@@ -1,11 +1,12 @@
-//  /client/src/services/productService.js
+//  /client/src/services/postsService.js
 
 import axios from 'axios';
 // eslint-disable-next-line
-const productservice = {
+const postsService = {
   getAll: async () => {
-    let res = await axios.get(`/api/product`);
+    let res = await axios.get(`/posts`);
     return res.data || [];
   }
 }
-export default productservice;
+
+export default postsService;
