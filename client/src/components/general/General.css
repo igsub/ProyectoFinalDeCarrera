@@ -1,0 +1,16 @@
+.nextprev{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    /*background-color: #423F3E;*/
+}
+
+.nextbutton{
+    margin-left: 0 auto;
+    background-color: #388E3C
+    ;
+}
+.prevbutton{
+    background-color: #9E9E9E;
+}
