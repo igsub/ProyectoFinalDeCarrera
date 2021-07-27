@@ -14,16 +14,24 @@ const datetimeslots = new mongoose.Schema({
 const datetimesSchema = new mongoose.Schema({
    meetid: {
        type: String,
-       required: true
+       required: false
    },
    userid: {
        type: String,
-       required: true
+       required: false
    },
    datetimes: {
        type: [datetimeslots],
+       required: false
+   },
+   weather: {
+       type: Boolean,
        required: true
-   },  
+   } ,
+   description: {
+       type: String,
+       required: true
+   }
 });
 
 const datetimes = mongoose.model("datetimes", datetimesSchema);

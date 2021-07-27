@@ -2,7 +2,7 @@ const express = require('express');
 const DatetimesRouter = express.Router();
 const datetimes = require('../models/datetimes.model'); // date times model
 
-/* Get all Datetimess */
+/* Get all Datetimes */
 DatetimesRouter.get('/', (req, res, next) => {
     datetimes.find({} , function(err, result){
         if(err){
@@ -40,7 +40,9 @@ DatetimesRouter.post("/", (req, res, next) => {
   let newDatetimes = {
     meetid: req.body.meetid,
     userid: req.body.userid,
-    datetimes: req.body.datetimes
+    datetimes: req.body.datetimes,
+    weather: req.body.weather,
+    description: req.body.description
   };
    datetimes.create(newDatetimes, function(err, result) {
     if(err){

@@ -4,8 +4,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/core/Menu';
-//import AccountCircleIcon from '@material-ui/Icon/AccountCircle';
+import MenuIcon from '@material-ui/icons/Menu';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
@@ -28,9 +28,9 @@ export default function NavBar() {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
-  const handleChange = (event) => {
-    setAuth(event.target.checked);
-  };
+  // const handleChange = (event) => {
+  //   setAuth(event.target.checked);
+  // };
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -46,7 +46,7 @@ export default function NavBar() {
         <Toolbar>
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
             <MenuIcon />
-            hello
+          
           </IconButton>
           <Typography variant="h6" className={classes.title}>
             MeetAPP
@@ -60,7 +60,7 @@ export default function NavBar() {
                 onClick={handleMenu}
                 color="inherit"
               >
-               accounticon
+              <AccountCircleIcon/>
               </IconButton>
             
               <Menu
