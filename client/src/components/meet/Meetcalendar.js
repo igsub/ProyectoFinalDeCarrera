@@ -7,19 +7,48 @@ import { useState } from 'react'
 const Meetcalendar = () => {
 
     const [focusedDate, setFocusedDate] = useState();
+    const [datetimes, setDateTimes] = useState([]);
 
     const handleDateClick = (event) => {
         console.log(event.day,event.month.name,event.year)
+        //show times for that date
+    }
+
+    const onCalendarChange = array => { 
+        array.forEach(dateitem => {
+            if (datetimes.indexOf(JSON.stringify(dateitem)) === -1) {
+                setDateTimes(datetimes.push({
+                    dateitem,
+                    times:[]
+                }
+                ))
+            }
+            else
+                setDateTimes(datetimes.splice(datetimes.indexOf(JSON.stringify(dateitem)), 1))
+        });
+        //Array of Dateobjecs
+        //alert("selected dates :\n" + array.join(",\n"))
+        console.log(datetimes)
     }
 
     return <Calendar 
                 multiple
                 onFocusedDateChange={setFocusedDate} 
                 className="bg-dark"
+                mapDays={({ date, isSameDate }) => {
+                    let props = {}
+                    
+                    if (!isSameDate(date, focusedDate)) return
+                
+                    props.style = { backgroundColor: "green" }
+                    
+                    return props
+                    }}
+                onChange={onCalendarChange}
                 plugins={[
                     <DatePanel                               
                         markFocused
-                        focusedClassName="bg-red" 
+                        focusedClassName="bg-green" 
                         sort="date"
                         onClickDate={handleDateClick}
                         />,
@@ -29,18 +58,7 @@ const Meetcalendar = () => {
                         style={{ backgroundColor: "steelblue" }} 
                     />
                     ]}
-                mapDays={({ date, isSameDate }) => {
-                    let props = {}
-                    
-                    if (!isSameDate(date, focusedDate)) return
                 
-                    props.style = { backgroundColor: "red" }
-                    
-                    return props
-                    }}
-                onChange={array => { //Array of Dateobjecs
-                    alert("selected dates :\n" + array.join(",\n"))
-                }}
                 >
                 
             </Calendar> 
