@@ -6,20 +6,19 @@ const app = express();
 
 // Routes
 const postRouter = require('./src/routes/post.router');
+const datetimesRouter = require('./src/routes/datetimes.router');
+
+require('./src/database');
+const path = require('path');
 
 app.use(
   express.urlencoded({
     extended: true
   })
 );
-
-require('./src/database');
-
 app.use(express.json());
-
 app.use('/posts', postRouter);
-
-const path = require('path');
+app.use('/datetimes',datetimesRouter);
 
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`)

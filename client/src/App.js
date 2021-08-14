@@ -1,44 +1,37 @@
-// /client/src/App.js
-
-import React, { useState, useEffect } from "react";
-
-// SERVICES
-import productService from './services/productService';
+import './App.css';
+import Meetform from './components/meet/Meetform';
+import NavBar from './components/general/NavBar';
+import { useState } from 'react';
+import {
+  
+  Paper,
+  Switch,
+  
+  createTheme,
+  ThemeProvider,
+  CssBaseline
+} from '@material-ui/core'
 
 function App() {
-  const [products, setproducts] = useState(null);
+  
+  const [darkMode, setDarkMode] = useState(false);
 
-  useEffect(() => {
-    if(!products) {
-      getProducts();
-    }
-  })
-
-  const getProducts = async () => {
-    let res = await productService.getAll();
-    console.log(res);
-    setproducts(res);
-  }
-
-  const renderProduct = product => {
-    return (
-      <li key={product._id} className="list__item product">
-        <h3 className="product__name">{product.name}</h3>
-        <p className="product__description">{product.description}</p>
-      </li>
-    );
-  };
+  const theme = createTheme({
+    palette: {
+      type: darkMode ? 'dark' : 'light',
+    },
+  });
 
   return (
-    <div className="App">
-      <ul className="list">
-        {(products && products.length > 0) ? (
-          products.map(product => renderProduct(product))
-        ) : (
-          <p>No products found</p>
-        )}
-      </ul>
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Paper style={{ height: '100vh' }}>
+        <NavBar></NavBar>
+        <Switch checked={darkMode} onChange={() => setDarkMode(!darkMode)} />
+        <Meetform></Meetform>
+      </Paper>
+    </ThemeProvider>
+    // <Meetform></Meetform>
   );
 }
 
