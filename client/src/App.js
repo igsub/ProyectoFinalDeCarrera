@@ -11,6 +11,7 @@ import {
   ThemeProvider,
   CssBaseline
 } from '@material-ui/core'
+import LoginButton from './components/login/LoginButton';
 
 function App() {
   
@@ -28,7 +29,8 @@ function App() {
       <Paper style={{ height: '100vh' }}>
         <NavBar></NavBar>
         <Switch checked={darkMode} onChange={() => setDarkMode(!darkMode)} />
-        <Meetform></Meetform>
+        {/* <Meetform></Meetform> */}
+        <LoginButton/>
       </Paper>
     </ThemeProvider>
     // <Meetform></Meetform>
