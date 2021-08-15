@@ -1,20 +1,17 @@
 import './App.css';
-import Meetform from './components/meet/Meetform';
 import NavBar from './components/general/NavBar';
 import { useState } from 'react';
 import {
-  
   Paper,
   Switch,
-  
   createTheme,
   ThemeProvider,
   CssBaseline
 } from '@material-ui/core'
-import LoginButton from './components/login/LoginButton';
+import Routes from './Routes';
 
 function App() {
-  
+
   const [darkMode, setDarkMode] = useState(false);
 
   const theme = createTheme({
@@ -27,13 +24,11 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Paper style={{ height: '100vh' }}>
-        <NavBar></NavBar>
+        <NavBar/>
         <Switch checked={darkMode} onChange={() => setDarkMode(!darkMode)} />
-        {/* <Meetform></Meetform> */}
-        <LoginButton/>
+        <Routes />
       </Paper>
     </ThemeProvider>
-    // <Meetform></Meetform>
   );
 }
 
