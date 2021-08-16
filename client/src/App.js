@@ -1,39 +1,36 @@
 import './App.css';
-import Meetform from './components/meet/Meetform';
 import NavBar from './components/general/NavBar';
 import { useState } from 'react';
+import { Auth0Provider } from "@auth0/auth0-react";
 import {
-  
   Paper,
-  Switch,
-  
   createTheme,
   ThemeProvider,
   CssBaseline
 } from '@material-ui/core'
-import LoginButton from './components/login/LoginButton';
+import Routes from './Routes';
 
 function App() {
   
-  const [darkMode, setDarkMode] = useState(false);
+  const domain = process.env.REACT_APP_AUTH0_DOMAIN;
+  const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
 
   const theme = createTheme({
     palette: {
-      type: darkMode ? 'dark' : 'light',
+      type: 'dark',
     },
   });
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Paper style={{ height: '100vh' }}>
-        <NavBar></NavBar>
-        <Switch checked={darkMode} onChange={() => setDarkMode(!darkMode)} />
-        {/* <Meetform></Meetform> */}
-        <LoginButton/>
-      </Paper>
-    </ThemeProvider>
-    // <Meetform></Meetform>
+    <Auth0Provider domain={domain} clientId={clientId} redirectUri={window.location.origin}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Paper style={{ height: '100vh' }}>
+          <NavBar/>
+          <Routes />
+        </Paper>
+      </ThemeProvider>
+    </Auth0Provider>
   );
 }
 
