@@ -1,5 +1,4 @@
 import { Redirect, Route } from "react-router-dom";
-import LoginView from "./components/login/LoginView";
 import { useAuth0 } from "@auth0/auth0-react";
 
 
