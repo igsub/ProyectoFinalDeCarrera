@@ -1,5 +1,4 @@
 const Datetime = require('../models/datetime'); // date times model
-var Project = require('../models/project');
 
 var controller = {
     
@@ -52,16 +51,13 @@ var controller = {
     // },
     
     getAllDatetimes: (req, res) => {
-        datetimes.find({} , function(err, result){
-            if(err){
-                res.status(400).send({
-                    'success': false,
-                    'error': err.message
-                });
-            }
-            res.status(200).send({
-                'success': true,
-                'data': result
+        Datetime.find({}).exec ((error, datetimes) => {
+            if (error) return res.status(500).send({message: 'Error al cargar los datetimes'});
+
+            if (!datetimes) return res.status(404).send({message: 'No se han podido cargar los datetimes'});
+
+            return res.status(200).send({
+                datetimes: datetimes
             });
         });
     },
