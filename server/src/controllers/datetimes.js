@@ -1,10 +1,55 @@
-const datetimes = require('../models/datetimes.model'); // date times model
+const Datetime = require('../models/datetime'); // date times model
+var Project = require('../models/project');
 
 var controller = {
     
     test: (req, res) => {
         res.status(200).send("Funciona!");
     },
+
+    // saveProject: (req, res) => {
+    //     var project = new Project();
+
+    //     var params = req.body;
+    //     project.name = params.name;
+    //     project.description = params.description;
+    //     project.category = params.category;
+    //     project.year = params.year;
+    //     project.langs = params.langs;
+
+    //     project.save((error, projectStored) => {
+    //         if (error) return res.status(500).send({message: 'Error al guardar'});
+
+    //         if (!projectStored) return res.status(404).send({message: 'No se ha podido guardar el proyecto'});
+
+    //         return res.status(200).send({
+    //             project: projectStored
+    //         });
+    //     })
+    // },
+
+    // getProject: (req, res) => {
+    //     var project_id = req.params.project_id;
+        
+    //     if (project_id == null) {
+    //         return res.status(404).send('No existe el datetime');
+    //     }
+
+    //     Project.findById(project_id, (err, project) => {
+    //         if(err){
+    //                 return res.status(500).send({
+    //                 success: false,
+    //                 error: err.message
+    //                 });
+    //         }
+    //         if (!project) {
+    //             return res.status(404).send('No existe el datetime 2');
+    //         }
+    //         return res.status(200).send({
+    //             project
+    //         });
+    //     });
+    // },
     
     getAllDatetimes: (req, res) => {
         datetimes.find({} , function(err, result){
@@ -22,41 +67,48 @@ var controller = {
     },
 
     getDatetime: (req, res) => {
-        datetimes.findById(req.params.datetimes_id, function (err, result) {
+        var datetime_id = req.params.datetime_id;
+        
+        if (datetime_id == null) {
+            return res.status(404).send('No existe el datetime');
+        }
+
+        Datetime.findById(datetime_id, (err, datetime) => {
             if(err){
-                    res.status(400).send({
+                    return res.status(500).send({
                     success: false,
                     error: err.message
                     });
             }
-            res.status(200).send({
-                success: true,
-                data: result
+            if (!datetime) {
+                return res.status(404).send('No existe el datetime 2');
+            }
+            return res.status(200).send({
+                datetime
             });
         });
     },
 
     addDatetime: (req, res) => {
-        let newDatetimes = {
-            meetid: req.body.meetid,
-            userid: req.body.userid,
-            datetimes: req.body.datetimes,
-            weather: req.body.weather,
-            description: req.body.description
-        };
-        datetimes.create(newDatetimes, function(err, result) {
-            if(err){
-                res.status(400).send({
-                    success: false,
-                    error: err.message
-                });
-            }
-            res.status(201).send({
-                success: true,
-                data: result,
-                message: "datetimes created successfully"
+        var datetime = new Datetime();
+
+        var params = req.body;
+        datetime.meetId = params.meetId;
+        datetime.description = params.description;
+        datetime.userId = params.userId;
+        datetime.start = params.start;
+        datetime.end = params.end;
+        datetime.weather = params.weather;
+
+        datetime.save((error, datetimeStored) => {
+            if (error) return res.status(500).send({message: 'Error al guardar'});
+
+            if (!datetimeStored) return res.status(404).send({message: 'No se ha podido guardar el datetime'});
+
+            return res.status(200).send({
+                datetime: datetimeStored
             });
-        });
+        })
     },
 
     editDatetime: (req, res) => {

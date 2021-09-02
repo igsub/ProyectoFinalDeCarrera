@@ -5,11 +5,14 @@ const DatetimesController = require('../controllers/datetimes');
 const router = express.Router();
 
 //Routes
-router.get('/', DatetimesController.getAllDatetimes);
-router.get('/:datetimes_id', DatetimesController.getDatetime);
-router.post('/', DatetimesController.addDatetime);
-router.patch('/:datetimes_id', DatetimesController.editDatetime);
-router.delete('/:datetimes_id', DatetimesController.deleteDatetime);
+router.get('/getAllDatetimes', DatetimesController.getAllDatetimes);
+router.get('/test', DatetimesController.test);
+// router.post('/save', DatetimesController.saveProject);
+// router.get('/getProject/:project_id', DatetimesController.getProject);
+router.get('/getDatetime/:datetime_id', DatetimesController.getDatetime);
+router.post('/addDatetime/', DatetimesController.addDatetime);
+router.patch('/editDatetime/:datetime_id', DatetimesController.editDatetime);
+router.delete('/deleteDatetime/:datetime_id', DatetimesController.deleteDatetime);
 
 module.exports = router;
 
