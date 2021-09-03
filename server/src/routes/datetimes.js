@@ -11,7 +11,7 @@ router.get('/test', DatetimesController.test);
 // router.get('/getProject/:project_id', DatetimesController.getProject);
 router.get('/getDatetime/:datetime_id', DatetimesController.getDatetime);
 router.post('/addDatetime/', DatetimesController.addDatetime);
-router.patch('/editDatetime/:datetime_id', DatetimesController.editDatetime);
+router.put('/updateDatetime/:datetime_id', DatetimesController.updateDatetime);
 router.delete('/deleteDatetime/:datetime_id', DatetimesController.deleteDatetime);
 
 module.exports = router;
