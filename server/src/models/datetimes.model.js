@@ -26,11 +26,11 @@ const datetimesSchema = new mongoose.Schema({
    },
    weather: {
        type: Boolean,
-       required: true
+       required: false
    } ,
    description: {
        type: String,
-       required: true
+       required: false
    }
 });
 
