@@ -15,11 +15,48 @@ const datetimesService = {
                 console.log(error);
             });
     },
-    
-    newdatetime: async (data) => {
-        let res = await axios.post("/datetimes", data);
-        return res.data || [];
+
+    getDatetime: async (id) => {
+        await axios.get('/datetimes/getDatetime/' + id)
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
     },
+
+    
+    addNewDatetime: async (data) => {
+        await axios.post("/datetimes/addDatetime", data)
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        //return res.data || [];
+    },
+
+    updateDatetime: async (id, data) => {
+        await axios.put("/datetimes/updateDatetime/" + id, data)
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    },
+
+    deleteDatetime: async (id) => {
+        await axios.delete('/datetimes/getDatetime/' + id)
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
 
     // getDatetime: async (data) => {
 
