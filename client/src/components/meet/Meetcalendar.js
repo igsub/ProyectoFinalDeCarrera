@@ -3,6 +3,8 @@ import DatePickerHeader from "react-multi-date-picker/plugins/date_picker_header
 import "react-multi-date-picker/styles/backgrounds/bg-dark.css"
 import { Calendar } from 'react-multi-date-picker'
 import { useState } from 'react'
+import _ from 'lodash';
+import moment from 'moment';
 
 const Meetcalendar = () => {
 
@@ -16,19 +18,22 @@ const Meetcalendar = () => {
 
     const onCalendarChange = array => { 
         array.forEach(dateitem => {
-            if (datetimes.indexOf(JSON.stringify(dateitem)) === -1) {
-                setDateTimes(datetimes.push({
-                    dateitem,
-                    times:[]
-                }
-                ))
+            const formattedDate = moment(dateitem).format(dateitem.format);
+            console.log("DATE ITEM: ",dateitem)
+            console.log("DATETIMES ARRAY: ", datetimes)
+            const idx = _.findIndex(datetimes, (dt) => {_.isEqual(dt.dateitem, dateitem)});
+            console.log("IDX: ",idx)
+            if (idx === -1){
+                const newDatetimesArray = _.clone(datetimes);
+                const newDatetimesObject = {dateitem: dateitem, times: []};
+                newDatetimesArray.push(newDatetimesObject)
+                setDateTimes(newDatetimesArray);
             }
-            else
-                setDateTimes(datetimes.splice(datetimes.indexOf(JSON.stringify(dateitem)), 1))
+            else{
+                const newDatetimesArray = _.clone(datetimes);
+                setDateTimes(newDatetimesArray.splice(idx, 1))
+            }
         });
-        //Array of Dateobjecs
-        //alert("selected dates :\n" + array.join(",\n"))
-        console.log(datetimes)
     }
 
     return <Calendar 
