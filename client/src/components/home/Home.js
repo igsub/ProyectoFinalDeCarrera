@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@material-ui/core";
 
 const Home = () => {
+    
     return (
         <Page flexDirection="column" justifyContent="center" alignItems="center" alignContent="center">
             <Typography variant="h2" gutterBottom>Bienvenido a Meet App</Typography>
