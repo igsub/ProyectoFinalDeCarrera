@@ -4,11 +4,41 @@ const express = require('express');
 
 var app = require('./app');
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 5000;
+const path = require('path');
+const fs = require('fs');
+const http = require('http');
+const https = require('https');
 
-app.listen(port, () => {
-    console.log('Server listening on port: ' + port);
+const privateKeyPath = path.join(__dirname, '/letsencrypt/live/meet-app.duckdns.org/privkey.pem');
+const certificatePath = path.join(__dirname, '/letsencrypt/live/meet-app.duckdns.org/cert.pem');
+const caPath = path.join(__dirname, '/letsencrypt/live/meet-app.duckdns.org/chain.pem');
+
+const privateKey = fs.readFileSync(privateKeyPath);
+const certificate = fs.readFileSync(certificatePath);
+const ca = fs.readFileSync(caPath);
+
+const credentials = {
+	key: privateKey,
+	cert: certificate,
+	ca: ca
+};
+const httpServer = http.createServer(app);
+const httpsServer = https.createServer(credentials, app);
+
+
+httpServer.listen(80, () => {
+	console.log('HTTP Server running on port 80');
 });
+
+httpsServer.listen(443, () => {
+	console.log('HTTPS Server running on port 443');
+});
+
+// app.listen(port, () => {
+//     console.log('Server listening on port: ' + port);
+// });
+
 // const app = express();
 
 // // Routes

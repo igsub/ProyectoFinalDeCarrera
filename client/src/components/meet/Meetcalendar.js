@@ -6,23 +6,20 @@ import { useState } from 'react'
 import _ from 'lodash';
 import moment from 'moment';
 
-const Meetcalendar = () => {
+const Meetcalendar = ({setSelectedDate}) => {
 
     const [focusedDate, setFocusedDate] = useState();
     const [datetimes, setDateTimes] = useState([]);
 
     const handleDateClick = (event) => {
         console.log(event.day,event.month.name,event.year)
-        //show times for that date
     }
 
     const onCalendarChange = array => { 
         array.forEach(dateitem => {
-            const formattedDate = moment(dateitem).format(dateitem.format);
-            console.log("DATE ITEM: ",dateitem)
-            console.log("DATETIMES ARRAY: ", datetimes)
             const idx = _.findIndex(datetimes, (dt) => {_.isEqual(dt.dateitem, dateitem)});
-            console.log("IDX: ",idx)
+            console.log("IDX: ",idx);
+            setSelectedDate(dateitem.day+"/"+dateitem.month+"/"+dateitem.year);
             if (idx === -1){
                 const newDatetimesArray = _.clone(datetimes);
                 const newDatetimesObject = {dateitem: dateitem, times: []};
@@ -38,8 +35,7 @@ const Meetcalendar = () => {
 
     return <Calendar 
                 multiple
-                onFocusedDateChange={setFocusedDate} 
-                className="bg-dark"
+                onFocusedDateChange={setFocusedDate}              
                 mapDays={({ date, isSameDate }) => {
                     let props = {}
                     
