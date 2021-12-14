@@ -37,12 +37,12 @@ const Step1 = () => {
             <TextField variant="standard" label="Título" className={classes.textfield}/>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'flex-end' }} className={classes.textfieldContainer}>
-            <LocationOnIcon style={{fill: "darkgrey"}}/>
-            <TextField variant="standard" label="Ubicación" className={classes.textfield}/>
-        </Box>
-        <Box sx={{ display: 'flex', alignItems: 'flex-end' }} className={classes.textfieldContainer}>
             <EventNoteIcon style={{fill: "darkgrey"}}/>
             <TextField variant="standard" label="Notas adicionales" className={classes.textfield}/>
+        </Box>
+        <Box sx={{ display: 'flex', alignItems: 'flex-end' }} className={classes.textfieldContainer}>
+            <LocationOnIcon style={{fill: "darkgrey"}}/>
+            <TextField variant="standard" label="Ubicación" className={classes.textfield}/>
         </Box>
         <Box className={classes.map}>
             <MyGoogleMap />
