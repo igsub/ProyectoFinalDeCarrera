@@ -119,7 +119,7 @@ const MyGoogleMap = () => {
                     onChildClick={() => console.log('child click')}
                     onClick={onClick}
                     bootstrapURLKeys={{
-                        key: 'AIzaSyAhpAjTLApg_9yjc7Kkp0EVM4WFEonZlnw',
+                        key: process.env.REACT_APP_GOOGLE_API_KEY,
                         libraries: ['places', 'geometry'],
                     }}
                     yesIWantToUseGoogleMapApiInternals
