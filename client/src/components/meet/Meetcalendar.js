@@ -3,38 +3,39 @@ import DatePickerHeader from "react-multi-date-picker/plugins/date_picker_header
 import "react-multi-date-picker/styles/backgrounds/bg-dark.css"
 import { Calendar } from 'react-multi-date-picker'
 import { useState } from 'react'
+import _ from 'lodash';
+import moment from 'moment';
 
-const Meetcalendar = () => {
+const Meetcalendar = ({setSelectedDate}) => {
 
     const [focusedDate, setFocusedDate] = useState();
     const [datetimes, setDateTimes] = useState([]);
 
     const handleDateClick = (event) => {
         console.log(event.day,event.month.name,event.year)
-        //show times for that date
     }
 
     const onCalendarChange = array => { 
         array.forEach(dateitem => {
-            if (datetimes.indexOf(JSON.stringify(dateitem)) === -1) {
-                setDateTimes(datetimes.push({
-                    dateitem,
-                    times:[]
-                }
-                ))
+            const idx = _.findIndex(datetimes, (dt) => {_.isEqual(dt.dateitem, dateitem)});
+            console.log("IDX: ",idx);
+            setSelectedDate(dateitem.day+"/"+dateitem.month+"/"+dateitem.year);
+            if (idx === -1){
+                const newDatetimesArray = _.clone(datetimes);
+                const newDatetimesObject = {dateitem: dateitem, times: []};
+                newDatetimesArray.push(newDatetimesObject)
+                setDateTimes(newDatetimesArray);
             }
-            else
-                setDateTimes(datetimes.splice(datetimes.indexOf(JSON.stringify(dateitem)), 1))
+            else{
+                const newDatetimesArray = _.clone(datetimes);
+                setDateTimes(newDatetimesArray.splice(idx, 1))
+            }
         });
-        //Array of Dateobjecs
-        //alert("selected dates :\n" + array.join(",\n"))
-        console.log(datetimes)
     }
 
     return <Calendar 
                 multiple
-                onFocusedDateChange={setFocusedDate} 
-                className="bg-dark"
+                onFocusedDateChange={setFocusedDate}              
                 mapDays={({ date, isSameDate }) => {
                     let props = {}
                     

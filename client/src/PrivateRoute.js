@@ -3,18 +3,17 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 
 const PrivateRoute = ({ children, ...rest }) => {
-    const { isAutenticated } = useAuth0();
-    
+    const { isAuthenticated } = useAuth0();
     return (
       <Route
         {...rest}
         render={({ location }) =>
-          isAutenticated ? (
+          isAuthenticated? (
             children
           ) : (
             <Redirect
               to={{
-                pathname: "/home",
+                pathname: "/",
                 state: { from: location }
               }}
             />

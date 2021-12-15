@@ -26,18 +26,13 @@ app.use((req, res, next) => {
 app.use('/posts', post_routes);
 app.use('/datetimes', datetimes_routes);
 
-//will redirect all the non-api routes to react frontend
-app.use(function(req, res) {
-    res.sendFile(path.join(__dirname, '../client','build','index.html'));
-});
-
-const CLIENT_BUILD_PATH = path.join(__dirname, "../client/build");
+const CLIENT_BUILD_PATH = path.join(__dirname, "..", "client", "build");
 
 //Static files
 app.use(express.static(CLIENT_BUILD_PATH));
 
 //Server React Client
-app.get("/", function(req, res) {
+app.get("*", function(req, res) {
     res.sendFile(path.join(CLIENT_BUILD_PATH , "index.html"));
 });
 

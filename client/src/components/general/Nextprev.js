@@ -1,15 +1,10 @@
-import Card from './Card'
+import {Button, Box} from '@material-ui/core'
 
-import {Button} from '@material-ui/core'
-
-const Nextprev = (props) => {
-    const classes = props.className? 'nextprev ' + props.className: 'nextprev';
-    return <Card className={classes}>
-        <div className='buttons '>            
+const Nextprev = () => {
+    return <Box>            
                 <Button className='prevbutton'>Previous</Button>                           
                 <Button className='nextbutton' >Next</Button>            
-        </div>
-    </Card>
+            </Box> 
 }
 
 export default Nextprev;

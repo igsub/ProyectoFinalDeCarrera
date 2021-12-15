@@ -5,11 +5,10 @@ FROM node:alpine3.11
 # ARG NODE_ENV=development
 
 # Create App Directory
-RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 # Install Dependencies
-COPY package*.json ./
+COPY ./package*.json ./
 
 RUN npm ci
 
@@ -17,6 +16,6 @@ RUN npm ci
 COPY . .
 
 # Exports
-EXPOSE 8080
+EXPOSE 5000
 
 CMD ["npm","start"]

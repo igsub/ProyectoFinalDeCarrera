@@ -36,3 +36,9 @@
     transform: rotate(360deg);
   }
 }
+
+.main-wrapper {
+  height: 60vh;
+  margin: 10px 50px;
+  filter: drop-shadow(-1px 5px 3px #ccc);
+}
