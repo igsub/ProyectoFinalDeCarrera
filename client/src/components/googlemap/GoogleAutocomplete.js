@@ -1,38 +1,149 @@
-import React, { useState } from "react";
-import MUIPlacesAutocomplete, {
-    geocodeByPlaceID, geocodeBySuggestion
-  } from 'mui-places-autocomplete';
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import parse from 'autosuggest-highlight/parse';
+import throttle from 'lodash/throttle';
 
-const GoogleAutocomplete = () => {
-    const [autocompleteState, setAutocompleteState] = useState({ open: false, coordinates: null, errorMessage: null })
+function loadScript(src, position, id) {
+  if (!position) {
+    return;
+  }
 
-    const onSuggestionSelected = async (suggestion) => {
-        geocodeBySuggestion(suggestion).then((results) => {
-            if (results.length < 1) {
-              setAutocompleteState({
-                ...autocompleteState,
-                open: true,
-                errorMessage: 'Geocode request completed successfully but without any results',
-              })
-      
-              return
-            }
-        // Just use the first result in the list to get the geometry coordinates
-        const { geometry } = results[0]
-
-        const coordinates = {
-            lat: geometry.location.lat(),
-            lng: geometry.location.lng(),
-        }
-
-        // Add your business logic here. In this case we simply set our state to show our <Snackbar>.
-        setAutocompleteState({ ...autocompleteState, open: true, coordinates })
-        }).catch((err) => {
-        setAutocompleteState({ ...autocompleteState, open: true, errorMessage: err.message })
-        })
-    }
-
-    return <MUIPlacesAutocomplete onSuggestionSelected={onSuggestionSelected} renderTarget={}/>
+  const script = document.createElement('script');
+  script.setAttribute('async', '');
+  script.setAttribute('id', id);
+  script.src = src;
+  position.appendChild(script);
 }
 
-export default GoogleAutocomplete;
+const autocompleteService = { current: null };
+
+export default function GoogleAutocomplete() {
+  const [value, setValue] = React.useState(null);
+  const [inputValue, setInputValue] = React.useState('');
+  const [options, setOptions] = React.useState([]);
+  const loaded = React.useRef(false);
+
+  if (typeof window !== 'undefined' && !loaded.current) {
+    if (!document.querySelector('#google-maps')) {
+      loadScript(
+        'https://maps.googleapis.com/maps/api/js?key=AIzaSyAhpAjTLApg_9yjc7Kkp0EVM4WFEonZlnw&libraries=places',
+        document.querySelector('head'),
+        'google-maps',
+      );
+    }
+
+    loaded.current = true;
+  }
+
+  const fetch = React.useMemo(
+    () =>
+      throttle((request, callback) => {
+        autocompleteService.current.getPlacePredictions(request, callback);
+      }, 200),
+    [],
+  );
+
+  React.useEffect(() => {
+    let active = true;
+
+    if (!autocompleteService.current && window.google) {
+      autocompleteService.current =
+        new window.google.maps.places.AutocompleteService();
+    }
+    if (!autocompleteService.current) {
+      return undefined;
+    }
+
+    if (inputValue === '') {
+      setOptions(value ? [value] : []);
+      return undefined;
+    }
+
+    fetch({ input: inputValue }, (results) => {
+      if (active) {
+        let newOptions = [];
+
+        if (value) {
+          newOptions = [value];
+        }
+
+        if (results) {
+          newOptions = [...newOptions, ...results];
+        }
+
+        setOptions(newOptions);
+      }
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [value, inputValue, fetch]);
+
+  return (
+    <Autocomplete
+      id="google-map-demo"
+      sx={{ width: "100%" }}
+      getOptionLabel={(option) =>
+        typeof option === 'string' ? option : option.description
+      }
+      filterOptions={(x) => x}
+      options={options}
+      autoComplete
+      includeInputInList
+      filterSelectedOptions
+      value={value}
+      onChange={(event, newValue) => {
+        setOptions(newValue ? [newValue, ...options] : options);
+        setValue(newValue);
+      }}
+      onInputChange={(event, newInputValue) => {
+        setInputValue(newInputValue);
+      }}
+      renderInput={(params) => (
+        <TextField {...params} label="Ubicación" variant="standard" fullWidth />
+      )}
+      renderOption={(props, option) => {
+        const matches = option.structured_formatting.main_text_matched_substrings;
+        const parts = parse(
+          option.structured_formatting.main_text,
+          matches.map((match) => [match.offset, match.offset + match.length]),
+        );
+
+        return (
+          <li {...props}>
+            <Grid container alignItems="center">
+              <Grid item>
+                <Box
+                  component={LocationOnIcon}
+                  sx={{ color: 'text.secondary', mr: 2 }}
+                />
+              </Grid>
+              <Grid item xs>
+                {parts.map((part, index) => (
+                  <span
+                    key={index}
+                    style={{
+                      fontWeight: part.highlight ? 700 : 400,
+                    }}
+                  >
+                    {part.text}
+                  </span>
+                ))}
+
+                <Typography variant="body2" color="text.secondary">
+                  {option.structured_formatting.secondary_text}
+                </Typography>
+              </Grid>
+            </Grid>
+          </li>
+        );
+      }}
+    />
+  );
+}

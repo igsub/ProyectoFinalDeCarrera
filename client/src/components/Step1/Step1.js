@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Link } from "react-router-dom";
 import MyGoogleMap from "../googlemap/MyGoogleMap";
 import '../../App.css';
+import GoogleAutocomplete from "../googlemap/GoogleAutocomplete";
 
 const useStyles = makeStyles((theme) => ({
     root:{
@@ -42,7 +43,7 @@ const Step1 = () => {
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'flex-end' }} className={classes.textfieldContainer}>
             <LocationOnIcon style={{fill: "darkgrey"}}/>
-            <TextField variant="standard" label="Ubicación" className={classes.textfield}/>
+            <GoogleAutocomplete />
         </Box>
         <Box className={classes.map}>
             <MyGoogleMap />
