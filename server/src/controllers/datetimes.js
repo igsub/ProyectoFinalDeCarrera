@@ -1,4 +1,3 @@
-const datetime = require('../models/datetime');
 const Datetime = require('../models/datetime'); // date times model
 
 var controller = {
