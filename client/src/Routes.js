@@ -1,4 +1,4 @@
-import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom"
+import { BrowserRouter, Route, Switch } from "react-router-dom"
 import Meetform from "./components/meet/Meetform"
 import Home from "./components/home/Home"
 import PrivateRoute from "./PrivateRoute"

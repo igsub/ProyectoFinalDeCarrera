@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import parse from 'autosuggest-highlight/parse';
 import throttle from 'lodash/throttle';
 
-function loadScript(src, position, id) {
+const loadScript = (src, position, id) => {
   if (!position) {
     return;
   }
@@ -22,23 +22,24 @@ function loadScript(src, position, id) {
 
 const autocompleteService = { current: null };
 
-export default function GoogleAutocomplete() {
+const GoogleAutocomplete = (props) => {
+  let {mapState, setMapState, autocompleteState, setAutocompleteState} = props
   const [value, setValue] = React.useState(null);
   const [inputValue, setInputValue] = React.useState('');
   const [options, setOptions] = React.useState([]);
   const loaded = React.useRef(false);
 
-  if (typeof window !== 'undefined' && !loaded.current) {
-    if (!document.querySelector('#google-maps')) {
-      loadScript(
-        `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}&libraries=places`,
-        document.querySelector('head'),
-        'google-maps',
-      );
-    }
+  // if (typeof window !== 'undefined' && !loaded.current) {
+  //   if (!document.querySelector('#google-maps')) {
+  //     loadScript(
+  //       `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}&libraries=places`,
+  //       document.querySelector('head'),
+  //       'google-maps',
+  //     );
+  //   }
 
-    loaded.current = true;
-  }
+  //   loaded.current = true;
+  // }
 
   const fetch = React.useMemo(
     () =>
@@ -59,31 +60,52 @@ export default function GoogleAutocomplete() {
       return undefined;
     }
 
-    if (inputValue === '') {
-      setOptions(value ? [value] : []);
+    if (autocompleteState.inputValue === '') {
+      setAutocompleteState( as => ({...as, options: as.value ? [as.value] : []}));
       return undefined;
     }
 
-    fetch({ input: inputValue }, (results) => {
+    fetch({ input: autocompleteState.inputValue }, (results) => {
       if (active) {
         let newOptions = [];
 
-        if (value) {
-          newOptions = [value];
+        if (autocompleteState.value) {
+          newOptions = [autocompleteState.value];
         }
 
         if (results) {
           newOptions = [...newOptions, ...results];
         }
 
-        setOptions(newOptions);
+        setAutocompleteState( as => ({ ...as, options: newOptions}));
       }
     });
 
     return () => {
       active = false;
     };
-  }, [value, inputValue, fetch]);
+  }, [setAutocompleteState, autocompleteState.value, autocompleteState.inputValue, fetch]);
+
+  const changeMapLocation = (placeId) => {
+    const geocoder = mapState.mapApi? new mapState.mapApi.Geocoder() : null;
+    if (geocoder) {
+      geocoder.geocode({ 'placeId': placeId }).then(({results}) => {
+        if (results[0]) {
+          const newLat = results[0].geometry.location.lat();
+          const newLng = results[0].geometry.location.lng();
+          setMapState(prevState => (
+            {...prevState, 
+              address: results[0].formatted_address, 
+              lat: newLat,
+              lng: newLng,
+              center: [newLat, newLng]
+            }));
+        } else {
+          window.alert('No se encontraron resultados');
+        }
+      })
+    }
+  }
 
   return (
     <Autocomplete
@@ -92,18 +114,22 @@ export default function GoogleAutocomplete() {
       getOptionLabel={(option) =>
         typeof option === 'string' ? option : option.description
       }
+      noOptionsText={"No hay opciones"}
       filterOptions={(x) => x}
-      options={options}
+      options={autocompleteState.options}
       autoComplete
       includeInputInList
       filterSelectedOptions
-      value={value}
+      value={autocompleteState.value}
       onChange={(event, newValue) => {
-        setOptions(newValue ? [newValue, ...options] : options);
-        setValue(newValue);
+        const newOptions = newValue ? [newValue, ...autocompleteState.options] : autocompleteState.options;
+        setAutocompleteState( as => ({...as, options: newOptions, value: newValue}));
+        if (newValue) 
+          changeMapLocation(newValue.place_id);
+        console.log(newValue)
       }}
       onInputChange={(event, newInputValue) => {
-        setInputValue(newInputValue);
+        setAutocompleteState( as => ({ ...as, inputValue: newInputValue}));
       }}
       renderInput={(params) => (
         <TextField {...params} label="Ubicación" variant="standard" fullWidth />
@@ -147,3 +173,5 @@ export default function GoogleAutocomplete() {
     />
   );
 }
+
+export default GoogleAutocomplete;

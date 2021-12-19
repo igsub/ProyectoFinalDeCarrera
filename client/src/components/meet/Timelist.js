@@ -30,10 +30,6 @@ const times = [
 ]
 
 const Timelist = () => {
-    
-    const handleClick = (event) => {
-
-    }
 
     const [checked, setChecked] = useState([0]);
 
