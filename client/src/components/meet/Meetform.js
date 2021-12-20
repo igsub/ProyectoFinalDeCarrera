@@ -4,6 +4,8 @@ import datetimesService from '../../services/datetimesService'
 import Meetcalendar from './Meetcalendar'
 import Timelist from './Timelist'
 import { makeStyles } from '@material-ui/core/styles';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import weatherService from '../../services/weatherService'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -16,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     form:{
         display: "flex",
         borderRadius:"8px",
-        backgroundColor: "lightgray", 
+        //backgroundColor: "lightgray", 
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column",
@@ -25,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     },
     submitButton: {
         display: "flex",
-        alignSelf:"flex-end",
+        alignSelf: "center",
         padding: "2rem",
     },
     nextPrev: {
@@ -37,21 +39,20 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: "row"
     },
     switchWeather: {
-        display: "inline-flex",
-        alignContent: "flex-end"
+        marginTop: "1rem"
     }
   }));
 
 const Meetform = () => {
     const [description, setDescription] = useState("");
-    const [weathermatters, setWeatherMatters] = useState(false);
+    const [weatherMatters, setWeatherMatters] = useState(false);
     const [datetime, setDatetime] = useState([]);
     const classes = useStyles();
     const [selectedDateAndTimes, setSelectedDateAndTimes] = useState({});
 
     let data = {
         description: description,
-        weather: weathermatters
+        weather: weatherMatters
     }
 
     const handleDecriptionChange = (event) => {
@@ -62,7 +63,7 @@ const Meetform = () => {
     }
     const handleSubmit = (event) => {
         event.preventDefault();
-        datetimesService.addNewDatetime({meetId: "test", userId: "da", start: 3, end:5, description: "ddescripcion larga"})
+        datetimesService.addNewDatetime({meetId: uuid(), userId: "da", start: 3, end:5, description: "ddescripcion larga"})
     }
     const displayDateTimes = () => {
         datetimesService.getAll().then(item => setDatetime(item.data))
@@ -70,20 +71,20 @@ const Meetform = () => {
 
     console.log(data.description,data.weather)
     return <Box className={classes.root}>
-                <form onSubmit={handleSubmit} className={classes.form}>       
-                    <TextField id="outlined-basic" label="Motivo de la reunion" variant="outlined" onChange={handleDecriptionChange}></TextField>
-                    <Box className={classes.switchWeather}>
-                        <Typography>Importa el clima?</Typography>
-                        <Switch onChange={handleWeatherMatters}>Importa el clima?</Switch>
-                    </Box>
+                <form onSubmit={handleSubmit} className={classes.form}>                  
+                    
                     <div></div>
                     <Box className={classes.calendar}>
                         <Meetcalendar setSelectedDate={setSelectedDateAndTimes}/>
                         <Timelist setSelectedTimes={setSelectedDateAndTimes}/>
                     </Box>
+                    <Box className={classes.switchWeather}>
+                        <FormControlLabel control={<Switch defaultChecked checked={weatherMatters} />} label="Tener en cuenta el clima?" onClick={() => setWeatherMatters(!weatherMatters)}/>
+                    </Box>
                     <Box className={classes.submitButton}>
                         <Button type="submit" variant="contained" color="primary">Crear</Button>
                     </Box>
+                    
                 </form>
                 {/* <Box>
                     <ul>
