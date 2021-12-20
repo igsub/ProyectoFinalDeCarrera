@@ -70,7 +70,7 @@ var controller = {
         Datetime.findByIdAndUpdate(datetime_id, fieldsToUpdate, (error, datetimeUpdated) => {
             if (error) return res.status(500).send({message: 'Error al actualizar'});
 
-            if (!datetimeUpdated) return res.status(404).send({message: 'No existe el proyecto para actualizar'});
+            if (!datetimeUpdated) return res.status(404).send({message: 'No existe el datetime para actualizar'});
 
             return res.status(200).send({
                 datetime: datetimeUpdated
@@ -83,7 +83,7 @@ var controller = {
         Datetime.findByIdAndDelete(datetime_id, function(error, datetimeDeleted){
             if (error) return res.status(500).send({message: 'Error al eliminar'});
 
-            if (!datetimeDeleted) return res.status(404).send({message: 'No existe el proyecto para eliminar'});
+            if (!datetimeDeleted) return res.status(404).send({message: 'No existe el datetime para eliminar'});
 
             return res.status(200).send({
                 datetime: datetimeDeleted
