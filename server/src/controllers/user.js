@@ -27,14 +27,14 @@ var userController = {
 
     addUser: (req, res) => {
         var user = new User();
-
+        console.log("REQUEST ADD USER", req.body)
         var params = req.body;
-        user.user_id = params.user_id;
+        user.user_id = params.user_id? params.user_id : null;
         user.name = params.name;
-        user.lastname = params.lastname;
-        user.address = params.address;
-        user.meetings = [];
-        user.email = params.email;
+        //user.lastname = params.lastname? params.lastname : null;
+        //user.address = params.address? params.address : null;
+        //user.meetings = [];
+        user.email = params.email? params.email : null;
 
         user.save((error, userStored) => {
             if (error) return res.status(500).send({message: 'Error al guardar el usuario'});
