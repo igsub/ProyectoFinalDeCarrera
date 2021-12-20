@@ -6,7 +6,7 @@ require('./src/database');
 var app = express();
 
 //Archivos rutas
-var datetimes_routes = require('./src/routes/datetimes');
+var meeting_routes = require('./src/routes/meeting');
 var post_routes = require('./src/routes/post');
 var user_routes = require('./src/routes/user');
 
@@ -25,7 +25,7 @@ app.use((req, res, next) => {
 
 //Rutas
 app.use('/posts', post_routes);
-app.use('/datetimes', datetimes_routes);
+app.use('/meeting', meeting_routes);
 app.use('/user', user_routes);
 
 const CLIENT_BUILD_PATH = path.join(__dirname, "..", "client", "build");

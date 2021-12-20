@@ -1,3 +1,5 @@
+const { v4: uuidv4 } = require('uuid');
+
 const User = require('../models/user');
 
 var userController = {
@@ -26,24 +28,29 @@ var userController = {
     },
 
     addUser: (req, res) => {
-        var user = new User();
-        console.log("REQUEST ADD USER", req.body)
-        var params = req.body;
-        user.user_id = params.user_id? params.user_id : null;
-        user.name = params.name;
-        //user.lastname = params.lastname? params.lastname : null;
-        //user.address = params.address? params.address : null;
-        //user.meetings = [];
-        user.email = params.email? params.email : null;
+        User.find({email: req.params.email}, (err, user) => {
+            if (err) return res.status(500).send({message: 'Error al buscar el usuario'});
 
-        user.save((error, userStored) => {
-            if (error) return res.status(500).send({message: 'Error al guardar el usuario'});
+            if (!user) {
+                var new_user = new User();
+                var params = req.body;
+                new_user.user_id = uuidv4();
+                new_user.name = params.name;
+                new_user.lastname = params.lastname? params.lastname : null;
+                new_user.address = params.address? params.address : null;
+                new_user.meetings = [];
+                new_user.email = params.email? params.email : null;
 
-            if (!userStored) return res.status(404).send({message: 'No se ha podido guardar el usuario'});
-
-            return res.status(200).send({
-                user: userStored
-            });
+                new_user.save((error, userStored) => {
+                    if (error) return res.status(500).send({message: 'Error al guardar el usuario'});
+        
+                    if (!userStored) return res.status(404).send({message: 'No se ha podido guardar el usuario'});
+        
+                    return res.status(200).send({
+                        user: userStored
+                    });
+                });
+            }
         });
     },
 

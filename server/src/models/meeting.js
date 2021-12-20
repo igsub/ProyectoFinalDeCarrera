@@ -11,13 +11,16 @@ const mongoose = require('mongoose');
 //         ]
 // })
 
-const DatetimeSchema = new mongoose.Schema({
+const MeetingSchema = new mongoose.Schema({
     meetId: String,
-    userId: String,
-    start: Number,
-    end: Number,
+    title: String,
+    ownerId: String,
     description: String,
-    weather: Boolean
+    location: {
+        lat: String,
+        lng: String,
+        address: String
+    }
 //    meetid: {
 //        type: String,
 //        required: false
@@ -40,5 +43,5 @@ const DatetimeSchema = new mongoose.Schema({
 //    }
 });
 
-const datetime = mongoose.model("Datetime", DatetimeSchema);
-module.exports = datetime;
+const meeting = mongoose.model("Meeting", MeetingSchema);
+module.exports = meeting;

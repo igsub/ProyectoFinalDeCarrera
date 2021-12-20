@@ -1,18 +1,18 @@
 const express = require('express');
 
-const DatetimesController = require('../controllers/datetimes');
+const MeetingController = require('../controllers/meeting');
 
 const router = express.Router();
 
 //Routes
-router.get('/getAllDatetimes', DatetimesController.getAllDatetimes);
-router.get('/test', DatetimesController.test);
+router.get('/getAllMeetings', MeetingController.getAllMeetings);
+router.get('/test', MeetingController.test);
 // router.post('/save', DatetimesController.saveProject);
 // router.get('/getProject/:project_id', DatetimesController.getProject);
-router.get('/getDatetime/:datetime_id', DatetimesController.getDatetime);
-router.post('/addDatetime/', DatetimesController.addDatetime);
-router.put('/updateDatetime/:datetime_id', DatetimesController.updateDatetime);
-router.delete('/deleteDatetime/:datetime_id', DatetimesController.deleteDatetime);
+router.get('/getMeeting/:meetId', MeetingController.getMeeting);
+router.post('/addMeeting/', MeetingController.addMeeting);
+router.put('/updateMeeting/:meetId', MeetingController.updateMeeting);
+router.delete('/deleteMeeting/:meetId', MeetingController.deleteMeeting);
 
 module.exports = router;
 
