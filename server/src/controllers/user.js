@@ -1,4 +1,4 @@
-const Participant = require('../models/user');
+const User = require('../models/user');
 
 var userController = {
     
@@ -35,7 +35,7 @@ var userController = {
         user.address = params.address;
         user.meetings = [];
 
-        user.save((error, userStored) => {
+        User.save((error, userStored) => {
             if (error) return res.status(500).send({message: 'Error al guardar el usuario'});
 
             if (!userStored) return res.status(404).send({message: 'No se ha podido guardar el usuario'});
@@ -47,7 +47,15 @@ var userController = {
     },
 
     getAllUsers: (req, res) => {
-        
+        User.find({}).exec ((error, users) => {
+            if (error) return res.status(500).send({message: 'Error al cargar los users'});
+
+            if (!users) return res.status(404).send({message: 'No se han podido cargar los users'});
+
+            return res.status(200).send({
+                users: users
+            });
+        });
     },
 
     deleteUser: (req, res) => {
@@ -79,4 +87,4 @@ var userController = {
     }
 }
 
-module.exports = participantController;
+module.exports = userController;
