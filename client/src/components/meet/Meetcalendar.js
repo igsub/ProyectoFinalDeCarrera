@@ -1,8 +1,8 @@
+import React, { useState } from 'react'
 import DatePanel from "react-multi-date-picker/plugins/date_panel"
 import DatePickerHeader from "react-multi-date-picker/plugins/date_picker_header"
 import "react-multi-date-picker/styles/backgrounds/bg-dark.css"
 import { Calendar } from 'react-multi-date-picker'
-import { useState } from 'react'
 import _ from 'lodash';
 import moment from 'moment';
 
@@ -12,7 +12,7 @@ const Meetcalendar = ({setSelectedDate}) => {
     const [datetimes, setDateTimes] = useState([]);
 
     const handleDateClick = (event) => {
-        console.log(event.day,event.month.name,event.year)
+        console.log(event)
     }
 
     const onCalendarChange = array => { 
@@ -59,10 +59,7 @@ const Meetcalendar = ({setSelectedDate}) => {
                         style={{ backgroundColor: "steelblue" }} 
                     />
                     ]}
-                
-                >
-                
-            </Calendar> 
+                />        
 }
 
 export default Meetcalendar
