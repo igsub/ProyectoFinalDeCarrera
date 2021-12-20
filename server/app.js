@@ -8,6 +8,7 @@ var app = express();
 //Archivos rutas
 var datetimes_routes = require('./src/routes/datetimes');
 var post_routes = require('./src/routes/post');
+var user_routes = require('./src/routes/user');
 
 //Middlewares
 app.use(express.urlencoded({extended: false}));
@@ -25,6 +26,7 @@ app.use((req, res, next) => {
 //Rutas
 app.use('/posts', post_routes);
 app.use('/datetimes', datetimes_routes);
+app.use('/user', user_routes);
 
 const CLIENT_BUILD_PATH = path.join(__dirname, "..", "client", "build");
 

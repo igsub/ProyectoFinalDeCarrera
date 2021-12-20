@@ -36,7 +36,7 @@ var userController = {
         user.meetings = [];
         user.email = params.email;
 
-        User.save((error, userStored) => {
+        user.save((error, userStored) => {
             if (error) return res.status(500).send({message: 'Error al guardar el usuario'});
 
             if (!userStored) return res.status(404).send({message: 'No se ha podido guardar el usuario'});
