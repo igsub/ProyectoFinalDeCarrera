@@ -12,4 +12,4 @@ const weatherService = {
     },
 }
 
-export default weatherService
+export default weatherService;

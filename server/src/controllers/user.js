@@ -34,6 +34,7 @@ var userController = {
         user.lastname = params.lastname;
         user.address = params.address;
         user.meetings = [];
+        user.email = params.email;
 
         User.save((error, userStored) => {
             if (error) return res.status(500).send({message: 'Error al guardar el usuario'});

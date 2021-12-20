@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -6,11 +6,12 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { useAuth0 } from "@auth0/auth0-react";
-
+import userService from '../../services/userService';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import LoginView from '../login/LoginView';
 import { Avatar } from '@material-ui/core';
+import { v4 as uuidv4 } from 'uuid';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,7 +34,14 @@ export default function NavBar() {
   const picture = user?.picture;
   const email = user?.email;
 
-  console.log("LOCATION: ",window.location)
+  //console.log("LOCATION: ",window.location)
+
+  useEffect(() => {
+    if (user) {
+      userService.addUser({user_id: uuidv4(), name: user.name, email: user.email})
+    }
+  }, [user]);
+
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -61,8 +69,7 @@ export default function NavBar() {
           </Typography>
           {user? 
           (
-            <div>
-              
+            <div>             
               {name}
               <IconButton
                 aria-label="account of current user"
@@ -94,7 +101,7 @@ export default function NavBar() {
                 <MenuItem onClick={handleLogout}>Log out</MenuItem>
               </Menu>
             </div>
-          ):<LoginView/>
+          ): <LoginView />
           }
         </Toolbar>
       </AppBar>

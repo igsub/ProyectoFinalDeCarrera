@@ -32,7 +32,7 @@ const userService = {
             });
     },
 
-    updateUser: async (data) => {
+    updateUser: async (data, id) => {
         await axios.put("/user/updateUser/" + id, data)
             .then(response => {
                 console.log(response.data);
