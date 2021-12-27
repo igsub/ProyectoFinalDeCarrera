@@ -1,4 +1,5 @@
 const Meeting = require('../models/meeting'); // date times model
+const crypto = require("crypto");
 
 var MeetingController = {
     
@@ -42,10 +43,11 @@ var MeetingController = {
     },
 
     addMeeting: (req, res) => {
+
         var meeting = new Meeting();
 
         var params = req.body;
-        meeting.meetId = params.meetId;
+        meeting.meetId = crypto.randomBytes(16).toString("hex");
         meeting.description = params.description;
         meeting.ownerId = params.ownerId;
         meeting.title = params.title;

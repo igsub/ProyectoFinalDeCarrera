@@ -1,6 +1,5 @@
-const { v4: uuidv4 } = require('uuid');
-
 const User = require('../models/user');
+const crypto = require("crypto");
 
 var userController = {
     
@@ -28,13 +27,16 @@ var userController = {
     },
 
     addUser: (req, res) => {
-        User.find({email: req.params.email}, (err, user) => {
+        console.log("BODY EMAIL: ", req.body.email)
+        User.find({email: req.body.email}, (err, user) => {
+            console.log("err:", err)
+            console.log("err:", user)
             if (err) return res.status(500).send({message: 'Error al buscar el usuario'});
 
-            if (!user) {
+            if (user === null) {
                 var new_user = new User();
                 var params = req.body;
-                new_user.user_id = uuidv4();
+                new_user.user_id = crypto.randomBytes(16).toString("hex");
                 new_user.name = params.name;
                 new_user.lastname = params.lastname? params.lastname : null;
                 new_user.address = params.address? params.address : null;
@@ -49,6 +51,10 @@ var userController = {
                     return res.status(200).send({
                         user: userStored
                     });
+                });
+            } else {
+                return res.status(200).send({
+                    user
                 });
             }
         });
