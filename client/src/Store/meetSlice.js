@@ -12,24 +12,16 @@ const meetSlice = createSlice({
     name: 'meet',
     initialState,
     reducers: {
-        setTitle(state, action) {
-            state.title = action.payload
+        setMeet(state, action) {
+            state.title = action.payload.title || "";
+            state.datetimes = action.payload.datetimes || [];
+            state.weather = action.payload.weather ||  [];
+            state.location = action.payload.location || null;
+            state.description = action.payload.description || "";
         },
-        setDatetimes(state, action) {
-            state.datetimes = action.payload
-        },
-        setWeather(state, action) {
-            state.weather = action.payload
-        },
-        setLocation(state, action) {
-            state.location = action.payload
-        },
-        setDescription(state, action) {
-            state.description = action.payload
-        }
     }
 });
 
-export const { setTitle, setDatetimes, setWeather, setLocation, setDescription } = meetSlice.actions;
+export const { setMeet } = meetSlice.actions;
 
 export default meetSlice.reducer;

@@ -14,9 +14,9 @@ const Routes = () => {
                 <PrivateRoute path="/meetform">
                     <Meetform />
                 </PrivateRoute>
-                <Route path="/step1">
+                <PrivateRoute path="/step1">
                     <Step1 />
-                </Route>
+                </PrivateRoute>
                 <Route path="/">
                     <Home />
                 </Route>

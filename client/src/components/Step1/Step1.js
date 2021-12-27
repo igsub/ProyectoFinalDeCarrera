@@ -10,7 +10,8 @@ import MyGoogleMap from "../googlemap/MyGoogleMap";
 import '../../App.css';
 import GoogleAutocomplete from "../googlemap/GoogleAutocomplete";
 import { useDispatch, useSelector } from "react-redux";
-import { setDescription, setLocation, setTitle } from "../../Store/meetSlice";
+import { setMeet } from "../../Store/meetSlice";
+import meetingService from "../../services/meetingService";
 
 const useStyles = makeStyles((theme) => ({
     root:{
@@ -61,9 +62,25 @@ const Step1 = () => {
     });
 
     const onClick = () => {
-        dispatch(setTitle(meetTitle));
-        dispatch(setDescription(meetDescription));
-        dispatch(setLocation({lat: mapState.lat, lng: mapState.lng, address: mapState.address}))
+
+        const newMeeting = {
+            title: meetTitle,
+            description: meetDescription,
+            location: {
+                lat: mapState.lat.toString(), 
+                lng: mapState.lng.toString(), 
+                address: mapState.address
+            }
+        }
+
+        dispatch(setMeet({
+                title: meetTitle, 
+                description: meetDescription, 
+                location: { lat: mapState.lat, lng: mapState.lng, address: mapState.address } 
+            })
+        );
+
+        meetingService.addMeeting(newMeeting);
     }
 
     const classes = useStyles();

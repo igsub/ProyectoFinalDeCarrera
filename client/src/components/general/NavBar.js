@@ -34,11 +34,9 @@ export default function NavBar() {
   const picture = user?.picture;
   const email = user?.email;
 
-  //console.log("LOCATION: ",window.location)
-
   useEffect(() => {
     if (user) {
-      userService.addUser({user_id: uuidv4(), name: user.name, email: user.email})
+      userService.addUser({name: user.name, email: user.email})
     }
   }, [user]);
 
@@ -51,7 +49,7 @@ export default function NavBar() {
   };
 
   const handleLogout = () => {
-    const path = (window.location.href).slice(0, -1);
+    const path = window.location.protocol + "//" + window.location.host
     console.log(path)
     logout({ returnTo: path })
   };
