@@ -23,7 +23,7 @@ const Meetcalendar = (props) => {
 
     const onDatePanelClick = (date) => {
         console.log("DATE PANEL CLICK: ", date)
-
+        setFocusedDate(date)
         // cuando se clickea una fecha se deben mostrar los rangos de horarios clickeados previamente
     };
 
@@ -32,22 +32,31 @@ const Meetcalendar = (props) => {
         if (array.length === 0){
             dispatch(setMeet({ ...meetState, datetimes: [] }));
         } else {
+            
+            const newDatetimesArray = _.clone(meetState.datetimes);
             array.forEach(dateitem => {
                 const formattedDate = formatDateObject(dateitem);
-                console.log(formattedDate)
                 const idx = _.findIndex(meetState.datetimes , (dt) => dt.date.localeCompare(formattedDate) === 0);
                 console.log("IDX: ",idx);
-                const newDatetimesArray = _.clone(meetState.datetimes);
 
                 if (idx === -1){
                     const newDatetimesObject = { date: formattedDate };
                     newDatetimesArray.push(newDatetimesObject)
-                    dispatch(setMeet({ ...meetState, datetimes: newDatetimesArray}));
                 }
-                else{
-                    dispatch(setMeet({ ...meetState, datetimes: newDatetimesArray.splice(idx, 1) }))
+
+            });
+
+            const finalDatetimesArray = []
+            newDatetimesArray.forEach(dateitem => {
+                const formattedDate = dateitem.date;
+                const idx = _.findIndex(array, dt => formatDateObject(dt).localeCompare(formattedDate) === 0);
+                if (idx !== -1) {
+                    finalDatetimesArray.push(dateitem)
                 }
             });
+
+            dispatch(setMeet({ ...meetState, datetimes: finalDatetimesArray}));
+
         }
     }
 
