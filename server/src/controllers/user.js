@@ -6,47 +6,44 @@ var userController = {
     
     login: (req, res) => {
         const email = req.body.email;
-        User.find({email: email}, (err, user) => {
-            if (err) return res.status(500).send("Error al buscar el usuario");
-
-            if (!user) {
-                this.signUp(req, res);
-            } else {
-                this.signIn(req, res);
-            }
-        });
-    },
-
-    signUp: async (req, res) => {
-        const {name, email} = req.body;
-        const user_id = crypto.randomBytes(16).toString("hex");
-        const meetings = [];
-        var newUser = new User({user_id, name, lastname, address, meetings, email});
-        await newUser.save((error, userStored) => {
-            if (error) return res.status(500).send({message: 'Error al guardar el usuario'});
-
-            if (!userStored) return res.status(404).send({message: 'No se ha podido guardar el usuario'});
-
-            const token = jwt.sign({_id: newUser._id}, 'secretkey');
+        User.findOne({'email': email}, (err, user) => {
             
-            return res.status(200).send({
-                token
-            });
-        });
-    },
+            if (err) {
+                return res.status(500).send("Error al buscar el usuario");
+            }
+            
+            if (!user) {
+                //SignUp
+                const {name, email} = req.body;
+                const user_id = crypto.randomBytes(16).toString("hex");
+                const meetings = [];
+                
+                var newUser = new User({user_id, name, meetings, email});
+                newUser.save((error, userStored) => {
+                    if (error) return res.status(500).send({message: 'Error al guardar el usuario'});
 
-    signIn: async (req, res) => {
-        //console.log(req.body);
-        
-        const { email } = req.body.email;
+                    if (!userStored) return res.status(404).send({message: 'No se ha podido guardar el usuario'});
 
-        const user = await User.findOne({email});
-        if (!user)
-            return res.status(400).send("No se encontro el mail");
-        
-        const token = jwt.sign({'_id': user._id}, 'secretkey');
-        return res.status(200).send({
-            token
+                    const token = jwt.sign({_id: newUser._id}, 'secretkey');
+                    
+                    return res.status(200).send({
+                        token
+                    });
+                });
+            
+            } else {
+                //SignIn
+                const { email } = req.body.email;
+
+                const user = User.findOne({email});
+                if (!user)
+                    return res.status(400).send("No se encontro el mail");
+                
+                const token = jwt.sign({'_id': user._id}, 'secretkey');
+                return res.status(200).send({
+                    token
+                });
+            }
         });
     },
     

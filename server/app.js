@@ -7,7 +7,6 @@ var app = express();
 
 //Archivos rutas
 var meeting_routes = require('./src/routes/meeting');
-var post_routes = require('./src/routes/post');
 var user_routes = require('./src/routes/user');
 
 //Middlewares
@@ -24,7 +23,6 @@ app.use((req, res, next) => {
 });
 
 //Rutas
-app.use('/posts', post_routes);
 app.use('/meeting', meeting_routes);
 app.use('/user', user_routes);
 
