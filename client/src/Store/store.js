@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import meetReducer from './meetSlice'
+import userReducer from './userSlice'
 
 const store = configureStore({
     reducer: { 
-        meet: meetReducer
+        meet: meetReducer,
+        user: userReducer
     }
 });
 

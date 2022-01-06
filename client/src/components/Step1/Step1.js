@@ -74,6 +74,7 @@ const Step1 = () => {
         }
 
         dispatch(setMeet({
+                ...meetState,
                 title: meetTitle, 
                 description: meetDescription, 
                 location: { lat: mapState.lat, lng: mapState.lng, address: mapState.address } 

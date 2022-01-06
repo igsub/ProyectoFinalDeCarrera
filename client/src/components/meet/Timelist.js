@@ -1,7 +1,15 @@
-import React, {useState} from 'react';
-import { List, ListItem, ListItemIcon, ListItemText, Checkbox } from '@material-ui/core';
+import React, {useEffect, useState} from 'react';
+import { List, ListItem, ListItemIcon, ListItemText, Checkbox, makeStyles } from '@material-ui/core';
 import TimeIcon from '@material-ui/icons/AccessTime';
 
+const useStyles = makeStyles(() => ({
+    selectedListItem: {
+        backgroundColor: "lightgrey"
+    },
+    listItem: {
+        backgroundColor: null
+    }
+}))
 // const times = [
 //     "00:00", "00:30", 
 //     "01:00", "01:30", 
@@ -48,34 +56,30 @@ const fourHourTime = [
     },
 ]
 
-const Timelist = () => {
+const Timelist = (props) => {
 
-    const [checked, setChecked] = useState([0]);
+    const { setSelectedTimes } = props;
+    const classes = useStyles();
+    const [checked, setChecked] = useState([]);
 
-    const handleToggle = (value) => () => {
-        const currentIndex = checked.indexOf(value);
-        const newChecked = [...checked];
-
-        if (currentIndex === -1) {
-            newChecked.push(value);
-        } else {
-            newChecked.splice(currentIndex, 1);
-        }
-
-        setChecked(newChecked);
+    const handleCheck = (value) => {
+        const idx = checked.indexOf(value);
+        const newValues = [...checked]
+        idx === -1? newValues.push(value) : newValues.splice(idx, 1);
+        setChecked(newValues);
+        setSelectedTimes(newValues);
     };
+
     return <List style={{maxHeight: 400, overflow: 'auto'}}>
         {fourHourTime.map(t => 
-            <ListItem key={t.start} button onClick={handleToggle(t)}>
+            <ListItem className={checked.indexOf(t) !== -1? classes.selectedListItem : classes.listItem} key={t.start} button onClick={() => handleCheck(t)}>
                     <ListItemIcon>
                         <Checkbox                         
                             edge="start"
                             checked={checked.indexOf(t) !== -1}
-                            tabIndex={-1}
                             disableRipple
                         />
-                    </ListItemIcon>
-                
+                    </ListItemIcon>               
                 <ListItemIcon>
                     <TimeIcon />
                 </ListItemIcon>

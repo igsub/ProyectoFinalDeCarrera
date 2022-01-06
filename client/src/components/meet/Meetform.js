@@ -1,5 +1,5 @@
 import {Switch, TextField, Typography, Button, Box} from '@material-ui/core'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import datetimesService from '../../services/datetimesService'
 import Meetcalendar from './Meetcalendar'
 import Timelist from './Timelist'
@@ -48,7 +48,12 @@ const Meetform = () => {
     const [weatherMatters, setWeatherMatters] = useState(false);
     const [datetime, setDatetime] = useState([]);
     const classes = useStyles();
-    const [selectedDateAndTimes, setSelectedDateAndTimes] = useState({});
+    const [selectedDate, setSelectedDate] = useState({});
+    const [selectedTimes, setSelectedTimes] = useState([]);
+
+    useEffect(() => {
+        
+    }, [ selectedDate ]);
 
     let data = {
         description: description,
@@ -58,13 +63,16 @@ const Meetform = () => {
     const handleDecriptionChange = (event) => {
         setDescription(event.target.value)
     };
+    
     const handleWeatherMatters = (event) => {
         setWeatherMatters(event.target.checked)
     }
+
     const handleSubmit = (event) => {
         event.preventDefault();
         //datetimesService.addNewDatetime({meetId: uuidv4(), userId: "da", start: 3, end:5, description: "ddescripcion larga"})
     }
+
     const displayDateTimes = () => {
         datetimesService.getAll().then(item => setDatetime(item.data))
     }
@@ -75,8 +83,8 @@ const Meetform = () => {
                     
                     <div></div>
                     <Box className={classes.calendar}>
-                        <Meetcalendar setSelectedDate={setSelectedDateAndTimes}/>
-                        <Timelist setSelectedTimes={setSelectedDateAndTimes}/>
+                        <Meetcalendar setSelectedDate={setSelectedDate}/>
+                        <Timelist setSelectedTimes={setSelectedTimes}/>
                     </Box>
                     <Box className={classes.switchWeather}>
                         <FormControlLabel control={<Switch defaultChecked checked={weatherMatters} />} label="Tener en cuenta el clima?" onClick={() => setWeatherMatters(!weatherMatters)}/>
