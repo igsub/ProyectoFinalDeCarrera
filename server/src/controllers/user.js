@@ -1,7 +1,54 @@
 const User = require('../models/user');
 const crypto = require("crypto");
+const jwt = require('jsonwebtoken');
 
 var userController = {
+    
+    login: (req, res) => {
+        const email = req.body.email;
+        User.find({email: email}, (err, user) => {
+            if (err) return res.status(500).send("Error al buscar el usuario");
+
+            if (!user) {
+                this.signUp(req, res);
+            } else {
+                this.signIn(req, res);
+            }
+        });
+    },
+
+    signUp: async (req, res) => {
+        const {name, email} = req.body;
+        const user_id = crypto.randomBytes(16).toString("hex");
+        const meetings = [];
+        var newUser = new User({user_id, name, lastname, address, meetings, email});
+        await newUser.save((error, userStored) => {
+            if (error) return res.status(500).send({message: 'Error al guardar el usuario'});
+
+            if (!userStored) return res.status(404).send({message: 'No se ha podido guardar el usuario'});
+
+            const token = jwt.sign({_id: newUser._id}, 'secretkey');
+            
+            return res.status(200).send({
+                token
+            });
+        });
+    },
+
+    signIn: async (req, res) => {
+        //console.log(req.body);
+        
+        const { email } = req.body.email;
+
+        const user = await User.findOne({email});
+        if (!user)
+            return res.status(400).send("No se encontro el mail");
+        
+        const token = jwt.sign({'_id': user._id}, 'secretkey');
+        return res.status(200).send({
+            token
+        });
+    },
     
     getUser: (req, res) => {
         var user_id = req.params.user_id;

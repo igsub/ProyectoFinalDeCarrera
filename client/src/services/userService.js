@@ -2,6 +2,16 @@ import axios from '../axios';
 
 const userService = {
 
+    login: async (data) => {
+        await axios.post('/user/login', data)
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    },
+    
     getUser: async (id) => {
         await axios.get('/user/getUser/' + id)
             .then(response => {

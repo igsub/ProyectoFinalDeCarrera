@@ -36,7 +36,7 @@ export default function NavBar() {
 
   useEffect(() => {
     if (user) {
-      userService.addUser({name: user.name, email: user.email})
+      userService.login({name: user.name, email: user.email})
     }
   }, [user]);
 
