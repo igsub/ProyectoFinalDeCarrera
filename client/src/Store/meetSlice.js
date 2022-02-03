@@ -5,7 +5,9 @@ const initialState = {
     weather: [],
     location: null,
     title: "",
-    description: ""
+    description: "",
+    currentDate: null,
+    currentTimes: [],
 };
 
 const meetSlice = createSlice({
@@ -18,6 +20,8 @@ const meetSlice = createSlice({
             state.weather = action.payload.weather ||  [];
             state.location = action.payload.location || null;
             state.description = action.payload.description || "";
+            state.currentDate = action.payload.currentDate || null;
+            state.currentTimes = action.payload.currentTimes || [];
         },
     }
 });

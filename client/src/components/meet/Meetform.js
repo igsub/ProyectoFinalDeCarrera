@@ -77,7 +77,6 @@ const Meetform = () => {
         datetimesService.getAll().then(item => setDatetime(item.data))
     }
 
-    console.log(data.description,data.weather)
     return <Box className={classes.root}>
                 <form onSubmit={handleSubmit} className={classes.form}>                  
                     

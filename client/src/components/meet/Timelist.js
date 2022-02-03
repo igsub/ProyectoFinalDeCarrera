@@ -1,6 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import { List, ListItem, ListItemIcon, ListItemText, Checkbox, makeStyles } from '@material-ui/core';
 import TimeIcon from '@material-ui/icons/AccessTime';
+import { useDispatch, useSelector } from "react-redux";
+import { setMeet } from '../../Store/meetSlice'
+import _ from 'lodash';
 
 const useStyles = makeStyles(() => ({
     selectedListItem: {
@@ -10,47 +13,25 @@ const useStyles = makeStyles(() => ({
         backgroundColor: null
     }
 }))
-// const times = [
-//     "00:00", "00:30", 
-//     "01:00", "01:30", 
-//     "02:00", "02:30", 
-//     "03:00", "03:30", 
-//     "04:00", "04:30", 
-//     "05:00", "05:30", 
-//     "06:00", "06:30", 
-//     "07:00", "07:30",
-//     "08:00", "08:30",
-//     "09:00", "09:30",
-//     "10:00", "10:30",
-//     "11:00", "11:30",
-//     "12:00", "12:30",
-//     "13:00", "13:30",
-//     "14:00", "14:30",
-//     "15:00", "15:30",
-//     "16:00", "16:30",
-//     "17:00", "17:30",
-//     "18:00", "18:30",
-//     "19:00", "19:30",
-//     "20:00", "20:30",
-//     "21:00", "21:30",
-//     "22:00", "22:30",
-//     "23:00", "23:30",
-// ]
 
 const fourHourTime = [
     {
-       start: "8:00",
-       end: "12:00", 
+        range: 1,
+        start: "8:00",
+        end: "12:00", 
     },
     {
+        range: 2,
         start: "12:00",
         end: "16:00"
     },
     {
+        range: 3,
         start: "16:00",
         end: "20:00"
     },
     {
+        range: 4,
         start: "20:00",
         end: "24:00"
     },
@@ -60,23 +41,30 @@ const Timelist = (props) => {
 
     const { setSelectedTimes } = props;
     const classes = useStyles();
-    const [checked, setChecked] = useState([]);
+    const dispatch = useDispatch();
+    const meetState = useSelector(state => state.meet);
 
     const handleCheck = (value) => {
-        const idx = checked.indexOf(value);
-        const newValues = [...checked]
+        const newValues = _.cloneDeep(meetState.currentTimes) || [];
+        const idx = _.findIndex(newValues, t => t.range === value.range);
+        
         idx === -1? newValues.push(value) : newValues.splice(idx, 1);
-        setChecked(newValues);
-        setSelectedTimes(newValues);
-    };
+        
+        const newDatetimes = _.cloneDeep(meetState.datetimes);
+        const datetimesIdx = _.findIndex(newDatetimes, dt => dt.date === meetState.currentDate);
+        newDatetimes[datetimesIdx].times = newValues;
 
+        setSelectedTimes(newValues);
+        dispatch(setMeet({ ...meetState, currentTimes: newValues, datetimes: newDatetimes }));
+    };
+    
     return <List style={{maxHeight: 400, overflow: 'auto'}}>
         {fourHourTime.map(t => 
-            <ListItem className={checked.indexOf(t) !== -1? classes.selectedListItem : classes.listItem} key={t.start} button onClick={() => handleCheck(t)}>
+            <ListItem className={meetState.currentTimes && _.findIndex(meetState.currentTimes, ct => ct.range === t.range) !== -1? classes.selectedListItem : classes.listItem} key={t.start} button onClick={() => handleCheck(t)} disabled={meetState.currentDate ? false : true}>
                     <ListItemIcon>
-                        <Checkbox                         
+                        <Checkbox
                             edge="start"
-                            checked={checked.indexOf(t) !== -1}
+                            checked={_.findIndex(meetState.currentTimes, ct => ct ? t.range === ct.range : -1 ) !== -1}
                             disableRipple
                         />
                     </ListItemIcon>               

@@ -3,13 +3,14 @@ import axios from '../axios';
 const userService = {
 
     login: async (data) => {
-        await axios.post('/user/login', data)
-            .then(response => {
-                console.log(response.data);
-            })
-            .catch(error => {
-                console.log(error);
-            });
+        return await axios.post('/user/login', data)
+            // .then(response => {
+            //     console.log(response.data);
+            //     dispatch(setUser({...userState, token: response.data.token}))
+            // })
+            // .catch(error => {
+            //     console.log(error);
+            // });
     },
     
     getUser: async (id) => {

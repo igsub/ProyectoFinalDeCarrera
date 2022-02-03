@@ -11,7 +11,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import LoginView from '../login/LoginView';
 import { Avatar } from '@material-ui/core';
-import { v4 as uuidv4 } from 'uuid';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUser } from '../../Store/userSlice'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,10 +27,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function NavBar() {
+  const dispatch = useDispatch();
+  const userState = useSelector(state => state.user)
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const {user, logout } = useAuth0();
+  const { user, logout } = useAuth0();
   const name = user?.name;
   const picture = user?.picture;
   const email = user?.email;
@@ -37,6 +40,8 @@ export default function NavBar() {
   useEffect(() => {
     if (user) {
       userService.login({name: user.name, email: user.email})
+        .then(response => dispatch(setUser({ ...userState, token: response.data?.token })))
+        .catch(error => console.log(error));
     }
   }, [user]);
 
