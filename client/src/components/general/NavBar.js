@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import React, { useEffect, useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
 import { useAuth0 } from "@auth0/auth0-react";
-import userService from '../../services/userService';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import LoginView from '../login/LoginView';
-import { Avatar } from '@material-ui/core';
-import { useSelector, useDispatch } from 'react-redux';
-import { setUser } from '../../Store/userSlice'
+import userService from "../../services/userService";
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
+import LoginView from "../login/LoginView";
+import { Avatar } from "@material-ui/core";
+import { useSelector, useDispatch } from "react-redux";
+import { setUser } from "../../Store/userSlice";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function NavBar() {
   const dispatch = useDispatch();
-  const userState = useSelector(state => state.user)
+  const userState = useSelector((state) => state.user);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -39,9 +39,12 @@ export default function NavBar() {
 
   useEffect(() => {
     if (user) {
-      userService.login({name: user.name, email: user.email})
-        .then(response => dispatch(setUser({ ...userState, token: response.data?.token })))
-        .catch(error => console.log(error));
+      userService
+        .login({ name: user.name, email: user.email })
+        .then((response) =>
+          dispatch(setUser({ ...userState, token: response.data?.token }))
+        )
+        .catch((error) => console.log(error));
     }
   }, [user]);
 
@@ -54,25 +57,28 @@ export default function NavBar() {
   };
 
   const handleLogout = () => {
-    const path = window.location.protocol + "//" + window.location.host
-    console.log(path)
-    logout({ returnTo: path })
+    const path = window.location.protocol + "//" + window.location.host;
+    console.log(path);
+    logout({ returnTo: path });
   };
 
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+          <IconButton
+            edge="start"
+            className={classes.menuButton}
+            color="inherit"
+            aria-label="menu"
+          >
             <MenuIcon />
-          
           </IconButton>
           <Typography variant="h6" className={classes.title}>
             MeetAPP
           </Typography>
-          {user? 
-          (
-            <div>             
+          {user ? (
+            <div>
               {name}
               <IconButton
                 aria-label="account of current user"
@@ -81,20 +87,20 @@ export default function NavBar() {
                 onClick={handleMenu}
                 color="inherit"
               >
-              <Avatar src={picture} />
+                <Avatar src={picture} />
               </IconButton>
-            
+
               <Menu
                 id="menu-appbar"
                 anchorEl={anchorEl}
                 anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
+                  vertical: "top",
+                  horizontal: "right",
                 }}
                 keepMounted
                 transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
+                  vertical: "top",
+                  horizontal: "right",
                 }}
                 open={open}
                 onClose={handleClose}
@@ -104,8 +110,9 @@ export default function NavBar() {
                 <MenuItem onClick={handleLogout}>Log out</MenuItem>
               </Menu>
             </div>
-          ): <LoginView />
-          }
+          ) : (
+            <LoginView />
+          )}
         </Toolbar>
       </AppBar>
     </div>
