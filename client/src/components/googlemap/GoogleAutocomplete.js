@@ -1,31 +1,32 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import parse from 'autosuggest-highlight/parse';
-import throttle from 'lodash/throttle';
+import * as React from "react";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import parse from "autosuggest-highlight/parse";
+import throttle from "lodash/throttle";
 
 const loadScript = (src, position, id) => {
   if (!position) {
     return;
   }
 
-  const script = document.createElement('script');
-  script.setAttribute('async', '');
-  script.setAttribute('id', id);
+  const script = document.createElement("script");
+  script.setAttribute("async", "");
+  script.setAttribute("id", id);
   script.src = src;
   position.appendChild(script);
-}
+};
 
 const autocompleteService = { current: null };
 
 const GoogleAutocomplete = (props) => {
-  let {mapState, setMapState, autocompleteState, setAutocompleteState} = props
+  let { mapState, setMapState, autocompleteState, setAutocompleteState } =
+    props;
   const [value, setValue] = React.useState(null);
-  const [inputValue, setInputValue] = React.useState('');
+  const [inputValue, setInputValue] = React.useState("");
   const [options, setOptions] = React.useState([]);
   const loaded = React.useRef(false);
 
@@ -46,7 +47,7 @@ const GoogleAutocomplete = (props) => {
       throttle((request, callback) => {
         autocompleteService.current.getPlacePredictions(request, callback);
       }, 200),
-    [],
+    []
   );
 
   React.useEffect(() => {
@@ -60,8 +61,11 @@ const GoogleAutocomplete = (props) => {
       return undefined;
     }
 
-    if (autocompleteState.inputValue === '') {
-      setAutocompleteState( as => ({...as, options: as.value ? [as.value] : []}));
+    if (autocompleteState.inputValue === "") {
+      setAutocompleteState((as) => ({
+        ...as,
+        options: as.value ? [as.value] : [],
+      }));
       return undefined;
     }
 
@@ -77,42 +81,47 @@ const GoogleAutocomplete = (props) => {
           newOptions = [...newOptions, ...results];
         }
 
-        setAutocompleteState( as => ({ ...as, options: newOptions}));
+        setAutocompleteState((as) => ({ ...as, options: newOptions }));
       }
     });
 
     return () => {
       active = false;
     };
-  }, [setAutocompleteState, autocompleteState.value, autocompleteState.inputValue, fetch]);
+  }, [
+    setAutocompleteState,
+    autocompleteState.value,
+    autocompleteState.inputValue,
+    fetch,
+  ]);
 
   const changeMapLocation = (placeId) => {
-    const geocoder = mapState.mapApi? new mapState.mapApi.Geocoder() : null;
+    const geocoder = mapState.mapApi ? new mapState.mapApi.Geocoder() : null;
     if (geocoder) {
-      geocoder.geocode({ 'placeId': placeId }).then(({results}) => {
+      geocoder.geocode({ placeId: placeId }).then(({ results }) => {
         if (results[0]) {
           const newLat = results[0].geometry.location.lat();
           const newLng = results[0].geometry.location.lng();
-          setMapState(prevState => (
-            {...prevState, 
-              address: results[0].formatted_address, 
-              lat: newLat,
-              lng: newLng,
-              center: [newLat, newLng]
-            }));
+          setMapState((prevState) => ({
+            ...prevState,
+            address: results[0].formatted_address,
+            lat: newLat,
+            lng: newLng,
+            center: [newLat, newLng],
+          }));
         } else {
-          window.alert('No se encontraron resultados');
+          window.alert("No se encontraron resultados");
         }
-      })
+      });
     }
-  }
+  };
 
   return (
     <Autocomplete
       id="google-map-demo"
       sx={{ width: "100%" }}
       getOptionLabel={(option) =>
-        typeof option === 'string' ? option : option.description
+        typeof option === "string" ? option : option.description
       }
       noOptionsText={"No hay opciones"}
       filterOptions={(x) => x}
@@ -122,23 +131,29 @@ const GoogleAutocomplete = (props) => {
       filterSelectedOptions
       value={autocompleteState.value}
       onChange={(event, newValue) => {
-        const newOptions = newValue ? [newValue, ...autocompleteState.options] : autocompleteState.options;
-        setAutocompleteState( as => ({...as, options: newOptions, value: newValue}));
-        if (newValue) 
-          changeMapLocation(newValue.place_id);
-        console.log(newValue)
+        const newOptions = newValue
+          ? [newValue, ...autocompleteState.options]
+          : autocompleteState.options;
+        setAutocompleteState((as) => ({
+          ...as,
+          options: newOptions,
+          value: newValue,
+        }));
+        if (newValue) changeMapLocation(newValue.place_id);
+        console.log(newValue);
       }}
       onInputChange={(event, newInputValue) => {
-        setAutocompleteState( as => ({ ...as, inputValue: newInputValue}));
+        setAutocompleteState((as) => ({ ...as, inputValue: newInputValue }));
       }}
       renderInput={(params) => (
         <TextField {...params} label="Ubicación" variant="standard" fullWidth />
       )}
       renderOption={(props, option) => {
-        const matches = option.structured_formatting.main_text_matched_substrings;
+        const matches =
+          option.structured_formatting.main_text_matched_substrings;
         const parts = parse(
           option.structured_formatting.main_text,
-          matches.map((match) => [match.offset, match.offset + match.length]),
+          matches.map((match) => [match.offset, match.offset + match.length])
         );
 
         return (
@@ -147,7 +162,7 @@ const GoogleAutocomplete = (props) => {
               <Grid item>
                 <Box
                   component={LocationOnIcon}
-                  sx={{ color: 'text.secondary', mr: 2 }}
+                  sx={{ color: "text.secondary", mr: 2 }}
                 />
               </Grid>
               <Grid item xs>
@@ -172,6 +187,6 @@ const GoogleAutocomplete = (props) => {
       }}
     />
   );
-}
+};
 
 export default GoogleAutocomplete;
