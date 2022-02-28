@@ -13,9 +13,9 @@ COPY ./package*.json ./
 RUN npm ci
 
 # Copy app source code
-COPY . .
+# COPY . .
 
 # Exports
 EXPOSE 5000
 
-CMD ["npm","start"]
+CMD ["npm","run","dev"]

@@ -10,7 +10,7 @@ COPY ./package.json ./
 RUN yarn install
 
 # copy local files to app folder
-COPY . .
+# COPY . .
 
 EXPOSE 3000
 
