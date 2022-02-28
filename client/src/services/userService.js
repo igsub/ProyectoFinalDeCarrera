@@ -61,6 +61,10 @@ const userService = {
             .catch(error => {
                 console.log(error);
             });
+    },
+
+    getToken: () => {
+        //gettoken
     }
 
 }
