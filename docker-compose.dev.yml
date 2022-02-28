@@ -5,8 +5,8 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
-    image: myapp-server
-    container_name: myapp-node-server
+    # image: myapp-server
+    container_name: meetapp-node-server
     command: /usr/src/app/node_modules/.bin/nodemon server.js
     volumes:
       - ./server/:/usr/src/app
@@ -33,12 +33,13 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
-    image: myapp-client
-    container_name: myapp-react-client
+    # image: myapp-client
+    container_name: meetapp-react-client
+    stdin_open: true
     command: yarn start
     volumes:
-      - ./client/:/usr/app
-      - /usr/app/node_modules
+      - ./client/:/usr/src/app
+      - /usr/src/app/node_modules
     depends_on:
       - server
     ports:
