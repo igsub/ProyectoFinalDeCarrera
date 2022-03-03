@@ -1,11 +1,12 @@
 import { Button, Box } from "@material-ui/core"
 import { useEffect, useState } from "react"
-import datetimesService from "../../services/datetimesService"
 import Meetcalendar from "./Meetcalendar"
 import Timelist from "./Timelist"
 import { makeStyles } from "@material-ui/core/styles"
 import { useSelector } from "react-redux"
 import WeatherCards from "./WeatherCards"
+import meetingService from "../../services/meetingService"
+import { useHistory } from "react-router-dom"
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -51,17 +52,24 @@ const Meetform = () => {
 	const classes = useStyles()
 	const [selectedDate, setSelectedDate] = useState({})
 	const meetState = useSelector((state) => state.meet)
+	const history = useHistory()
 
 	useEffect(() => {}, [selectedDate])
 
 	const handleSubmit = (event) => {
 		event.preventDefault()
-		//datetimesService.addNewDatetime({meetId: uuidv4(), userId: "da", start: 3, end:5, description: "ddescripcion larga"})
+		meetingService
+			.addMeeting(meetState)
+			.then((response) => {
+				const meetId = response.data.meeting._id
+				history.push(`/meet/${meetId}`)
+			})
+			.catch((error) => console.log(error))
 	}
 
 	return (
 		<Box className={classes.root}>
-			<form onSubmit={handleSubmit} className={classes.form}>
+			<Box className={classes.form}>
 				<div></div>
 				<Box className={classes.weatherCards}>{meetState.weather && meetState.weather.length > 0 ? <WeatherCards /> : null}</Box>
 				<Box className={classes.calendar}>
@@ -69,11 +77,11 @@ const Meetform = () => {
 					<Timelist />
 				</Box>
 				<Box className={classes.submitButton}>
-					<Button type='submit' variant='contained' color='primary'>
+					<Button variant='contained' color='primary' onClick={handleSubmit}>
 						Crear
 					</Button>
 				</Box>
-			</form>
+			</Box>
 		</Box>
 	)
 }

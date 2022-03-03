@@ -33,15 +33,18 @@ const WeatherCards = () => {
 	const classes = useStyles()
 
 	const formatDatatime = (d) => {
-		const date = moment(d, "YYYY-MM-DD hh:mm:ss").format("L")
+		const date = moment(d, "YYYY-MM-DD hh:mm:ss").format("LL")
 		const time = moment(d).hour() + " hs"
-		console.log(d)
 		return (
-			<Typography sx={{ fontSize: 14 }} color='text.secondary' gutterBottom>
-				{date}
+			<>
+				<Typography sx={{ fontSize: 14 }} color='text.secondary' gutterBottom>
+					{date}
+				</Typography>
 				<br />
-				{time}
-			</Typography>
+				<Typography sx={{ fontSize: 16, fontWeight: "bold" }} color='text.secondary' gutterBottom>
+					{time}
+				</Typography>
+			</>
 		)
 	}
 
