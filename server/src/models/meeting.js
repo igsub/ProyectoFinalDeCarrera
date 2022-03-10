@@ -1,7 +1,28 @@
 // datetimes.model.js
-const mongoose = require('mongoose');
+const mongoose = require("mongoose")
 
-//const Datetimes = require('./datetimes');
+const DateTimeWeather = new mongoose.Schema({
+	id: Number,
+	main: String,
+	description: String,
+	icon: String,
+});
+
+const WeatherObject = new mongoose.Schema({
+	main: {
+		temp: Number,
+		feels_like: Number,
+		temp_min: Number,
+		temp_max: Number,
+		pressure: Number,
+		sea_level: Number,
+		grnd_level: Number,
+		humidity: Number,
+		temp_kf: Number,
+	},
+	datetime: String,
+	weather: [DateTimeWeather],
+});
 
 const TimesSchema = new mongoose.Schema({
     range: Number, //1: 8-12 2: 12-16 3: 16-20 4: 20-24
@@ -26,7 +47,8 @@ const MeetingSchema = new mongoose.Schema({
         lng: String,
         address: String
     },
-    datetimes: [{type: mongoose.Schema.Types.ObjectId, ref: "Datetimes"}]
+    datetimes: [{type: mongoose.Schema.Types.ObjectId, ref: "Datetimes"}],
+	weather: [WeatherObject]
 });
 
 const meeting = mongoose.model("Meeting", MeetingSchema);

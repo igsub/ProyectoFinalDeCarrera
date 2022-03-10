@@ -54,6 +54,7 @@ var MeetingController = {
         meeting.title = params.title;
         meeting.location = params.location;
         meeting.datetimes = params.datetimes;
+        meeting.weather = params.weather
 
         meeting.save((error, meetingStored) => {
             if (error) return res.status(500).send({message: 'Error al guardar'});
@@ -161,4 +162,4 @@ var MeetingController = {
     }
 }
 
-module.exports = MeetingController;
+module.exports = MeetingController
