@@ -24,21 +24,40 @@ const WeatherObject = new mongoose.Schema({
 	weather: [DateTimeWeather],
 });
 
-const TimesSchema = new mongoose.Schema({
-    range: Number, //1: 8-12 2: 12-16 3: 16-20 4: 20-24
-    start: String,
-    end: String
-});
+// const DatetimesSchema = new mongoose.Schema({
+//     date: String, //AAAA/MM/DD
+//     times: [{type: mongoose.Schema.Types.ObjectId, ref: "Times"}],
+//     count: Number,
+//     meeting: {type: mongoose.Schema.Types.ObjectId, ref: "Meeting"}
+// });
 
-const DatetimesSchema = new mongoose.Schema({
-    date: String, //AAAA/MM/DD
-    times: [{type: mongoose.Schema.Types.ObjectId, ref: "Times"}],
-    count: Number,
-    meeting: {type: mongoose.Schema.Types.ObjectId, ref: "Meeting"}
-});
+const DatetimeSlots = new mongoose.Schema({
+    date: String,
+    timeslots: [
+        {
+            range: Number,
+            start: String,
+            end: String,
+        },
+    ],
+})
+
+const DatetimesByUserSchema = new mongoose.Schema({
+    email: {
+        type: String,
+        required: false,
+    },
+    userid: {
+        type: String,
+        required: false,
+    },
+    datetimes: {
+        type: [DatetimeSlots],
+        required: false,
+    },
+})
 
 const MeetingSchema = new mongoose.Schema({
-    meetId: String,
     title: String,
     ownerId: String,
     description: String,
@@ -47,12 +66,12 @@ const MeetingSchema = new mongoose.Schema({
         lng: String,
         address: String
     },
-    datetimes: [{type: mongoose.Schema.Types.ObjectId, ref: "Datetimes"}],
+    datetimesByUser: [DatetimesByUserSchema],
 	weather: [WeatherObject]
 });
 
 const meeting = mongoose.model("Meeting", MeetingSchema);
-const datetimes = mongoose.model("Datetimes", DatetimesSchema);
-const times = mongoose.model("Times", TimesSchema);
+//const datetimes = mongoose.model("DatetimesByUser", DatetimesByUserSchema);
+//const times = mongoose.model("DatetimeSlots", DatetimeSlotsSchema);
 
-module.exports = meeting, datetimes, times;
+module.exports = meeting;

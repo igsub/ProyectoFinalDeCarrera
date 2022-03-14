@@ -1,5 +1,4 @@
-const {Meeting, Datetimes} = require('../models/meeting'); // date times model
-const crypto = require("crypto");
+const Meeting = require('../models/meeting'); // date times model
 const jwt = require("jsonwebtoken");
 
 var MeetingController = {
@@ -48,12 +47,11 @@ var MeetingController = {
         var meeting = new Meeting();
 
         var params = req.body;
-        meeting.meetId = crypto.randomBytes(16).toString("hex");
         meeting.description = params.description;
         meeting.ownerId = params.ownerId;
         meeting.title = params.title;
         meeting.location = params.location;
-        meeting.datetimes = params.datetimes;
+        meeting.datetimesByUser = params.datetimesByUser;
         meeting.weather = params.weather
 
         meeting.save((error, meetingStored) => {
@@ -148,17 +146,54 @@ var MeetingController = {
         });
     },
 
+    //Probar bien
     getMostVoted: (req, res) => {
-        const meeting_id = req.body.meeting_id;
-        Datetimes.find({meeting: meeting_id}, (error, datetime) => {
-            if (error) return res.status(500).send({message: 'Error al encontrar al mas votado'});
+        const meeting_id = req.params.meeting_id;
+        try {
+            Meeting.findById(meeting_id, (error, meeting) => {
+                if (error) return res.status(500).send({message: 'Error al encontrar al meeting'});
 
-            if (!datetime) return res.status('No se encontro un mas votado');
-            
-            return res.status(200).send({
-                datetime
+                if (!datetime) return res.status('No se encontro un meeting');
+                
+                var datetimesByUser = meeting.datetimesByUser;
+
+                var votos = [];
+                
+                datetimesByUser.forEach(datetimeByUser => {
+                    
+                    var datetimes = datetimeByUser.datetimes;
+                    
+                    datetimes.forEach(datetime => {
+                        var index = votos.findIndex(votos_datetime => datetime && datetime.date == votos_datetime.date);
+                        if (index != -1) {
+                            //Aparece el date, recorrer los timeslots para ver si hay que sumar o agregar
+                            datetime.timeslots.forEach(ts => {
+                                var ts_index = votos[index].times_votes.findIndex(voto_timeslot => ts && ts.range == voto_timeslot.range);
+                                if (ts_index != -1) {
+                                    var new_count = votos[index].times_votes[ts_index].count;
+                                    new_count++;
+                                    votos[index].times_votes[ts_index].count = new_count;
+                                } else {
+                                    votos[index].times_votes.push({timeslot: ts, count: 1});
+                                }
+                            })
+                            
+                        } else {
+                            //for para recorrer timeslots y agregar todos al arreglo votos
+                            var times_votes = [];
+                            datetime.timeslots.forEach(ts => {
+                                times_votes.push({timeslot: ts, count: 1});
+                            })
+                            votos.push({date: datetime.date, times_votes: times_votes});
+                        }
+                    })
+
+                });
+                return res.status(200).send(votos);
             });
-        })
+        } catch (Error) {
+            console.log(Error);
+        }
     }
 }
 
