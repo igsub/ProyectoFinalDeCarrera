@@ -153,7 +153,7 @@ var MeetingController = {
             Meeting.findById(meeting_id, (error, meeting) => {
                 if (error) return res.status(500).send({message: 'Error al encontrar al meeting'});
 
-                if (!datetime) return res.status('No se encontro un meeting');
+                if (!meeting) return res.status('No se encontro un meeting');
                 
                 var datetimesByUser = meeting.datetimesByUser;
 
@@ -168,7 +168,7 @@ var MeetingController = {
                         if (index != -1) {
                             //Aparece el date, recorrer los timeslots para ver si hay que sumar o agregar
                             datetime.timeslots.forEach(ts => {
-                                var ts_index = votos[index].times_votes.findIndex(voto_timeslot => ts && ts.range == voto_timeslot.range);
+                                var ts_index = votos[index].times_votes.findIndex(voto_timeslot => ts && ts.range == voto_timeslot.timeslot.range);
                                 if (ts_index != -1) {
                                     var new_count = votos[index].times_votes[ts_index].count;
                                     new_count++;
