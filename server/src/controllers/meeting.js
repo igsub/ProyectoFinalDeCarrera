@@ -125,23 +125,22 @@ var MeetingController = {
         });
     },
 
-    voteDatetime: (req, res) => {
-        //Acomodar para que busque en los datetimes con el id del meeting
-        // const meeting_id = req.body.meeting_id;
-        // const datetime_id = req.body.datetime_id;
-        // Meeting.find({: meeting_id}), (error, meeting) => {
-        //     for (let datetime in meeting.datetimes) {
+    voteDatetimes: (req, res) => {
 
-        //     }
-        // }
+        var meeting_id = req.body.meeting_id;
+        var user_id = req.body.user_id;
+        var email = req.body.email;
+        var datetimes = req.body.datetimes;
 
-        Datetimes.findByIdAndUpdate({_id: datetime_id}, {$inc: {count: 1}}, (error, datetimeUpdated) => {
-            if (error) return res.status(500).send({message: 'Error al actualizar'});
+        var user_datetimes = {email, user_id, datetimes};
 
-            if (!datetimeUpdated) return res.status(404).send({message: 'No existe el datetime para actualizar'});
+        Meeting.findByIdAndUpdate({_id: meeting_id}, {$push: {datetimesByUser: user_datetimes}}, (error, meetingUpdated) => {
+            if (error) return res.status(500).send({message: 'Error al agregar los datetimes de un usuario a la meeting'});
+
+            if (!meetingUpdated) return res.status(400).send({message: 'No se pudo agregar el datetime del usuario al meeting'});
 
             return res.status(200).send({
-                datetime: datetimeUpdated
+                meeting: meetingUpdated
             });
         });
     },
