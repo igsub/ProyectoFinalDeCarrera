@@ -52,7 +52,8 @@ var MeetingController = {
         meeting.title = params.title;
         meeting.location = params.location;
         meeting.datetimesByUser = params.datetimesByUser;
-        meeting.weather = params.weather
+        meeting.weather = params.weather;
+        meeting.ownerEmail = params.ownerEmail;
 
         meeting.save((error, meetingStored) => {
             if (error) return res.status(500).send({message: 'Error al guardar'});

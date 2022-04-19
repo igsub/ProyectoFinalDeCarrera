@@ -1,8 +1,8 @@
-import Page from "../general/Page";
+import Page from "../General/Page";
 import Typography from "@material-ui/core/Typography";
 import { Link } from "react-router-dom";
 import { Button } from "@material-ui/core";
-import logo from "../../images/MeetApp-logos_black.png";
+import logo from "../../Images/MeetApp-logos_black.png";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({

@@ -1,5 +1,5 @@
 import "./App.css";
-import NavBar from "./components/general/NavBar";
+import NavBar from "./Components/General/NavBar";
 import { Auth0Provider } from "@auth0/auth0-react";
 import {
   createTheme,
