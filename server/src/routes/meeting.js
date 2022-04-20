@@ -17,6 +17,7 @@ router.delete('/deleteMeeting/:meetId', MeetingController.verifyToken, MeetingCo
 router.post('/addDatetime/', MeetingController.verifyToken, MeetingController.addDatetime);
 router.post('/voteDatetimes/', MeetingController.verifyToken, MeetingController.voteDatetimes);
 router.get('/getMostVoted/:meeting_id', MeetingController.verifyToken, MeetingController.getMostVoted);
+router.get('/decideDatetime/:meeting_id', MeetingController.decideDatetime);
 
 module.exports = router;
 

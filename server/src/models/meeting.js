@@ -60,12 +60,14 @@ const DatetimesByUserSchema = new mongoose.Schema({
 const MeetingSchema = new mongoose.Schema({
     title: String,
     ownerId: String,
+    ownerEmail: String,
     description: String,
     location: {
         lat: String,
         lng: String,
         address: String
     },
+    weatherMatters: Boolean,
     datetimesByUser: [DatetimesByUserSchema],
 	weather: [WeatherObject]
 });
