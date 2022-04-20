@@ -5,7 +5,7 @@ import Timelist from "./Timelist"
 import { makeStyles } from "@material-ui/core/styles"
 import { useSelector } from "react-redux"
 import WeatherCards from "./WeatherCards"
-import meetingService from "../../services/meetingService"
+import meetingService from "../../Services/meetingService"
 import { useHistory } from "react-router-dom"
 
 const useStyles = makeStyles((theme) => ({
@@ -52,14 +52,24 @@ const Meetform = () => {
 	const classes = useStyles()
 	const [selectedDate, setSelectedDate] = useState({})
 	const meetState = useSelector((state) => state.meet)
+	const userState = useSelector((state) => state.user)
 	const history = useHistory()
 
 	useEffect(() => {}, [selectedDate])
 
 	const handleSubmit = (event) => {
 		event.preventDefault()
+		console.log("FE DATETIMES:",meetState.datetimes)
+		const formattedDatetimes = meetState.datetimes.map(e => {return {date: e.date, timeslots: e.times}})
 		meetingService
-			.addMeeting(meetState)
+			.addMeeting({
+				title: meetState.title,
+				ownerEmail: userState.email,
+				description: meetState.description,
+				location: meetState.location,
+				weather: meetState.weather,
+				datetimesByUser: [{ email: userState.email, datetimes: formattedDatetimes }],
+			})
 			.then((response) => {
 				const meetId = response.data.meeting._id
 				history.push(`/meet/${meetId}`)

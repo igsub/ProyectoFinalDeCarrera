@@ -6,7 +6,7 @@ import Typography from "@material-ui/core/Typography"
 import IconButton from "@material-ui/core/IconButton"
 import MenuIcon from "@material-ui/icons/Menu"
 import { useAuth0 } from "@auth0/auth0-react"
-import userService from "../../services/userService"
+import userService from "../../Services/userService"
 import MenuItem from "@material-ui/core/MenuItem"
 import Menu from "@material-ui/core/Menu"
 import { Avatar } from "@material-ui/core"
@@ -42,6 +42,7 @@ export default function NavBar() {
 			userService
 				.login({ name: user.name, email: user.email })
 				.then((response) => {
+					localStorage.setItem("token", response.data?.token)
 					dispatch(
 						setUser({
 							...userState,

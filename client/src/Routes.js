@@ -1,9 +1,10 @@
 import { BrowserRouter, Route, Switch } from "react-router-dom"
-import Meetform from "./components/meet/Meetform"
-import Home from "./components/home/Home"
+import Meetform from "./Components/Meet/Meetform"
+import Home from "./Components/Home/Home"
 import PrivateRoute from "./PrivateRoute"
-import Step1 from "./components/Step1/Step1"
-import MeetStatus from "./components/meet/MeetStatus"
+import Step1 from "./Components/Step1/Step1"
+import MeetStatus from "./Components/Meet/MeetStatus"
+import Invited from "./Components/Meet/Invited"
 
 const Routes = () => {
 	return (
@@ -12,6 +13,9 @@ const Routes = () => {
 				<PrivateRoute path='/meetform'>
 					<Meetform />
 				</PrivateRoute>
+				<Route path={"/meetinvitation/:id?"}>
+					<Invited />
+				</Route>
 				<PrivateRoute path='/meet/:id?'>
 					<MeetStatus />
 				</PrivateRoute>

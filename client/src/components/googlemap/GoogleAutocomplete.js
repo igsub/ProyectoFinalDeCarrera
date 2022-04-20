@@ -29,16 +29,12 @@ const GoogleAutocomplete = (props) => {
 	const [options, setOptions] = React.useState([])
 	const loaded = React.useRef(false)
 
-	// if (typeof window !== 'undefined' && !loaded.current) {
-	//   if (!document.querySelector('#google-maps')) {
-	//     loadScript(
-	//       `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}&libraries=places`,
-	//       document.querySelector('head'),
-	//       'google-maps',
-	//     );
-	//   }
+	// if (typeof window !== "undefined" && !loaded.current) {
+	// 	if (!document.querySelector("#google-maps")) {
+	// 		loadScript(`https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}&libraries=places`, document.querySelector("head"), "google-maps")
+	// 	}
 
-	//   loaded.current = true;
+	// 	loaded.current = true
 	// }
 
 	const fetch = React.useMemo(
@@ -128,13 +124,10 @@ const GoogleAutocomplete = (props) => {
 					options: newOptions,
 					value: newValue,
 				}))
-				console.log("autocomplete change: ", newValue)
 				if (newValue) changeMapLocation(newValue.place_id)
-				console.log(newValue)
 			}}
 			onInputChange={(event, newInputValue) => {
 				setAutocompleteState((as) => ({ ...as, inputValue: newInputValue }))
-				console.log("autocomplete change: ", newInputValue)
 			}}
 			renderInput={(params) => <TextField {...params} label='Ubicación' variant='standard' fullWidth onChange={(e) => setAutocompleteState((as) => ({ ...as, value: e.target.value }))} />}
 			renderOption={(props, option) => {

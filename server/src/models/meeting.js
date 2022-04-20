@@ -62,6 +62,7 @@ const MeetingSchema = new mongoose.Schema({
     ownerId: String,
     ownerEmail: String,
     description: String,
+    ownerEmail: String,
     location: {
         lat: String,
         lng: String,

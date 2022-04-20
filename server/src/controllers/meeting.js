@@ -53,7 +53,8 @@ var MeetingController = {
         meeting.title = params.title;
         meeting.location = params.location;
         meeting.datetimesByUser = params.datetimesByUser;
-        meeting.weather = params.weather
+        meeting.weather = params.weather;
+        meeting.ownerEmail = params.ownerEmail;
 
         meeting.save((error, meetingStored) => {
             if (error) return res.status(500).send({message: 'Error al guardar'});
@@ -255,71 +256,7 @@ var MeetingController = {
         } catch (Error) {
             console.log(Error);
         }
-    },
-
-    //decideDatetime2: (req, res) => {
-        // const meeting_id = req.params.meeting_id;
-        
-        // Meeting.findById(meeting_id, (error, meeting) => {
-        //     if (error) return res.status(500).send({message: 'Error al encontrar al meeting'});
-
-        //     if (!meeting) return res.status('No se encontro un meeting');
-
-        //     if (!meeting.weatherMatters) {
-
-        //     }
-        // })
-        // const meeting_id = req.params.meeting_id;
-
-        // try {
-        //     Meeting.findById(meeting_id, (error, meeting) => {
-        //         if (error) return res.status(500).send({message: 'Error al encontrar al meeting'});
-
-        //         if (!meeting) return res.status('No se encontro un meeting');
-                
-        //         var datetimesByUser = meeting.datetimesByUser;
-
-        //         var votos = [];
-                
-        //         datetimesByUser.forEach(datetimeByUser => {
-                    
-        //             var datetimes = datetimeByUser.datetimes;
-                    
-        //             datetimes.forEach(datetime => {
-        //                 var index = votos.findIndex(votos_datetime => datetime && datetime.date == votos_datetime.date);
-        //                 if (index != -1) {
-        //                     //Aparece el date, recorrer los timeslots para ver si hay que sumar o agregar
-        //                     datetime.timeslots.forEach(ts => {
-        //                         var ts_index = votos[index].times_votes.findIndex(voto_timeslot => ts && ts.range == voto_timeslot.timeslot.range);
-        //                         if (ts_index != -1) {
-        //                             var new_count = votos[index].times_votes[ts_index].count;
-        //                             new_count++;
-        //                             votos[index].times_votes[ts_index].count = new_count;
-        //                         } else {
-        //                             //votos[index].times_votes.push({timeslot: ts, count: 1});
-
-        //                             votos.push({date: datetime.date, timeslot: ts, count: 1});
-        //                         }
-        //                     })
-                            
-        //                 } else {
-        //                     //for para recorrer timeslots y agregar todos al arreglo votos
-        //                     //var times_votes = [];
-        //                     datetime.timeslots.forEach(ts => {
-        //                         //times_votes.push({timeslot: ts, count: 1});
-        //                         votos.push({date: datetime.date, timeslot: ts, count: 1});
-        //                     })
-        //                     //votos.push({date: datetime.date, times_votes: times_votes});
-        //                 }
-        //             })
-
-        //         });
-        //         return res.status(200).send(votos);
-        //     });
-        // } catch (Error) {
-        //     console.log(Error);
-        // }
-    //}
+    }
 }
 
 module.exports = MeetingController
