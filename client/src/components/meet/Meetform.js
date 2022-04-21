@@ -59,7 +59,6 @@ const Meetform = () => {
 
 	const handleSubmit = (event) => {
 		event.preventDefault()
-		console.log("FE DATETIMES:",meetState.datetimes)
 		const formattedDatetimes = meetState.datetimes.map(e => {return {date: e.date, timeslots: e.times}})
 		meetingService
 			.addMeeting({

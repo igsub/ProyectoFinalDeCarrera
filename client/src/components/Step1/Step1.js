@@ -42,7 +42,6 @@ const Step1 = () => {
 	const meetState = useSelector((state) => state.meet)
 
 	const classes = useStyles()
-
 	const [meetDescription, setMeetDescription] = useState("")
 	const [meetTitle, setMeetTitle] = useState("")
 	const [weatherMatters, setWeatherMatters] = useState(false)
@@ -86,6 +85,7 @@ const Step1 = () => {
 					lon: mapState.lng.toString(),
 				})
 				.then((response) => {
+					console.log("response weather", response)
 					weatherValues = response.data.list.map((d) => {
 						let newDT = {
 							main: d.main,
@@ -95,22 +95,23 @@ const Step1 = () => {
 						return newDT
 					})
 					//newMeeting.weather = weatherValues
+					dispatch(
+						setMeet({
+							...meetState,
+							weather: weatherValues,
+							title: meetTitle,
+							description: meetDescription,
+							location: {
+								lat: mapState.lat,
+								lng: mapState.lng,
+								address: autocompleteState.inputValue,
+							},
+						})
+					)
 				})
 				.catch((e) => console.log(e))
 
-			dispatch(
-				setMeet({
-					...meetState,
-					weather: weatherValues,
-					title: meetTitle,
-					description: meetDescription,
-					location: {
-						lat: mapState.lat,
-						lng: mapState.lng,
-						address: autocompleteState.inputValue,
-					},
-				})
-			)
+			
 		} else {
 			dispatch(
 				setMeet({
@@ -128,6 +129,7 @@ const Step1 = () => {
 
 		//meetingService.addMeeting(newMeeting)
 	}
+
 	return (
 		<Page flexDirection='column' justifyContent='center' alignItems='center' alignContent='center'>
 			<Box sx={{ display: "flex", alignItems: "flex-end" }} className={classes.textfieldContainer}>
