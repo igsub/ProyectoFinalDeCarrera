@@ -8,7 +8,7 @@ import meetingService from "../../Services/meetingService"
 import { setMeet } from "../../Store/meetSlice"
 import Page from "../General/Page"
 import moment from "moment"
-import { Box, TextField, Grid } from "@material-ui/core"
+import { Box, TextField, Button } from "@material-ui/core"
 import { Email } from "@material-ui/icons"
 import { DriveEta } from "@material-ui/icons"
 import { useAuth0 } from "@auth0/auth0-react"
@@ -48,6 +48,8 @@ const Invited = () => {
 	const meetState = useSelector((state) => state.meet)
 	const userState = useSelector((state) => state.user)
 	const [selectedDates, setSelectedDates] = useState([])
+	const [invitedName, setInvitedName] = useState()
+	const [invitedEmail, setInvitedEmail] = useState()
 	const[data, setData] = useState([]);
 	const { isAuthenticated } = useAuth0()
 
@@ -67,7 +69,6 @@ const Invited = () => {
 			meetingService
 				.getMeeting(id)
 				.then((response) => {
-					console.log("getMeetingResponse: ", response)
 					dispatch(setMeet(response.data?.meeting))
 					const meet = response.data?.meeting
 					const idx = _.findIndex(meet.datetimesByUser, (dtByUser) => dtByUser.email === meet.ownerEmail)
@@ -80,6 +81,30 @@ const Invited = () => {
 		}
 	}, [id])
 
+	const submitVotes = () => {
+		let votes = []
+		_.forEach(selectedDates, (sd) => {
+			let currentValue = data[sd.index]
+			if (votes.length > 0 && _.findIndex(votes, v => v.date === currentValue.date) !== -1) {
+				let idx = _.findIndex(votes, v => v.date === currentValue.date)
+				votes[idx].timeslots.push({
+					range: currentValue.range,
+					start: currentValue.start,
+					end: currentValue.end
+				})
+			}
+			else {
+				const timeslots = [{
+					range: currentValue.range,
+					start: currentValue.start,
+					end: currentValue.end
+				}]
+				votes.push({date: currentValue.date, timeslots})
+			}
+		})
+		meetingService.voteDatetimes({meeting_id: id, email: invitedEmail, datetimes: votes})
+	}
+	
 	const columns = [
 		{
 			name: "date",
@@ -121,7 +146,7 @@ const Invited = () => {
 		filter: false,
 		viewColumns: false,
 		customToolbarSelect: () => null,
-		onRowSelectionChange: (currentRowSelected, allRowsSelected) => {
+		onRowSelectionChange: (currentRowSelected, allRowsSelected) => {			
 			setSelectedDates(allRowsSelected)
 		}
 	}
@@ -136,10 +161,10 @@ const Invited = () => {
 								variant='standard'
 								label='Email'
 								className={classes.textfield}
+								onChange={e => setInvitedEmail(e.target.value)}
 								InputProps={{
 									readOnly: false,
 								}}
-								focused
 							/>
 						</Box>
 						<Box sx={{ display: "flex", alignItems: "flex-end" }} className={classes.textfieldContainer}>
@@ -148,6 +173,7 @@ const Invited = () => {
 								variant='standard'
 								label='Nombre'
 								className={classes.textfield}
+								onChange={e => setInvitedName(e.target.value)}
 								InputProps={{
 									readOnly: false,
 								}}
@@ -183,6 +209,13 @@ const Invited = () => {
 					</>
 					}
 			<MUIDataTable title={"Días y horarios disponibles"} data={data} columns={columns} options={options} />
+			<Button
+				onClick={submitVotes}
+				variant="contained"
+				color="secondary"
+			>
+				Enviar Seleccionados
+			</Button>
 		</Page>
 	)
 }

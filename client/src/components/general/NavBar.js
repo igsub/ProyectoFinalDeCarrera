@@ -12,7 +12,7 @@ import Menu from "@material-ui/core/Menu"
 import { Avatar } from "@material-ui/core"
 import { useSelector, useDispatch } from "react-redux"
 import { setUser } from "../../Store/userSlice"
-import { Button } from "@material-ui/core"
+import { Button, Grid } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -24,6 +24,17 @@ const useStyles = makeStyles((theme) => ({
 	title: {
 		flexGrow: 1,
 	},
+	appbar: {
+		boxShadow: 'none', 
+	},
+	toolbar: {
+		display: "flex",
+		justifyContent: "end"
+	},
+	name: {
+		fontWeight: "600",
+		marginRight: "1rem",
+	}
 }))
 
 export default function NavBar() {
@@ -68,24 +79,17 @@ export default function NavBar() {
 
 	const handleLogout = () => {
 		const path = window.location.protocol + "//" + window.location.host
-		console.log(path)
 		logout({ returnTo: path })
 	}
 
 	return (
 		<div className={classes.root}>
-			<AppBar position='static'>
-				<Toolbar>
-					<IconButton edge='start' className={classes.menuButton} color='inherit' aria-label='menu'>
-						<MenuIcon />
-					</IconButton>
-					<Typography variant='h6' className={classes.title}>
-						MeetAPP
-					</Typography>
+			<AppBar position='static' color="transparent" className={classes.appbar}>
+				<Toolbar className={classes.toolbar}>
 					{user ? (
 						<div>
-							{name}
-							<IconButton aria-label='account of current user' aria-controls='menu-appbar' aria-haspopup='true' onClick={handleMenu} color='inherit'>
+							<IconButton className={classes.iconButton} aria-label='account of current user' aria-controls='menu-appbar' aria-haspopup='true' onClick={handleMenu} color='inherit'>
+								<Typography className={classes.name}>{name}</Typography>
 								<Avatar src={picture} />
 							</IconButton>
 
@@ -104,13 +108,11 @@ export default function NavBar() {
 								open={open}
 								onClose={handleClose}
 							>
-								<MenuItem onClick={handleClose}>Profile</MenuItem>
-								<MenuItem onClick={handleClose}>My account</MenuItem>
-								<MenuItem onClick={handleLogout}>Log out</MenuItem>
+								<MenuItem onClick={handleLogout}><Typography>Log out</Typography></MenuItem>
 							</Menu>
 						</div>
 					) : (
-						<Button onClick={loginWithRedirect}>Login</Button>
+						<Button color="secondary" variant="contained" onClick={loginWithRedirect}>Login</Button>
 					)}
 				</Toolbar>
 			</AppBar>

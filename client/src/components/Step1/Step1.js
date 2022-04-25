@@ -85,7 +85,6 @@ const Step1 = () => {
 					lon: mapState.lng.toString(),
 				})
 				.then((response) => {
-					console.log("response weather", response)
 					weatherValues = response.data.list.map((d) => {
 						let newDT = {
 							main: d.main,
@@ -99,6 +98,7 @@ const Step1 = () => {
 						setMeet({
 							...meetState,
 							weather: weatherValues,
+							weatherMatters: true,
 							title: meetTitle,
 							description: meetDescription,
 							location: {
@@ -117,6 +117,7 @@ const Step1 = () => {
 				setMeet({
 					...meetState,
 					title: meetTitle,
+					weatherMatters: false,
 					description: meetDescription,
 					location: {
 						lat: mapState.lat,

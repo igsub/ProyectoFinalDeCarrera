@@ -8,6 +8,10 @@ const meetingService = {
 	getMeeting: async (id) => {
 		return await axios.get("/meeting/getMeeting/" + id)
 	},
+
+	voteDatetimes: async (data) => {
+		return await axios.post("/meeting/voteDatetimes", data)
+	}
 }
 
 export default meetingService
