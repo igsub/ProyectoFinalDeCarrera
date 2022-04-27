@@ -55,6 +55,7 @@ var MeetingController = {
         meeting.datetimesByUser = params.datetimesByUser;
         meeting.weather = params.weather;
         meeting.ownerEmail = params.ownerEmail;
+        meeting.weatherMatters = params.weatherMatters;
 
         meeting.save((error, meetingStored) => {
             if (error) return res.status(500).send({message: 'Error al guardar'});
@@ -244,11 +245,59 @@ var MeetingController = {
                 //return res.status(200).send(votos);
                 var votos_formateados = [];
 
-                votos.forEach(datetime => {
-                    datetime.times_votes.forEach(time => {
-                        votos_formateados.push({date: datetime.date, timeslot: time.timeslot, count: time.count});
+                if (!weatherMatters) {
+                    
+                    votos.forEach(datetime => {
+                        datetime.times_votes.forEach(time => {
+                            votos_formateados.push({date: datetime.date, timeslot: time.timeslot, count: time.count});
+                        });
                     });
-                });
+                    
+                } else {
+                    
+                    var weatherArray = meeting.weather;
+                    
+                    //Recorre el arreglo con todos los votos por dia
+                    votos.forEach(datetime => {
+                        
+                        //Recorre cada dia por horario
+                        datetime.times_votes.forEach(time => {
+                            
+                            //Recorre el arreglo de climas
+                            weatherArray.forEach(weather => {
+                                
+                                var date = weather.datetime.split(" ")[0].replaceAll("-","/");
+                                var hour = weather.datetime.split(" ")[1].split(":")[0];
+
+                                //Chequea que para el clima haya un dia y horario votado
+                                if (datetime.date == date && time.timeslot.start.split(":")[0] <= hour && time.timeslot.end.split(":")[0] > hour) {
+                                    
+                                    var weatherCondition = weather.weather[0].main;
+                                    
+                                    //Busca si ya se agrego un elemento con este dia y horario
+                                    var index = votos_formateados.findIndex(element => element.date == datetime.date && element.timeslot.range == time.timeslot.range);
+                                    console.log(votos_formateados[index]);
+
+                                    //Chequea el estado del clima y que no haya un elemento con peor clima agregado
+                                    if (weatherCondition == "Clear" && votos_formateados[index] == undefined) { 
+                                        votos_formateados.push({date: datetime.date, timeslot: time.timeslot, count: time.count + 3});
+                                    } else if (weatherCondition == "Clouds") {
+                                        if (votos_formateados[index] == undefined) {
+                                            votos_formateados.push({date: datetime.date, timeslot: time.timeslot, count: time.count + 2});
+                                        } else if (votos_formateados[index].count > (time.count + 2)) {
+                                            votos_formateados.splice(index, 1, {date: datetime.date, timeslot: time.timeslot, count: time.count + 2});
+                                        }
+                                    } else if (votos_formateados[index] == undefined) {
+                                        votos_formateados.push({date: datetime.date, timeslot: time.timeslot, count: time.count + 1});
+                                    } else if (votos_formateados[index].count > (time.count + 1)) {
+                                        votos_formateados.splice(index, 1, {date: datetime.date, timeslot: time.timeslot, count: time.count + 1});
+                                    }
+                                }
+                            });
+                        });
+                    });
+                }
+                
                 votos_formateados.sort((datetime_a, datetime_b) => datetime_b.count - datetime_a.count);
 
                 return res.status(200).send(votos_formateados);
