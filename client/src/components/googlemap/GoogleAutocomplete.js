@@ -118,6 +118,7 @@ const GoogleAutocomplete = (props) => {
 			filterSelectedOptions
 			value={autocompleteState.value}
 			onChange={(event, newValue) => {
+				console.log("on change: ", event, newValue)
 				const newOptions = newValue ? [newValue, ...autocompleteState.options] : autocompleteState.options
 				setAutocompleteState((as) => ({
 					...as,
@@ -127,41 +128,49 @@ const GoogleAutocomplete = (props) => {
 				if (newValue) changeMapLocation(newValue.place_id)
 			}}
 			onInputChange={(event, newInputValue) => {
+				console.log("input change: ", event, newInputValue)
 				setAutocompleteState((as) => ({ ...as, inputValue: newInputValue }))
 			}}
 			renderInput={(params) => <TextField {...params} label='Ubicación' variant='standard' fullWidth onChange={(e) => setAutocompleteState((as) => ({ ...as, value: e.target.value }))} />}
 			renderOption={(props, option) => {
-				const matches = option.structured_formatting.main_text_matched_substrings
-				const parts = parse(
-					option.structured_formatting.main_text,
-					matches.map((match) => [match.offset, match.offset + match.length])
-				)
+				console.log("renderOption props", props)
+				console.log("renderOption option: ", option)
+				let parts = []
+				if (typeof option === 'object' && option != null) {
+					const matches = option.structured_formatting.main_text_matched_substrings
+					parts = parse(
+						option.structured_formatting.main_text,
+						matches.map((match) => [match.offset, match.offset + match.length])
+					)
+				
 
-				return (
-					<li {...props}>
-						<Grid container alignItems='center'>
-							<Grid item>
-								<Box component={LocationOnIcon} sx={{ color: "text.secondary", mr: 2 }} />
-							</Grid>
-							<Grid item xs>
-								{parts.map((part, index) => (
-									<span
-										key={index}
-										style={{
-											fontWeight: part.highlight ? 700 : 400,
-										}}
-									>
-										{part.text}
-									</span>
-								))}
+					return (
+						<li {...props}>
+							<Grid container alignItems='center'>
+								<Grid item>
+									<Box component={LocationOnIcon} sx={{ color: "text.secondary", mr: 2 }} />
+								</Grid>
+								<Grid item xs>
+									{parts.map((part, index) => (
+										<span
+											key={index}
+											style={{
+												fontWeight: part.highlight ? 700 : 400,
+											}}
+										>
+											{part.text}
+										</span>
+									))}
 
-								<Typography variant='body2' color='text.secondary'>
-									{option.structured_formatting.secondary_text}
-								</Typography>
+									<Typography variant='body2' color='text.secondary'>
+										{option.structured_formatting.secondary_text}
+									</Typography>
+								</Grid>
 							</Grid>
-						</Grid>
-					</li>
-				)
+						</li>
+					)
+				}
+				return null
 			}}
 		/>
 	)

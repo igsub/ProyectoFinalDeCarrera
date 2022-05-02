@@ -5,27 +5,30 @@ import PrivateRoute from "./PrivateRoute"
 import Step1 from "./Components/Step1/Step1"
 import MeetStatus from "./Components/Meet/MeetStatus"
 import Invited from "./Components/Meet/Invited"
+import Layout from "./Components/Layout/Layout"
 
 const Routes = () => {
 	return (
 		<BrowserRouter>
-			<Switch>
-				<PrivateRoute path='/meetform'>
-					<Meetform />
-				</PrivateRoute>
-				<Route path={"/meetinvitation/:id?"}>
-					<Invited />
-				</Route>
-				<PrivateRoute path='/meet/:id?'>
-					<MeetStatus />
-				</PrivateRoute>
-				<PrivateRoute path='/step1'>
-					<Step1 />
-				</PrivateRoute>
-				<Route path='/'>
-					<Home />
-				</Route>
-			</Switch>
+			<Layout>
+				<Switch>
+					<PrivateRoute path='/meetform'>
+						<Meetform />
+					</PrivateRoute>
+					<Route path={"/meetinvitation/:id?"}>
+						<Invited />
+					</Route>
+					<PrivateRoute path='/meet/:id?'>
+						<MeetStatus />
+					</PrivateRoute>
+					<PrivateRoute path='/step1'>
+						<Step1 />
+					</PrivateRoute>
+					<Route path='/'>
+						<Home />
+					</Route>
+				</Switch>
+			</Layout>
 		</BrowserRouter>
 	)
 }

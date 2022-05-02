@@ -1,18 +1,16 @@
-import React, { useEffect, useState } from "react"
-import { makeStyles } from "@material-ui/core/styles"
+import { useAuth0 } from "@auth0/auth0-react"
+import { Avatar, Button } from "@material-ui/core"
 import AppBar from "@material-ui/core/AppBar"
+import IconButton from "@material-ui/core/IconButton"
+import Menu from "@material-ui/core/Menu"
+import MenuItem from "@material-ui/core/MenuItem"
+import { makeStyles } from "@material-ui/core/styles"
 import Toolbar from "@material-ui/core/Toolbar"
 import Typography from "@material-ui/core/Typography"
-import IconButton from "@material-ui/core/IconButton"
-import MenuIcon from "@material-ui/icons/Menu"
-import { useAuth0 } from "@auth0/auth0-react"
+import React, { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
 import userService from "../../Services/userService"
-import MenuItem from "@material-ui/core/MenuItem"
-import Menu from "@material-ui/core/Menu"
-import { Avatar } from "@material-ui/core"
-import { useSelector, useDispatch } from "react-redux"
 import { setUser } from "../../Store/userSlice"
-import { Button, Grid } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -78,13 +76,14 @@ export default function NavBar() {
 	}
 
 	const handleLogout = () => {
+		localStorage.removeItem("token")
 		const path = window.location.protocol + "//" + window.location.host
 		logout({ returnTo: path })
 	}
 
 	return (
 		<div className={classes.root}>
-			<AppBar position='static' color="transparent" className={classes.appbar}>
+			<AppBar position='static' color="transparent" elevation={0} >
 				<Toolbar className={classes.toolbar}>
 					{user ? (
 						<div>

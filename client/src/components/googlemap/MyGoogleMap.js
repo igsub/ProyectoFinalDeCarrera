@@ -63,8 +63,6 @@ const MyGoogleMap = (props) => {
 					setAutocompleteState((prevState) => ({
 						...prevState,
 						value: results[0].formatted_address,
-						lat: lat,
-						lng: lng,
 					}))
 				} else {
 					window.alert("No se encontraron resultados")
@@ -149,12 +147,6 @@ const MyGoogleMap = (props) => {
 			>
 				<Marker text={mapState.address} lat={mapState.lat} lng={mapState.lng} />
 			</GoogleMapReact>
-
-			{/* <div className="info-wrapper">
-            <div className="map-details">Latitude: <span>{mapState.lat}</span>, Longitude: <span>{mapState.lng}</span></div>
-            <div className="map-details">Zoom: <span>{mapState.zoom}</span></div>
-            <div className="map-details">Address: <span>{mapState.address}</span></div>
-        </div> */}
 		</>
 	)
 }

@@ -1,12 +1,8 @@
-import "./App.css";
-import NavBar from "./Components/General/NavBar";
 import { Auth0Provider } from "@auth0/auth0-react";
 import {
-  createTheme,
-  ThemeProvider,
-  CssBaseline,
-  Box,
+  createTheme, CssBaseline, ThemeProvider
 } from "@material-ui/core";
+import "./App.css";
 import Routes from "./Routes";
 
 function App() {
@@ -23,10 +19,7 @@ function App() {
     >
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Box>
-          <NavBar />
-          <Routes />
-        </Box>
+        <Routes />
       </ThemeProvider>
     </Auth0Provider>
   );

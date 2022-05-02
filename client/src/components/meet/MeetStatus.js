@@ -13,6 +13,7 @@ import MUIDataTable from "mui-datatables"
 import _, { forEach } from "lodash"
 import moment from "moment"
 import DisplayMeetData from "./DisplayMeetData"
+import InvitationLinkButton from "./InvitationLinkButton"
 
 const useStyles = makeStyles((theme) => ({
 	root: {},
@@ -20,24 +21,14 @@ const useStyles = makeStyles((theme) => ({
 		margin: "0.4rem",
 		width: "50%",
 	},
+	table: {
+		margin: "1rem"
+	},
 	textfield: {
 		width: "100%",
 	},
 	button: {
 		margin: "1rem",
-	},
-	map: {
-		height: "60vh",
-		width: "50%",
-		margin: "10px 50px",
-		filter: "drop-shadow(-1px 5px 3px #ccc)",
-	},
-	switchWeather: {
-		justifyContent: "start",
-	},
-	calendar: {
-		display: "flex",
-		flexDirection: "row",
 	},
 }))
 
@@ -126,7 +117,8 @@ const MeetStatus = () => {
 		<>
 			<Page flexDirection='column' justifyContent='center' alignItems='center' alignContent='center'>
 				<DisplayMeetData title={meetState.title} description={meetState.description} location={meetState.location} />
-				<MUIDataTable title={"Días y horarios disponibles"} data={data} columns={columns} options={options} />
+				<MUIDataTable title={"Días y horarios disponibles"} data={data} columns={columns} options={options} className={classes.table}/>
+				<InvitationLinkButton path={`${window.location.protocol}//${window.location.host}/meetinvitation/${id}`} className={classes.button}/>
 			</Page>
 		</>
 	)

@@ -7,10 +7,11 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   logo: {
-    maxWidth: "50rem",
-    marginTop: "-15rem",
-    marginBottom: "-15rem",
+    maxWidth: "50vw",
   },
+  title: {
+    fontSize: "3vw"
+  }
 }));
 
 const Home = () => {
@@ -24,7 +25,7 @@ const Home = () => {
       alignContent="center"
     >
       <img src={logo} className={classes.logo} />
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom className={classes.title}>
         Crea tu reunión fácilmente
       </Typography>
       <Button
