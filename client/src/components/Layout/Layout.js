@@ -5,9 +5,10 @@ import Footer from './Footer'
 
 const useStyles = makeStyles({
     page: {
-        background: "#ffe1e100",
+        background: "linear-gradient(180deg, rgba(232,232,232,0.4318102240896359) 40%, rgba(240,98,146,0.3054516806722689) 100%)",
         width: "100%",
-        height: "100vh"
+        height: "100vh",
+        overflowY: "scroll"
     }
 })
 

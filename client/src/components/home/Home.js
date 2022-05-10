@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@material-ui/core";
 import logo from "../../Images/MeetApp-logos_black.png";
 import { makeStyles } from "@material-ui/core/styles";
+import { useAuth0 } from "@auth0/auth0-react"
 
 const useStyles = makeStyles((theme) => ({
   logo: {
@@ -16,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Home = () => {
   const classes = useStyles();
+	const { isAuthenticated } = useAuth0()
 
   return (
     <Page
@@ -24,18 +26,20 @@ const Home = () => {
       alignItems="center"
       alignContent="center"
     >
-      <img src={logo} className={classes.logo} />
+      <img alt="" src={logo} className={classes.logo} />
       <Typography variant="h4" gutterBottom className={classes.title}>
-        Crea tu reunión fácilmente
+        Create your meeting easily!
       </Typography>
-      <Button
-        component={Link}
-        to="/step1"
-        variant="contained"
-        color="secondary"
-      >
-        Nueva Reunión
-      </Button>
+      {isAuthenticated? 
+        <Button
+          component={Link}
+          to="/step1"
+          variant="contained"
+          color="secondary"
+        >
+          New Meeting
+        </Button>
+      : <Typography variant="h6">Log in to create a new meeting</Typography>}
     </Page>
   );
 };

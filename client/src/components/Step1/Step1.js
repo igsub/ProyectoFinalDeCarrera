@@ -157,7 +157,7 @@ const Step1 = () => {
 					disabled={!autocompleteState.value}
 				/>
 			</Box>
-			<Button onClick={onClick} component={Link} to='/meetform' type='submit' variant='contained' color='primary' disabled={!meetTitle} className={classes.button}>
+			<Button onClick={onClick} component={Link} to='/meetform' type='submit' variant='contained' color='secondary' disabled={!meetTitle} className={classes.button}>
 				Siguiente
 			</Button>
 		</Page>

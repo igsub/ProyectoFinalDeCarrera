@@ -86,7 +86,7 @@ const Meetform = () => {
 					<Timelist />
 				</Box>
 				<Box className={classes.submitButton}>
-					<Button variant='contained' color='primary' onClick={handleSubmit}>
+					<Button variant='contained' color='secondary' onClick={handleSubmit}>
 						Crear
 					</Button>
 				</Box>

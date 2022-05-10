@@ -4,9 +4,11 @@ import { Link } from 'react-router-dom'
 
 const useStyles = makeStyles({
     root: {
-        position: "fixed",
-        bottom: 0,
-        padding: "1rem"
+        padding: "1rem",
+        left:0,
+        bottom:0,
+        right:0,
+        position: "fixed"
     },
     link: {
         color: "#f50057"
@@ -17,8 +19,8 @@ const Footer = () => {
     const classes = useStyles()
     return (
         <div className={classes.root}>
-            <Typography variant='subtitle2'><Link className={classes.link} to={ {pathname: "https://github.com/igsub/ProyectoFinalDeCarrera"}} target="_blank">Pagina</Link> creada con fines educativos</Typography>
-            <Typography variant='caption'>Dimatz Juan y Suburu Ignacio</Typography>
+            <Typography variant='subtitle2'><Link className={classes.link} to={ {pathname: "https://github.com/igsub/ProyectoFinalDeCarrera"}} target="_blank">Page</Link> created by</Typography>
+            <Typography variant='caption'>Dimatz Juan and Suburu Ignacio</Typography>
         </div>
     )
 }

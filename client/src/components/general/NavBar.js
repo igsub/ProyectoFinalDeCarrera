@@ -1,5 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react"
-import { Avatar, Button } from "@material-ui/core"
+import { Avatar, Box, Button, Grid } from "@material-ui/core"
 import AppBar from "@material-ui/core/AppBar"
 import IconButton from "@material-ui/core/IconButton"
 import Menu from "@material-ui/core/Menu"
@@ -11,13 +11,12 @@ import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import userService from "../../Services/userService"
 import { setUser } from "../../Store/userSlice"
+import logo from "../../Images/MeetApp-logos_black.png";
+import { useHistory } from "react-router-dom"
 
 const useStyles = makeStyles((theme) => ({
 	root: {
 		flexGrow: 1,
-	},
-	menuButton: {
-		marginRight: theme.spacing(2),
 	},
 	title: {
 		flexGrow: 1,
@@ -26,12 +25,22 @@ const useStyles = makeStyles((theme) => ({
 		boxShadow: 'none', 
 	},
 	toolbar: {
-		display: "flex",
-		justifyContent: "end"
+		display: "flex"
 	},
 	name: {
 		fontWeight: "600",
 		marginRight: "1rem",
+	},
+	logo: {
+		maxWidth: "15rem",
+		width:"30vw",
+		padding: theme.spacing(2),
+	},
+	iconButton: {
+		fontSize: "min(3vw, 20px)"
+	},
+	userContainer: {
+		padding: "1rem"
 	}
 }))
 
@@ -45,6 +54,8 @@ export default function NavBar() {
 	const { user, logout } = useAuth0()
 	const name = user?.name
 	const picture = user?.picture
+	const history = useHistory()
+	const [isHomePage, setIsHomePage] = useState(history.location.pathname === '/')
 
 	useEffect(() => {
 		if (user) {
@@ -67,6 +78,12 @@ export default function NavBar() {
 		}
 	}, [user])
 
+	useEffect(() => {
+		return history.listen((location) => { 
+			setIsHomePage(location.pathname === "/")
+		 }) 
+	},[history])
+
 	const handleMenu = (event) => {
 		setAnchorEl(event.currentTarget)
 	}
@@ -82,39 +99,50 @@ export default function NavBar() {
 	}
 
 	return (
-		<div className={classes.root}>
+		<Box className={classes.root}>
 			<AppBar position='static' color="transparent" elevation={0} >
-				<Toolbar className={classes.toolbar}>
-					{user ? (
-						<div>
-							<IconButton className={classes.iconButton} aria-label='account of current user' aria-controls='menu-appbar' aria-haspopup='true' onClick={handleMenu} color='inherit'>
-								<Typography className={classes.name}>{name}</Typography>
-								<Avatar src={picture} />
-							</IconButton>
+				<Toolbar >
+					<Grid container justifyContent="space-between">
+						<Grid item >
+							{!isHomePage ?
+							<img alt="meet-app" src={logo} className={classes.logo} />
+							: null}		
+						</Grid>
+						<Grid item>
+							<div className={classes.userContainer}>
+							{user ? (
+								<>
+									<IconButton className={classes.iconButton} aria-label='account of current user' aria-controls='menu-appbar' aria-haspopup='true' onClick={handleMenu} color='inherit'>
+										<Typography className={classes.name}>{name}</Typography>
+										<Avatar src={picture} />
+									</IconButton>
 
-							<Menu
-								id='menu-appbar'
-								anchorEl={anchorEl}
-								anchorOrigin={{
-									vertical: "top",
-									horizontal: "right",
-								}}
-								keepMounted
-								transformOrigin={{
-									vertical: "top",
-									horizontal: "right",
-								}}
-								open={open}
-								onClose={handleClose}
-							>
-								<MenuItem onClick={handleLogout}><Typography>Log out</Typography></MenuItem>
-							</Menu>
-						</div>
-					) : (
-						<Button color="secondary" variant="contained" onClick={loginWithRedirect}>Login</Button>
-					)}
+									<Menu
+										id='menu-appbar'
+										anchorEl={anchorEl}
+										anchorOrigin={{
+											vertical: "top",
+											horizontal: "right",
+										}}
+										keepMounted
+										transformOrigin={{
+											vertical: "top",
+											horizontal: "right",
+										}}
+										open={open}
+										onClose={handleClose}
+									>
+										<MenuItem onClick={handleLogout}><Typography>Log out</Typography></MenuItem>
+									</Menu>
+								</>
+							) : (
+								<Button color="secondary" variant="contained" onClick={loginWithRedirect}>Log in</Button>
+							)}
+							</div>
+						</Grid>
+					</Grid>
 				</Toolbar>
 			</AppBar>
-		</div>
+		</Box>
 	)
 }
