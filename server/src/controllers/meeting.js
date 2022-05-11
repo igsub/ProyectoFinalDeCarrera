@@ -226,10 +226,10 @@ var MeetingController = {
                             if (index == -1) {
                                 
                                 if (weatherMatters) {
-                                    var index_clima = meeting.weather.findIndex(weather => weather.datetime.split(" ")[0].replaceAll("-","/") == datetime.date && weather.datetime.split(" ")[1].split(":")[0] <= timeslot.end.split(":")[0] && weather.datetime.split(" ")[1].split(":")[0] >= timeslot.start.split(":")[0]);
+                                    var index_clima = meeting.weather.findIndex(weather => weather.datetime.split(" ")[0].replaceAll("-","/") == datetime.date && parseInt(weather.datetime.split(" ")[1].split(":")[0]) <= parseInt(timeslot.end.split(":")[0]) && parseInt(weather.datetime.split(" ")[1].split(":")[0]) >= parseInt(timeslot.start.split(":")[0]));
                                     var weatherCondition = meeting.weather[index_clima].weather[0].main;
 
-                                    var index_clima_2 = meeting.weather.reverse().findIndex(weather => weather.datetime.split(" ")[0].replaceAll("-","/") == datetime.date && weather.datetime.split(" ")[1].split(":")[0] <= timeslot.end.split(":")[0] && weather.datetime.split(" ")[1].split(":")[0] >= timeslot.start.split(":")[0]);
+                                    var index_clima_2 = meeting.weather.reverse().findIndex(weather => weather.datetime.split(" ")[0].replaceAll("-","/") == datetime.date && parseInt(weather.datetime.split(" ")[1].split(":")[0]) <= parseInt(timeslot.end.split(":")[0]) && parseInt(weather.datetime.split(" ")[1].split(":")[0]) >= parseInt(timeslot.start.split(":")[0]));
                                     var weatherCondition2 = meeting.weather[index_clima_2].weather[0].main; 
 
                                     var valores_climas = {
@@ -256,6 +256,8 @@ var MeetingController = {
                         });
                     });
                 });
+
+                votos.sort((datetime_a, datetime_b) => datetime_b.count - datetime_a.count);
 
                 return res.status(200).send(votos);
             });
