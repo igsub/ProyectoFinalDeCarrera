@@ -7,12 +7,14 @@ import _ from "lodash";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { setMeet } from "../../Store/meetSlice";
+import { useTheme } from "@material-ui/core/styles";
 
 const Meetcalendar = (props) => {
   const dispatch = useDispatch();
   const meetState = useSelector((state) => state.meet);
   const [focusedDate, setFocusedDate] = useState();
   const [datesArray, setDatesArray] = useState([]);
+  const theme = useTheme()
 
   useEffect(() => {
     const formattedFocusedDate = formatDateObject(focusedDate);
@@ -79,7 +81,7 @@ const Meetcalendar = (props) => {
 
         if (!isSameDate(date, focusedDate)) return;
 
-        props.style = { backgroundColor: "#04c104" };
+        props.style = { backgroundColor: theme.palette.secondary.main };
 
         return props;
       }}
@@ -89,7 +91,7 @@ const Meetcalendar = (props) => {
         <DatePickerHeader
           position="top"
           size="small"
-          style={{ backgroundColor: "steelblue" }}
+          style={{ backgroundColor: theme.palette.secondary.dark }}
         />,
       ]}
     />

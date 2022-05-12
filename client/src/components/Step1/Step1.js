@@ -151,7 +151,7 @@ const Step1 = () => {
 			<Box sx={{ display: "flex", alignItems: "flex-end" }}>
 				<FormControlLabel
 					className={classes.switchWeather}
-					control={<Switch defaultChecked checked={weatherMatters} />}
+					control={<Switch checked={weatherMatters} />}
 					label='Tener en cuenta el clima?'
 					onClick={() => setWeatherMatters(!weatherMatters)}
 					disabled={!autocompleteState.value}
