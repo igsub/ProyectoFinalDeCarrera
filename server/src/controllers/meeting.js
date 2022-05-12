@@ -1,5 +1,6 @@
 const Meeting = require('../models/meeting'); // date times model
 const jwt = require("jsonwebtoken");
+const nodemailer = require('nodemailer');
 
 var MeetingController = {
     
@@ -140,7 +141,7 @@ var MeetingController = {
         Meeting.findByIdAndUpdate({_id: meeting_id}, {$push: {datetimesByUser: user_datetimes}}, (error, meetingUpdated) => {
             if (error) return res.status(500).send({message: 'Error al agregar los datetimes de un usuario a la meeting'});
 
-            if (!meetingUpdated) return res.status(400).send({message: 'No se pudo agregar el datetime del usuario al meeting'});
+            if (!meetingUpdated) return res.status(404).send({message: 'No se pudo agregar el datetime del usuario al meeting'});
 
             return res.status(200).send({
                 meeting: meetingUpdated
@@ -155,7 +156,7 @@ var MeetingController = {
             Meeting.findById(meeting_id, (error, meeting) => {
                 if (error) return res.status(500).send({message: 'Error al encontrar al meeting'});
 
-                if (!meeting) return res.status('No se encontro un meeting');
+                if (!meeting) return res.status(404).send('No se encontro un meeting');
                 
                 var datetimesByUser = meeting.datetimesByUser;
 
@@ -209,7 +210,7 @@ var MeetingController = {
             Meeting.findById(meeting_id, (error, meeting) => {
                 if (error) return res.status(500).send({message: 'Error al encontrar al meeting'});
     
-                if (!meeting) return res.status('No se encontro un meeting');
+                if (!meeting) return res.status(404).send('No se encontro un meeting');
                 
                 var datetimesByUser = meeting.datetimesByUser;
     
@@ -264,6 +265,51 @@ var MeetingController = {
         } catch (Error) {
             console.log(Error);
         }
+    },
+
+    sendEmails: (req, res) => {
+        const meeting_id = req.params.meeting_id;
+        const users = [];
+
+        Meeting.findById(meeting_id, (error, meeting) => {
+            if (error) return res.status(500).send({message: 'Error al encontrar al meeting'});
+    
+            if (!meeting) return res.status(404).send('No se encontro un meeting');
+                
+            var datetimesByUser = meeting.datetimesByUser;
+
+            datetimesByUser.forEach(datetimeByUser => {
+                users.push(datetimeByUser.email);
+            });
+
+            console.log(users);
+
+            //Cambiar los datos por una cuenta real
+            const transporter = nodemailer.createTransport({
+                host: 'smtp.gmail.com',
+                port: 465,
+                secure: true,
+                auth: {
+                    user: 'meetappok@gmail.com',
+                    pass: 'vwhoipyqkbnvyamo'
+                }
+            });
+
+            const mailOptions = {
+                from: 'Meet App',
+                to: users,
+                subject: 'Probando Mail lista usuarios',
+                text: 'Probando'
+            };
+
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                return res.status(500).send(error.message);
+                } else {
+                return res.status(200).send('Email sent: ' + info.response);
+                }
+            });
+        });
     }
 }
 

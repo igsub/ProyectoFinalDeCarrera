@@ -18,5 +18,6 @@ router.post('/addDatetime/', MeetingController.verifyToken, MeetingController.ad
 router.post('/voteDatetimes/', MeetingController.voteDatetimes);
 router.get('/getMostVoted/:meeting_id', MeetingController.verifyToken, MeetingController.getMostVoted);
 router.get('/decideDatetime/:meeting_id', MeetingController.decideDatetime);
+router.post('/sendEmails/:meeting_id', MeetingController.sendEmails);
 
 module.exports = router
