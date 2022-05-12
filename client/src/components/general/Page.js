@@ -8,6 +8,7 @@ const Page = (props) => {
       justifyContent: `${props.justifyContent}`,
       alignItems: `${props.alignItems}`,
       alignContent: `${props.alignContent}`,
+      marginBottom: "2rem"
     },
   }));
 

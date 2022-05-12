@@ -8,7 +8,8 @@ const useStyles = makeStyles({
         left:0,
         bottom:0,
         right:0,
-        position: "fixed"
+        position: "fixed",
+        width: "20%"
     },
     link: {
         color: "#f50057"

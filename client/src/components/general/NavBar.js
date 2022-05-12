@@ -13,6 +13,7 @@ import userService from "../../Services/userService"
 import { setUser } from "../../Store/userSlice"
 import logo from "../../Images/MeetApp-logos_black.png";
 import { useHistory } from "react-router-dom"
+import CircularProgress from "@material-ui/core/CircularProgress"
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -45,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export default function NavBar() {
-	const { loginWithRedirect } = useAuth0()
+	const { loginWithRedirect, isLoading, isAuthenticated } = useAuth0()
 	const dispatch = useDispatch()
 	const userState = useSelector((state) => state.user)
 	const classes = useStyles()
@@ -98,13 +99,18 @@ export default function NavBar() {
 		logout({ returnTo: path })
 	}
 
+	const handleLogIn = () => {
+		localStorage.setItem("callbackURL", window.location.pathname)
+		loginWithRedirect()
+	}
+
 	return (
 		<Box className={classes.root}>
 			<AppBar position='static' color="transparent" elevation={0} >
 				<Toolbar >
 					<Grid container justifyContent="space-between">
 						<Grid item >
-							{!isHomePage ?
+							{!isHomePage && isAuthenticated?
 							<img alt="meet-app" src={logo} className={classes.logo} />
 							: null}		
 						</Grid>
@@ -135,9 +141,11 @@ export default function NavBar() {
 										<MenuItem onClick={handleLogout}><Typography>Log out</Typography></MenuItem>
 									</Menu>
 								</>
-							) : (
-								<Button color="secondary" variant="contained" onClick={loginWithRedirect}>Log in</Button>
-							)}
+							) : 
+								isLoading ? 
+								<CircularProgress color="secondary" />
+								: <Button color="secondary" variant="contained" onClick={handleLogIn}>Log in</Button>
+							}
 							</div>
 						</Grid>
 					</Grid>

@@ -6,6 +6,7 @@ import Step1 from "./Components/Step1/Step1"
 import MeetStatus from "./Components/Meet/MeetStatus"
 import Invited from "./Components/Meet/Invited"
 import Layout from "./Components/Layout/Layout"
+import Callback from "./Components/Callback/Callback"
 
 const Routes = () => {
 	return (
@@ -15,15 +16,18 @@ const Routes = () => {
 					<PrivateRoute path='/meetform'>
 						<Meetform />
 					</PrivateRoute>
-					<Route path={"/meetinvitation/:id?"}>
+					<PrivateRoute path={"/meetinvitation/:id"}>
 						<Invited />
-					</Route>
+					</PrivateRoute>
 					<PrivateRoute path='/meet/:id?'>
 						<MeetStatus />
 					</PrivateRoute>
 					<PrivateRoute path='/step1'>
 						<Step1 />
 					</PrivateRoute>
+					<Route path={"/callback"}>
+						<Callback />
+					</Route>
 					<Route path='/'>
 						<Home />
 					</Route>
