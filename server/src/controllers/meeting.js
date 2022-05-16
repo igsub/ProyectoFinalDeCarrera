@@ -282,8 +282,6 @@ var MeetingController = {
                 users.push(datetimeByUser.email);
             });
 
-            console.log(users);
-
             //Cambiar los datos por una cuenta real
             const transporter = nodemailer.createTransport({
                 host: 'smtp.gmail.com',
@@ -291,15 +289,15 @@ var MeetingController = {
                 secure: true,
                 auth: {
                     user: 'meetappok@gmail.com',
-                    pass: 'vwhoipyqkbnvyamo'
+                    pass: process.env.EMAIL_PASSWORD
                 }
             });
 
             const mailOptions = {
                 from: 'Meet App',
                 to: users,
-                subject: 'Probando Mail lista usuarios',
-                text: 'Probando'
+                subject: 'Evento confirmado!',
+                text: 'Test'
             };
 
             transporter.sendMail(mailOptions, (error, info) => {
