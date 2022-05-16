@@ -1,0 +1,173 @@
+:root {
+    --rmdp-primary-closeer: #f175ad;
+    --rmdp-secondary-closeer: #f50057;
+    --rmdp-shadow-closeer: #26a69a;
+
+    --rmdp-hover-font-closeer: #000000;
+    --rmdp-today-closeer: #690e4c;
+    --rmdp-selected-closeer: #02e2bd;
+    --rmdp-hover-closeer: #fecee9;
+  
+    --rmdp-white-closeer: #ffffff;
+    --rmdp-deselect-closeer: #00695c;
+  }
+  
+  .rmdp-shadow.closeer {
+    box-shadow: none;
+  }
+
+  .closeer .rmdp-border-top {
+    border: none;
+  }
+  
+  .closeer.rmdp-wrapper {
+    border: none;
+    box-shadow: none;
+    border-radius: 16px;
+    box-shadow: 0px 2px 6px rgb(0 0 0 / 10%);
+  }
+  
+  
+  .closeer .rmdp-calendar {
+    padding: 11px 16px 16px;
+    border-radius: 16px;
+  }
+  
+  .closeer .rmdp-border-bottom {
+    border: none;
+  }
+  
+  .closeer .rmdp-calendar .rmdp-header {
+    position: relative;
+    min-height: 38px;
+    height: 100%;
+  }
+  .closeer .rmdp-header:after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: #d6d6d6;
+    margin: 5px auto 0;
+  }
+  
+  .closeer.en-US .rmdp-header:before {
+    content: "Select dates";
+    display: block;
+    max-width: 94%;
+    color: var(--rmdp-primary-closeer);
+    margin: 0 auto 5px;
+    font-family: "Muli Bold";
+    font-size: 16px;
+  }
+  
+  .closeer.es-ES .rmdp-header:before {
+    content: "Seleccionar fechas";
+    display: block;
+    max-width: 94%;
+    color: var(--rmdp-primary-closeer);
+    margin: 0 auto 5px;
+    font-family: "Muli Bold";
+    font-size: 16px;
+  }
+  
+  .closeer.pt-BR .rmdp-header:before {
+    content: "Selecione as datas";
+    display: block;
+    max-width: 94%;
+    color: var(--rmdp-primary-closeer);
+    margin: 0 auto 5px;
+    font-family: "Muli Bold";
+    font-size: 16px;
+  }
+  
+  .closeer .rmdp-panel-body li {
+    background-color: var(--rmdp-primary-closeer);
+    box-shadow: 0 0 2px var(--rmdp-secondary-closeer);
+  }
+  
+  .closeer .rmdp-week-day {
+    color: var(--rmdp-secondary-closeer);
+  }
+  
+  .closeer .rmdp-day.rmdp-deactive {
+    color: var(--rmdp-secondary-closeer);
+  }
+  
+  .closeer .rmdp-range {
+    background-color: var(--rmdp-primary-closeer);
+    box-shadow: 0 0 3px var(--rmdp-shadow-closeer);
+  }
+  
+  .closeer .rmdp-arrow-container {
+    align-items: center;
+  }
+  
+  .closeer .rmdp-arrow {
+    margin: 0;
+    border: solid var(--rmdp-primary-closeer);
+    border-width: 0 2px 2px 0;
+    width: 6px;
+    height: 6px;
+    border-width: 0 1px 1px 0;
+  }
+  
+  .closeer .rmdp-arrow-container.disabled .rmdp-arrow,
+  .closeer .rmdp-arrow-container.disabled:hover .rmdp-arrow {
+    border-width: 0 1px 1px 0;
+  }
+  
+  .closeer .rmdp-arrow-container {
+    width: 28px;
+    height: 28px;
+  }
+  .closeer .rmdp-arrow-container:hover:not(.disabled) {
+    background-color: var(--rmdp-selected-closeer);
+    box-shadow: none;
+  }
+  
+  .closeer .rmdp-panel-body::-webkit-scrollbar-thumb {
+    background: var(--rmdp-primary-closeer);
+  }
+  
+  .closeer .rmdp-panel-body .rmdp-focused {
+    background: var(--rmdp-secondary-closeer);
+  }
+
+  .closeer .rmdp-day.rmdp-today span {
+    background-color: var(--rmdp-today-closeer);
+    color: var(--rmdp-white-closeer);
+  }
+  
+  .closeer .rmdp-rtl .rmdp-panel {
+    border-left: unset;
+    border-right: 1px solid var(--rmdp-secondary-closeer);
+  }
+  
+  .closeer .rmdp-day.rmdp-selected span:not(.highlight) {
+    background-color: var(--rmdp-selected-closeer);
+    box-shadow: none;
+    color: var(--rmdp-primary-closeer);
+  }
+  
+  .closeer .rmdp-day:not(.rmdp-day-hidden, .rmdp-disabled) span:hover {
+    background-color: var(--rmdp-hover-closeer) !important;
+    color: var(--rmdp-hover-font-closeer) !important;
+  }
+  
+  .closeer .b-deselect {
+    color: var(--rmdp-deselect-closeer);
+    background-color: white;
+  }
+  
+  .closeer .rmdp-action-button {
+    color: var(--rmdp-primary-closeer);
+  }
+  
+  .closeer .rmdp-button:not(.rmdp-action-button) {
+    background-color: var(--rmdp-primary-closeer);
+  }
+  
+  .closeer .rmdp-button:not(.rmdp-action-button):hover {
+    background-color: var(--rmdp-deselect-closeer);
+  }

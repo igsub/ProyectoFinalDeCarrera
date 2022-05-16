@@ -7,7 +7,12 @@ import _ from "lodash";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { setMeet } from "../../Store/meetSlice";
-import { useTheme } from "@material-ui/core/styles";
+import { useTheme, makeStyles } from "@material-ui/core/styles";
+import "./styles.css"
+
+const useStyles = makeStyles((theme) => ({
+ 
+}))
 
 const Meetcalendar = (props) => {
   const dispatch = useDispatch();
@@ -15,6 +20,7 @@ const Meetcalendar = (props) => {
   const [focusedDate, setFocusedDate] = useState();
   const [datesArray, setDatesArray] = useState([]);
   const theme = useTheme()
+  const classes = useStyles()
 
   useEffect(() => {
     const formattedFocusedDate = formatDateObject(focusedDate);
@@ -74,20 +80,41 @@ const Meetcalendar = (props) => {
 
   return (
     <Calendar
+      className={"closeer"}
       multiple
       onFocusedDateChange={onCalendarDateClick}
-      mapDays={({ date, isSameDate }) => {
-        let props = {};
+      mapDays={({ date, today, selectedDate, currentMonth, isSameDate }) => {
+        let props = {
+          //className: "highlight-red"
+        };
 
-        if (!isSameDate(date, focusedDate)) return;
+        // props.style = {
+        //   color: "black"
+        // }
 
-        props.style = { backgroundColor: theme.palette.secondary.main };
+        // if (isSameDate(date, today)) props.style = {
+        //    ...props.style, 
+        //   backgroundColor: theme.palette.secondary.light,
+        //   color: "white" }
+
+        if (isSameDate(date, focusedDate)) {
+          props.style = { 
+            ...props.style, 
+            backgroundColor: theme.palette.secondary.main, 
+            color: "white" }
+          return props
+        };
+
+        if (_.findIndex(selectedDate, sd => isSameDate(sd, date)) !== -1) {
+          props.style = { backgroundColor: theme.palette.secondary.light, color: "white" }
+          return props
+        }
 
         return props;
       }}
       onChange={onCalendarChange}
       plugins={[
-        <DatePanel markFocused focusedClassName="bg-green" sort="date" />,
+        <DatePanel markFocused  sort="date" />,
         <DatePickerHeader
           position="top"
           size="small"
