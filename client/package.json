@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "homepage": "https://meet-app.duckdns.org/",
-  "proxy": "http://server:5000/",
   "dependencies": {
     "@auth0/auth0-react": "^1.6.0",
     "@emotion/react": "^11.7.1",

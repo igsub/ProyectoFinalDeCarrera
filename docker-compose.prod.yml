@@ -1,0 +1,42 @@
+version: "3.7"
+
+services:
+  webserver:
+    depends_on:
+      - frontend
+      - backend
+    image: nginx:1.21-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+    volumes:
+      - ./nginx/conf/:/etc/nginx/conf.d/:ro
+      - ./certbot/www:/var/www/certbot/:ro
+      - ./certbot/conf/:/etc/letsencrypt/ssl/:ro
+    
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./certbot/www/:/var/www/certbot/:rw
+      - ./certbot/conf/:/etc/letsencrypt/ssl/:rw
+
+  frontend:
+    image: igsub/pfc-frontend:latest
+    ports:
+      - "3000:3000"
+
+  backend:
+    image: igsub/pfc-backend:latest
+    ports:
+      - "5000:80"
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - data-volume:/data/db
+
+volumes:
+  data-volume:
