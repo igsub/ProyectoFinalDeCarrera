@@ -8,7 +8,7 @@ import meetingService from "../../Services/meetingService"
 import { setMeet } from "../../Store/meetSlice"
 import Page from "../General/Page"
 import moment from "moment"
-import { Box, TextField, Button, Grid } from "@material-ui/core"
+import { Box, TextField, Button, Grid, Typography } from "@material-ui/core"
 import { Email } from "@material-ui/icons"
 import BadgeIcon from '@mui/icons-material/Badge';
 import { useAuth0 } from "@auth0/auth0-react"
@@ -18,11 +18,6 @@ import DisplayMeetData from "./DisplayMeetData"
 const useStyles = makeStyles((theme) => ({
 	root: {},
 	textfieldContainer: {
-		margin: "0.4rem",
-		width: "50%",
-	},
-	textfield: {
-		width: "100%",
 	},
 	button: {
 		margin: "1rem",
@@ -45,7 +40,10 @@ const useStyles = makeStyles((theme) => ({
 	},
 	buttonContainer: {
 		marginTop: "1rem"
-	}
+	},
+	labelColor: {
+        color: theme.palette.secondary.dark
+    }
 }))
 
 const Invited = () => {
@@ -55,10 +53,8 @@ const Invited = () => {
 	const meetState = useSelector((state) => state.meet)
 	const userState = useSelector((state) => state.user)
 	const [selectedDates, setSelectedDates] = useState([])
-	const [invitedName, setInvitedName] = useState(null)
-	const [invitedEmail, setInvitedEmail] = useState(null)
+	const [invitedName, setInvitedName] = useState("")
 	const [data, setData] = useState([])
-	const { isAuthenticated } = useAuth0()
 
 	const formatTableData = (array) => {
 		let formattedData = []
@@ -109,13 +105,13 @@ const Invited = () => {
 				votes.push({date: currentValue.date, timeslots})
 			}
 		})
-		meetingService.voteDatetimes({meeting_id: id, email: invitedEmail, datetimes: votes})
+		meetingService.voteDatetimes({meeting_id: id, email: userState.email, datetimes: votes})
 	}
 	
 	const columns = [
 		{
 			name: "date",
-			label: "Día",
+			label: "Day",
 			options: {
 				filter: true,
 				sort: false,
@@ -130,7 +126,7 @@ const Invited = () => {
 		},
 		{
 			name: "start",
-			label: "Desde",
+			label: "From",
 			options: {
 				filter: false,
 				sort: false
@@ -138,7 +134,7 @@ const Invited = () => {
 		},
 		{
 			name: "end",
-			label: "Hasta",
+			label: "To",
 			options: {
 				filter: false,
 				sort: false
@@ -161,71 +157,47 @@ const Invited = () => {
 	return (
 		<Page flexDirection='column' justifyContent='center' alignItems='center' alignContent='center'>
 				<DisplayMeetData title={meetState.title} description={meetState.description} location={meetState.location} />
-					{!isAuthenticated ? (<>
-						<Box sx={{ display: "flex", alignItems: "flex-end" }} className={classes.textfieldContainer}>
-							<Email style={{ fill: "darkgrey" }} />
-							<TextField
-								variant='standard'
-								label='Email'
-								className={classes.textfield}
-								onChange={e => setInvitedEmail(e.target.value)}
-								InputProps={{
-									readOnly: false,
-								}}
-							/>
-						</Box>
-						<Box sx={{ display: "flex", alignItems: "flex-end" }} className={classes.textfieldContainer}>
-							<BadgeIcon style={{ fill: "darkgrey" }} />
-							<TextField
-								variant='standard'
-								label='Nombre'
-								className={classes.textfield}
-								onChange={e => setInvitedName(e.target.value)}
-								InputProps={{
-									readOnly: false,
-								}}
-							/>
-						</Box>
-					</>) : <>
-						<Box sx={{ display: "flex", alignItems: "flex-end" }} className={classes.textfieldContainer}>
-							<Email style={{ fill: "darkgrey" }} />
-							<TextField
-								variant='standard'
-								label='Email'
-								className={classes.textfield}
-								InputProps={{
-									readOnly: true,
-								}}
-								value={userState.email}
-								focused
-							/>
-						</Box>
-						<Box sx={{ display: "flex", alignItems: "flex-end" }} className={classes.textfieldContainer}>
-							<BadgeIcon style={{ fill: "darkgrey" }} />
-							<TextField
-								variant='standard'
-								label='Nombre'
-								className={classes.textfield}
-								InputProps={{
-									readOnly: true,
-								}}
-								value={userState.fullName}
-								focused
-							/>
-						</Box>
+					<>
+						<Grid item xs={12}>
+							<Typography variant="h5" className={classes.labelColor}>
+								Email
+							</Typography>
+						</Grid>
+						<Grid item xs={12}>
+							<Typography variant="subtitle1">
+								{userState.email}
+							</Typography>
+						</Grid>
+						<Grid item xs={12}>
+							<Typography variant="h5" className={classes.labelColor}>
+								Nombre
+							</Typography>
+						</Grid>
+						<Grid item xs={12} sm={8} md={4}>
+							{userState.fullName  && userState.fullName !== userState.email? 
+								<Typography variant="subtitle1">
+									{userState.fullName}
+								</Typography>
+							: <TextField
+							variant='standard'
+							color="secondary"
+							value={invitedName}
+							inputProps={{min: 0, style: { textAlign: 'center' }}}
+							onChange={e => setInvitedName(e.target.value)}
+						/>}							
+						</Grid>
 					</>
-					}
 			<Grid container className={classes.tableContainer} justifyContent="center">
-				<MUIDataTable title={"Días y horarios disponibles"} data={data} columns={columns} options={options} />
+				<MUIDataTable title={"Dates available"} data={data} columns={columns} options={options} />
 			</Grid>
 			<Grid container className={classes.buttonContainer} justifyContent="center">
 				<Button
 					onClick={submitVotes}
 					variant="contained"
 					color="secondary"
-					disabled={!invitedName || !invitedEmail || selectedDates.length === 0}
+					disabled={!invitedName || selectedDates.length === 0}
 				>
-					Enviar Seleccionados
+					Send selected dates
 				</Button>
 			</Grid>
 		</Page>
