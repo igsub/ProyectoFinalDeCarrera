@@ -129,6 +129,7 @@ var MeetingController = {
         });
     },
 
+    //Modificar para cuando vuleve a ingresar el mismo usuario se pisen los votos viejos
     voteDatetimes: (req, res) => {
 
         var meeting_id = req.body.meeting_id;

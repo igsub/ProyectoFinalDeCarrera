@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const crypto = require("crypto");
 const jwt = require('jsonwebtoken');
+const Meeting = require('../models/meeting');
 
 var userController = {
     
@@ -141,6 +142,35 @@ var userController = {
             return res.status(200).send({
                 user: userUpdated
             });
+        });
+    },
+
+    getAllUserMeetings: (req, res) => {
+        var user_email = req.body.user_email;
+
+        User.findOne({email: user_email}).then((user) => {
+            
+            var user_meetings = user.meetings.map((meeting_id) => { 
+                return Meeting.findOne({_id: meeting_id}).exec() ;
+            });
+
+            return Promise.all(user_meetings);
+        }).then((user_meetings) => {
+            res.status(200).send(user_meetings);
+        });
+    },
+
+    addUserMeeting: (req, res) => {
+        var user_email = req.body.user_email;
+
+        var meeting_id = req.body.meeting_id;
+
+        User.findOneAndUpdate({email: user_email}, {$push: { meetings: meeting_id}}, (error, user) => {
+            if (error) return res.status(500).send({message: 'Error al buscar el usuario'});
+
+            if (!user) return res.status(404).send({message: 'No existe el usuario'});
+
+            return res.status(200).send(user);
         });
     }
 }
