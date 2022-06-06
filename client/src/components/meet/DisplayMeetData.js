@@ -1,82 +1,62 @@
-import { TextField, Box } from "@material-ui/core"
+import { TextField, Grid, Typography } from "@material-ui/core"
 import LocationOnIcon from "@material-ui/icons/LocationOn"
 import TitleIcon from "@material-ui/icons/Title"
 import EventNoteIcon from "@material-ui/icons/EventNote"
 import { makeStyles } from "@material-ui/core/styles"
+import { Title } from "@material-ui/icons"
 
 
 const useStyles = makeStyles((theme) => ({
 	root: {},
-	textfieldContainer: {
-		margin: "0.4rem",
-		width: "50%",
-	},
-	textfield: {
-		width: "100%",
-	},
-	button: {
-		margin: "1rem",
-	},
-	map: {
-		height: "60vh",
-		width: "50%",
-		margin: "10px 50px",
-		filter: "drop-shadow(-1px 5px 3px #ccc)",
-	},
-	switchWeather: {
-		justifyContent: "start",
-	},
-	calendar: {
-		display: "flex",
-		flexDirection: "row",
-	},
+	labelColor: {
+        color: theme.palette.secondary.dark
+    }
 }))
 
 const DisplayMeetData = ({title, description, location}) => {
 	const classes = useStyles()
 
-    return <>
-    <Box sx={{ display: "flex", alignItems: "flex-end" }} className={classes.textfieldContainer}>
-        <TitleIcon style={{ fill: "darkgrey" }} />
-        <TextField
-            variant='standard'
-            label='Título'
-            className={classes.textfield}
-            InputProps={{
-                readOnly: true,
-            }}
-            value={title}
-        />
-    </Box>
-    {description?
-    <Box sx={{ display: "flex", alignItems: "flex-end" }} className={classes.textfieldContainer}>
-        <EventNoteIcon style={{ fill: "darkgrey" }} />
-        <TextField
-            variant='standard'
-            label='Notas adicionales'
-            className={classes.textfield}
-            InputProps={{
-                readOnly: true,
-            }}
-            value={description}
-        />
-    </Box>
-    : null }
-    {location && location.address ? (
-    <Box sx={{ display: "flex", alignItems: "flex-end" }} className={classes.textfieldContainer}>
-        <LocationOnIcon style={{ fill: "darkgrey" }} />
-        <TextField
-            variant='standard'
-            label='Ubicación'
-            className={classes.textfield}
-            InputProps={{
-                readOnly: true,
-            }}
-            value={location.address}
-        />
-    </Box>
-    ) : null}
-    </>
+    return (
+        <>
+        <Grid item xs={12}>
+            <Typography variant="h5" className={classes.labelColor}>
+                Title
+            </Typography>
+        </Grid>
+        <Grid item xs={12}>
+            <Typography variant="subtitle1">
+                {title}
+            </Typography>
+        </Grid>
+        {description ? <>
+            <Grid item xs={12}>
+                <Typography variant="h5" className={classes.labelColor}>
+                    Description
+                </Typography>
+            </Grid>
+            <Grid item xs={12}>
+                <Typography variant="subtitle1">
+                    {description}
+                </Typography>
+            </Grid>
+            </>
+        : null}
+        {location && location.address ?
+        <>
+            <Grid item xs={12}>
+                <Typography variant="h5" className={classes.labelColor}>
+                    Location
+                </Typography>
+            </Grid>
+            <Grid item xs={12}>
+                <Typography variant="subtitle1">
+                    {location.address}
+                </Typography>
+            </Grid>
+        </> 
+        :null}
+        </>
+    )
 }
 
 export default DisplayMeetData
