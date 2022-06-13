@@ -8,6 +8,7 @@ import Invited from "./Components/Meet/Invited"
 import Callback from "./Components/Callback/Callback"
 import { Route, Switch, useLocation } from "react-router-dom"
 import { AnimatePresence } from "framer-motion/dist/framer-motion"
+import MyMeetings from './Components/MyMeetings/MyMeetings'
 
 function AnimatedRoutes() {
     const location = useLocation()
@@ -26,6 +27,9 @@ function AnimatedRoutes() {
                 </PrivateRoute>
                 <PrivateRoute path='/step1'>
                     <Step1 />
+                </PrivateRoute>
+                <PrivateRoute path='/mymeetings'>
+                    <MyMeetings />
                 </PrivateRoute>
                 <Route path={"/callback"}>
                     <Callback />

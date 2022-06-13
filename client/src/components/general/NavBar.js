@@ -104,6 +104,10 @@ export default function NavBar() {
 		loginWithRedirect()
 	}
 
+	const handleMyMeetings = () => {
+		history.push("/mymeetings")
+	}
+
 	return (
 		<Box className={classes.root}>
 			<AppBar position='static' color="transparent" elevation={0} >
@@ -138,6 +142,7 @@ export default function NavBar() {
 										open={open}
 										onClose={handleClose}
 									>
+										<MenuItem onClick={handleMyMeetings}><Typography>My Meetings</Typography></MenuItem>
 										<MenuItem onClick={handleLogout}><Typography>Log out</Typography></MenuItem>
 									</Menu>
 								</>

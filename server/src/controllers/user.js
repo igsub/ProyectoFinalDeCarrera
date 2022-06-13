@@ -146,7 +146,7 @@ var userController = {
     },
 
     getAllUserMeetings: (req, res) => {
-        var user_email = req.body.user_email;
+        var user_email = req.params.user_email;
 
         User.findOne({email: user_email}).then((user) => {
             

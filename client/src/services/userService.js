@@ -70,6 +70,11 @@ const userService = {
 	getToken: () => {
 		return localStorage.getItem("token") || null
 	},
+
+	getAllUserMeetings: async (email) => {
+		return await axios
+			.get(`/user/getAllUserMeetings/${email}`)
+	}
 }
 
 export default userService
