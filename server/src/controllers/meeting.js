@@ -139,14 +139,13 @@ var MeetingController = {
 
         var user_datetimes = {email, user_id, datetimes};
 
-        Meeting.findByIdAndUpdate({_id: meeting_id}, {$push: {datetimesByUser: user_datetimes}}, (error, meetingUpdated) => {
-            if (error) return res.status(500).send({message: 'Error al agregar los datetimes de un usuario a la meeting'});
+        Meeting.findByIdAndUpdate({_id: meeting_id}, {$push: {datetimesByUser: user_datetimes}}).then((meetingUpdated) => {
+            
+            User.findOneAndUpdate({email: email}, {$push: {meetings: meeting_id}}).exec();
 
-            if (!meetingUpdated) return res.status(404).send({message: 'No se pudo agregar el datetime del usuario al meeting'});
-
-            return res.status(200).send({
-                meeting: meetingUpdated
-            });
+            return Promise.resolve(meetingUpdated);
+        }).then((meetingUpdated) => {
+            res.status(200).send(meetingUpdated);
         });
     },
 
