@@ -1,6 +1,7 @@
 const Meeting = require('../models/meeting'); // date times model
 const jwt = require("jsonwebtoken");
 const nodemailer = require('nodemailer');
+const User = require('../models/user');
 
 var MeetingController = {
     
@@ -58,15 +59,14 @@ var MeetingController = {
         meeting.ownerEmail = params.ownerEmail;
         meeting.weatherMatters = params.weatherMatters;
 
-        meeting.save((error, meetingStored) => {
-            if (error) return res.status(500).send({message: 'Error al guardar'});
+        meeting.save().then((meetingStored) => {
+            
+            User.findOneAndUpdate({email: meetingStored.ownerEmail}, {$push: {meetings: meetingStored._id}}).exec();
 
-            if (!meetingStored) return res.status(404).send({message: 'No se ha podido guardar el meeting'});
-
-            return res.status(200).send({
-                meeting: meetingStored
-            });
-        })
+            return Promise.resolve(meetingStored);
+        }).then((meetingStored) => {
+            res.status(200).send(meetingStored);
+        });
     },
 
     updateMeeting: (req, res) => {
