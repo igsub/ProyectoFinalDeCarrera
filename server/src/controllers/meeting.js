@@ -129,7 +129,6 @@ var MeetingController = {
         });
     },
 
-    //Modificar para cuando vuleve a ingresar el mismo usuario se pisen los votos viejos
     voteDatetimes: (req, res) => {
 
         var meeting_id = req.body.meeting_id;
@@ -139,13 +138,21 @@ var MeetingController = {
 
         var user_datetimes = {email, user_id, datetimes};
 
-        Meeting.findByIdAndUpdate({_id: meeting_id}, {$push: {datetimesByUser: user_datetimes}}).then((meetingUpdated) => {
+        Meeting.findById({_id: meeting_id}).then((meeting) => {
             
-            User.findOneAndUpdate({email: email}, {$push: {meetings: meeting_id}}).exec();
+            const old_user_datetimes = meeting.datetimesByUser.find(datetime => datetime.email == email);
 
-            return Promise.resolve(meetingUpdated);
-        }).then((meetingUpdated) => {
-            res.status(200).send(meetingUpdated);
+            if (old_user_datetimes != undefined) {
+                Meeting.findByIdAndUpdate({_id: meeting_id}, {$pull: {datetimesByUser: old_user_datetimes}}).exec();
+                Meeting.findByIdAndUpdate({_id: meeting_id}, {$push: {datetimesByUser: user_datetimes}}).exec();
+            } else {
+                Meeting.findByIdAndUpdate({_id: meeting_id}, {$push: {datetimesByUser: user_datetimes}}).exec();
+                User.findOneAndUpdate({email: email}, {$push: {meetings: meeting_id}}).exec();
+            }
+
+            return Promise.resolve(meeting);
+        }).then((meeting) => {
+            res.status(200).send(meeting);
         });
     },
 
