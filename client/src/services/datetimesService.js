@@ -27,18 +27,6 @@ const datetimesService = {
       });
   },
 
-  addNewDatetime: async (data) => {
-    await axios
-      .post("/datetimes/addDatetime", data)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    //return res.data || [];
-  },
-
   updateDatetime: async (id, data) => {
     await axios
       .put("/datetimes/updateDatetime/" + id, data)

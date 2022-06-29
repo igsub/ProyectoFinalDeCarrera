@@ -1,9 +1,5 @@
-import { Box, TextField } from "@material-ui/core"
 import Page from "../General/Page"
 import { useSelector, useDispatch } from "react-redux"
-import LocationOnIcon from "@material-ui/icons/LocationOn"
-import TitleIcon from "@material-ui/icons/Title"
-import EventNoteIcon from "@material-ui/icons/EventNote"
 import { makeStyles } from "@material-ui/core/styles"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
@@ -22,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
 		width: "50%",
 	},
 	table: {
-		margin: "1rem"
+		margin: "1rem",
 	},
 	textfield: {
 		width: "100%",
@@ -37,17 +33,16 @@ const MeetStatus = () => {
 	const { id } = useParams()
 	const meetState = useSelector((state) => state.meet)
 	const classes = useStyles()
-	const [selectedDates, setSelectedDates] = useState([])
-	const[data, setData] = useState([])
+	const [data, setData] = useState([])
 
 	const formatTableData = (array) => {
 		let formattedData = []
-		forEach(array, dt => {
-			forEach(dt.timeslots, ts => {
-				formattedData.push({date: dt.date, range: ts.range, start: ts.start, end: ts.end})
+		forEach(array, (dt) => {
+			forEach(dt.timeslots, (ts) => {
+				formattedData.push({ date: dt.date, range: ts.range, start: ts.start, end: ts.end })
 			})
 		})
-		return _.sortBy(formattedData, ['date', 'range'])
+		return _.sortBy(formattedData, ["date", "range"])
 	}
 
 	useEffect(() => {
@@ -65,42 +60,44 @@ const MeetStatus = () => {
 				})
 				.catch((e) => console.log(e))
 
-			return () => { isMounted = false }
+			return () => {
+				isMounted = false
+			}
 		}
 	}, [id])
 
 	const columns = [
 		{
 			name: "date",
-			label: "Día",
+			label: "Day",
 			options: {
 				filter: true,
 				sort: false,
-				customBodyRender: v => moment(v, "YYYY/MM/DD").format('dddd D [of] MMMM [,] YYYY')
-			}
+				customBodyRender: (v) => moment(v, "YYYY/MM/DD").format("dddd D [of] MMMM [,] YYYY"),
+			},
 		},
 		{
 			name: "range",
-			options: {	
-				display: "excluded"
-			}
+			options: {
+				display: "excluded",
+			},
 		},
 		{
 			name: "start",
-			label: "Desde",
+			label: "From",
 			options: {
 				filter: false,
-				sort: false
-			}
+				sort: false,
+			},
 		},
 		{
 			name: "end",
-			label: "Hasta",
+			label: "To",
 			options: {
 				filter: false,
-				sort: false
-			}
-		}
+				sort: false,
+			},
+		},
 	]
 	const options = {
 		selectableRows: "none",
@@ -115,10 +112,10 @@ const MeetStatus = () => {
 
 	return (
 		<>
-			<Page flexDirection='column' justifyContent='center' alignItems='center' alignContent='center'>
+			<Page showBack={true} flexDirection='column' justifyContent='center' alignItems='center' alignContent='center'>
 				<DisplayMeetData title={meetState.title} description={meetState.description} location={meetState.location} />
-				<MUIDataTable title={"Días y horarios disponibles"} data={data} columns={columns} options={options} className={classes.table}/>
-				<InvitationLinkButton path={`${window.location.protocol}//${window.location.host}/meetinvitation/${id}`} className={classes.button}/>
+				<MUIDataTable title={"Dates available to choose"} data={data} columns={columns} options={options} className={classes.table} />
+				<InvitationLinkButton path={`${window.location.protocol}//${window.location.host}/meetinvitation/${id}`} className={classes.button} />
 			</Page>
 		</>
 	)

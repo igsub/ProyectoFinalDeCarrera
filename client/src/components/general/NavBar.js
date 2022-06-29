@@ -11,7 +11,7 @@ import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import userService from "../../Services/userService"
 import { setUser } from "../../Store/userSlice"
-import logo from "../../Images/MeetApp-logos_black.png";
+import logo from "../../Images/MeetApp-logos_black.png"
 import { useHistory } from "react-router-dom"
 import CircularProgress from "@material-ui/core/CircularProgress"
 
@@ -23,10 +23,10 @@ const useStyles = makeStyles((theme) => ({
 		flexGrow: 1,
 	},
 	appbar: {
-		boxShadow: 'none', 
+		boxShadow: "none",
 	},
 	toolbar: {
-		display: "flex"
+		display: "flex",
 	},
 	name: {
 		fontWeight: "600",
@@ -34,15 +34,15 @@ const useStyles = makeStyles((theme) => ({
 	},
 	logo: {
 		maxWidth: "15rem",
-		width:"30vw",
+		width: "30vw",
 		padding: theme.spacing(2),
 	},
 	iconButton: {
-		fontSize: "min(3vw, 20px)"
+		fontSize: "min(3vw, 20px)",
 	},
 	userContainer: {
-		padding: "1rem"
-	}
+		padding: "1rem",
+	},
 }))
 
 export default function NavBar() {
@@ -56,7 +56,7 @@ export default function NavBar() {
 	const name = user?.name
 	const picture = user?.picture
 	const history = useHistory()
-	const [isHomePage, setIsHomePage] = useState(history.location.pathname === '/')
+	const [isHomePage, setIsHomePage] = useState(history.location.pathname === "/")
 
 	useEffect(() => {
 		if (user) {
@@ -80,10 +80,10 @@ export default function NavBar() {
 	}, [user])
 
 	useEffect(() => {
-		return history.listen((location) => { 
+		return history.listen((location) => {
 			setIsHomePage(location.pathname === "/")
-		 }) 
-	},[history])
+		})
+	}, [history])
 
 	const handleMenu = (event) => {
 		setAnchorEl(event.currentTarget)
@@ -110,47 +110,55 @@ export default function NavBar() {
 
 	return (
 		<Box className={classes.root}>
-			<AppBar position='static' color="transparent" elevation={0} >
-				<Toolbar >
-					<Grid container justifyContent="space-between">
-						<Grid item >
-							{!isHomePage && isAuthenticated?
-							<img alt="meet-app" src={logo} className={classes.logo} />
-							: null}		
+			<AppBar position='static' color='transparent' elevation={0}>
+				<Toolbar>
+					<Grid container justifyContent='space-between'>
+						<Grid item>
+							{!isHomePage && isAuthenticated ? (
+								<a href={`${window.location.protocol}//${window.location.host}`}>
+									<img alt='meet-app' src={logo} className={classes.logo} />
+								</a>
+							) : null}
 						</Grid>
 						<Grid item>
 							<div className={classes.userContainer}>
-							{user ? (
-								<>
-									<IconButton className={classes.iconButton} aria-label='account of current user' aria-controls='menu-appbar' aria-haspopup='true' onClick={handleMenu} color='inherit'>
-										<Typography className={classes.name}>{name}</Typography>
-										<Avatar src={picture} />
-									</IconButton>
+								{user ? (
+									<>
+										<IconButton className={classes.iconButton} aria-label='account of current user' aria-controls='menu-appbar' aria-haspopup='true' onClick={handleMenu} color='inherit'>
+											<Typography className={classes.name}>{name}</Typography>
+											<Avatar src={picture} />
+										</IconButton>
 
-									<Menu
-										id='menu-appbar'
-										anchorEl={anchorEl}
-										anchorOrigin={{
-											vertical: "top",
-											horizontal: "right",
-										}}
-										keepMounted
-										transformOrigin={{
-											vertical: "top",
-											horizontal: "right",
-										}}
-										open={open}
-										onClose={handleClose}
-									>
-										<MenuItem onClick={handleMyMeetings}><Typography>My Meetings</Typography></MenuItem>
-										<MenuItem onClick={handleLogout}><Typography>Log out</Typography></MenuItem>
-									</Menu>
-								</>
-							) : 
-								isLoading ? 
-								<CircularProgress color="secondary" />
-								: <Button color="secondary" variant="contained" onClick={handleLogIn}>Log in</Button>
-							}
+										<Menu
+											id='menu-appbar'
+											anchorEl={anchorEl}
+											anchorOrigin={{
+												vertical: "top",
+												horizontal: "right",
+											}}
+											keepMounted
+											transformOrigin={{
+												vertical: "top",
+												horizontal: "right",
+											}}
+											open={open}
+											onClose={handleClose}
+										>
+											<MenuItem onClick={handleMyMeetings}>
+												<Typography>My Meetings</Typography>
+											</MenuItem>
+											<MenuItem onClick={handleLogout}>
+												<Typography>Log out</Typography>
+											</MenuItem>
+										</Menu>
+									</>
+								) : isLoading ? (
+									<CircularProgress color='secondary' />
+								) : (
+									<Button color='secondary' variant='contained' onClick={handleLogIn}>
+										Log in
+									</Button>
+								)}
 							</div>
 						</Grid>
 					</Grid>

@@ -7,6 +7,7 @@ import { useSelector } from "react-redux"
 import WeatherCards from "./WeatherCards"
 import meetingService from "../../Services/meetingService"
 import { useHistory } from "react-router-dom"
+import Page from "../General/Page"
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -59,7 +60,9 @@ const Meetform = () => {
 
 	const handleSubmit = (event) => {
 		event.preventDefault()
-		const formattedDatetimes = meetState.datetimes.map(e => {return {date: e.date, timeslots: e.times}})
+		const formattedDatetimes = meetState.datetimes.map((e) => {
+			return { date: e.date, timeslots: e.times }
+		})
 		meetingService
 			.addMeeting({
 				title: meetState.title,
@@ -70,14 +73,14 @@ const Meetform = () => {
 				datetimesByUser: [{ email: userState.email, datetimes: formattedDatetimes }],
 			})
 			.then((response) => {
-				const meetId = response.data.meeting._id
+				const meetId = response.data._id
 				history.push(`/meet/${meetId}`)
 			})
 			.catch((error) => console.log(error))
 	}
 
 	return (
-		<Box className={classes.root}>
+		<Page showBack={true}>
 			<Box className={classes.form}>
 				<div></div>
 				<Box className={classes.weatherCards}>{meetState.weather && meetState.weather.length > 0 ? <WeatherCards /> : null}</Box>
@@ -91,7 +94,7 @@ const Meetform = () => {
 					</Button>
 				</Box>
 			</Box>
-		</Box>
+		</Page>
 	)
 }
 

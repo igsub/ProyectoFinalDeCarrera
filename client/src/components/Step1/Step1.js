@@ -110,8 +110,6 @@ const Step1 = () => {
 					)
 				})
 				.catch((e) => console.log(e))
-
-			
 		} else {
 			dispatch(
 				setMeet({
@@ -132,14 +130,14 @@ const Step1 = () => {
 	}
 
 	return (
-		<Page flexDirection='column' justifyContent='center' alignItems='center' alignContent='center'>
+		<Page showBack={true} flexDirection='column' justifyContent='center' alignItems='center' alignContent='center'>
 			<Box sx={{ display: "flex", alignItems: "flex-end" }} className={classes.textfieldContainer}>
 				<TitleIcon style={{ fill: "darkgrey" }} />
-				<TextField variant='standard' label='Título' className={classes.textfield} onChange={(e) => setMeetTitle(e.target.value)} />
+				<TextField variant='standard' color='secondary' label='Título' className={classes.textfield} onChange={(e) => setMeetTitle(e.target.value)} />
 			</Box>
 			<Box sx={{ display: "flex", alignItems: "flex-end" }} className={classes.textfieldContainer}>
 				<EventNoteIcon style={{ fill: "darkgrey" }} />
-				<TextField variant='standard' label='Notas adicionales' className={classes.textfield} onChange={(e) => setMeetDescription(e.target.value)} />
+				<TextField variant='standard' color='secondary' label='Notas adicionales' className={classes.textfield} onChange={(e) => setMeetDescription(e.target.value)} />
 			</Box>
 			<Box sx={{ display: "flex", alignItems: "flex-end" }} className={classes.textfieldContainer}>
 				<LocationOnIcon style={{ fill: "darkgrey" }} />
@@ -152,7 +150,7 @@ const Step1 = () => {
 				<FormControlLabel
 					className={classes.switchWeather}
 					control={<Switch checked={weatherMatters} />}
-					label='Tener en cuenta el clima?'
+					label='Wheater matters?'
 					onClick={() => setWeatherMatters(!weatherMatters)}
 					disabled={!autocompleteState.value}
 				/>

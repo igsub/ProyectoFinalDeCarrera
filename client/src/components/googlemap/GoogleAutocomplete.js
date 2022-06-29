@@ -109,6 +109,7 @@ const GoogleAutocomplete = (props) => {
 		<Autocomplete
 			id='google-map-demo'
 			sx={{ width: "100%" }}
+			color="secondary"
 			getOptionLabel={(option) => (typeof option === "string" ? option : option.description)}
 			noOptionsText={"No hay opciones"}
 			filterOptions={(x) => x}
