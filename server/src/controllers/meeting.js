@@ -111,24 +111,6 @@ var MeetingController = {
         next();
     },
 
-    //No anda, problema con el constructor Datetimes que viene del model
-    addDatetime: (req, res) => {
-        var datetime = new Datetimes();
-
-        datetime.date = req.body.date;
-        datetime.count = req.body.count;
-
-        datetime.save((error, datetimeStored) => {
-            if (error) return res.status(500).send({message: 'Error al guardar datetime'});
-
-            if (!datetimeStored) return res.status(404).send({message: 'No se ha podido guardar el datetime'});
-
-            return res.status(200).send({
-                datetime: datetimeStored
-            });
-        });
-    },
-
     voteDatetimes: (req, res) => {
 
         var meeting_id = req.body.meeting_id;
@@ -314,6 +296,20 @@ var MeetingController = {
                 return res.status(200).send('Email sent: ' + info.response);
                 }
             });
+        });
+    },
+
+    selectFinalDatetime: (req, res) => {
+        const meeting_id = req.body.meeting_id;
+        const date = req.body.date;
+        const timeslot = req.body.timeslot;
+
+        Meeting.findByIdAndUpdate(meeting_id, {final_selection: {date: date, timeslot: timeslot}}, (err, meetingUpdated) => {
+            if (err) return res.status(500).send({message: 'Error al encontrar al meeting'});
+    
+            if (!meetingUpdated) return res.status(404).send('No se pudo actualizar la meeting');
+
+            return res.status(200).send({meetingUpdated});    
         });
     }
 }

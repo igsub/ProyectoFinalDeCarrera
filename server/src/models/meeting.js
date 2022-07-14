@@ -71,7 +71,8 @@ const MeetingSchema = new mongoose.Schema({
     },
     weatherMatters: Boolean,
     datetimesByUser: [DatetimesByUserSchema],
-	weather: [WeatherObject]
+	weather: [WeatherObject],
+    final_selection: Object
 });
 
 const meeting = mongoose.model("Meeting", MeetingSchema);
