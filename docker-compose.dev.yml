@@ -1,26 +1,29 @@
 version: '3.7'
 
 services:
+
   server:
     build:
       context: ./server
       dockerfile: Dockerfile
     # image: myapp-server
     container_name: meetapp-node-server
-    command: /usr/src/app/node_modules/.bin/nodemon server.js
+    # command: /usr/src/app/node_modules/.bin/nodemon server.js
     volumes:
-      - ./server/:/usr/src/app
-      - /usr/src/app/node_modules
+      - ./server:/usr/src/app
+      # - /usr/src/app/node_modules
     ports:
-    # [Puerto del contenedor de docker: Puerto local]
+    # [Puerto del contenedor de docker: Puerto del servicio]
       - "5000:80"
     depends_on:
       - mongo
     env_file: ./server/.env
     environment:
       - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
     networks:
       - app-network
+
   mongo:
     image: mongo
     volumes:
@@ -29,16 +32,19 @@ services:
       - "27017:27017"
     networks:
       - app-network
+
   client:
     build:
       context: ./client
       dockerfile: Dockerfile
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
     # image: myapp-client
     container_name: meetapp-react-client
-    stdin_open: true
-    command: yarn start
+    # stdin_open: true
+    # command: yarn start
     volumes:
-      - ./client/:/usr/src/app
+      - ./client:/usr/src/app
       - /usr/src/app/node_modules
     depends_on:
       - server
