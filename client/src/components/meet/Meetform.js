@@ -70,6 +70,7 @@ const Meetform = () => {
 				description: meetState.description,
 				location: meetState.location,
 				weather: meetState.weather,
+				weatherMatters: meetState.weatherMatters,
 				datetimesByUser: [{ email: userState.email, datetimes: formattedDatetimes }],
 			})
 			.then((response) => {

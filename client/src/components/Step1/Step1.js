@@ -98,7 +98,7 @@ const Step1 = () => {
 						setMeet({
 							...meetState,
 							weather: weatherValues,
-							weatherMatters: true,
+							weatherMatters: weatherMatters,
 							title: meetTitle,
 							description: meetDescription,
 							location: {
@@ -115,7 +115,7 @@ const Step1 = () => {
 				setMeet({
 					...meetState,
 					title: meetTitle,
-					weatherMatters: false,
+					weatherMatters: weatherMatters,
 					description: meetDescription,
 					location: {
 						lat: mapState.lat,
