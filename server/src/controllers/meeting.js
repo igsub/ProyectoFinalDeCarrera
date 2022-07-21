@@ -265,22 +265,24 @@ var MeetingController = {
         }
     },
 
-    sendEmails: (req, res) => {
-        const meeting_id = req.params.meeting_id;
+    selectFinalDatetime: (req, res) => {
+        const meeting_id = req.body.meeting_id;
+        const date = req.body.date;
+        const timeslot = req.body.timeslot;
+
         const users = [];
 
-        Meeting.findById(meeting_id, (error, meeting) => {
-            if (error) return res.status(500).send({message: 'Error al encontrar al meeting'});
+        Meeting.findByIdAndUpdate(meeting_id, {final_selection: {date: date, timeslot: timeslot}}, (err, meetingUpdated) => {
+            if (err) return res.status(500).send({message: 'Error al encontrar al meeting'});
     
-            if (!meeting) return res.status(404).send('No se encontro un meeting');
-                
-            var datetimesByUser = meeting.datetimesByUser;
+            if (!meetingUpdated) return res.status(404).send('No se pudo actualizar la meeting');
+
+            var datetimesByUser = meetingUpdated.datetimesByUser;
 
             datetimesByUser.forEach(datetimeByUser => {
                 users.push(datetimeByUser.email);
             });
 
-            //Cambiar los datos por una cuenta real
             const transporter = nodemailer.createTransport({
                 host: 'smtp.gmail.com',
                 port: 465,
@@ -295,30 +297,16 @@ var MeetingController = {
                 from: 'Meet App',
                 to: users,
                 subject: 'Evento confirmado!',
-                text: 'Test'
+                text: 'Se confirmo un evento para el dia ' + date + ' entre las ' + timeslot.start + ' y las ' + timeslot.end
             };
 
             transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
-                return res.status(500).send(error.message);
+                    return res.status(500).send(error.message);
                 } else {
-                return res.status(200).send('Email sent: ' + info.response);
+                    return res.status(200).send('Email sent: ' + info.response);
                 }
-            });
-        });
-    },
-
-    selectFinalDatetime: (req, res) => {
-        const meeting_id = req.body.meeting_id;
-        const date = req.body.date;
-        const timeslot = req.body.timeslot;
-
-        Meeting.findByIdAndUpdate(meeting_id, {final_selection: {date: date, timeslot: timeslot}}, (err, meetingUpdated) => {
-            if (err) return res.status(500).send({message: 'Error al encontrar al meeting'});
-    
-            if (!meetingUpdated) return res.status(404).send('No se pudo actualizar la meeting');
-
-            return res.status(200).send({meetingUpdated});    
+            });   
         });
     }
 }
