@@ -190,11 +190,7 @@ var MeetingController = {
 
     decideDatetime: (req, res) => {
         const meeting_id = req.params.meeting_id;
-
-        //Cambiar despues, tiene que venir del front
-        const weatherMatters = true;
-
-        //Agregar el if para ver si el clima es importante
+        
         try {
             Meeting.findById(meeting_id, (error, meeting) => {
                 if (error) return res.status(500).send({message: 'Error al encontrar al meeting'});
@@ -214,38 +210,51 @@ var MeetingController = {
                         timeslots.forEach(timeslot => {
                             var index = votos.findIndex(element => element.date == datetime.date && element.timeslot.range == timeslot.range);
                             if (index == -1) {
-                                
-                                if (weatherMatters) {
-                                    var index_clima = meeting.weather.findIndex(weather => weather.datetime.split(" ")[0].replaceAll("-","/") == datetime.date && parseInt(weather.datetime.split(" ")[1].split(":")[0]) <= parseInt(timeslot.end.split(":")[0]) && parseInt(weather.datetime.split(" ")[1].split(":")[0]) >= parseInt(timeslot.start.split(":")[0]));
-                                    var weatherCondition = meeting.weather[index_clima].weather[0].main;
-
-                                    var index_clima_2 = meeting.weather.reverse().findIndex(weather => weather.datetime.split(" ")[0].replaceAll("-","/") == datetime.date && parseInt(weather.datetime.split(" ")[1].split(":")[0]) <= parseInt(timeslot.end.split(":")[0]) && parseInt(weather.datetime.split(" ")[1].split(":")[0]) >= parseInt(timeslot.start.split(":")[0]));
-                                    var weatherCondition2 = meeting.weather[index_clima_2].weather[0].main; 
-
-                                    var valores_climas = {
-                                        "Clear": 3,
-                                        "Clouds": 2,
-                                        "Rain": 1
-                                    };
-
-                                    if (valores_climas[weatherCondition] > valores_climas[weatherCondition2]) {
-                                        votos.push({date: datetime.date, timeslot: timeslot, count: valores_climas[weatherCondition2]});
-                                    } else {
-                                        votos.push({date: datetime.date, timeslot: timeslot, count: valores_climas[weatherCondition]});
-                                    }
-
-                                } else {
-                                    votos.push({date: datetime.date, timeslot: timeslot, count: 1});
-                                }
-            
+                                votos.push({date: datetime.date, timeslot: timeslot, count: 1});
                             } else {
-                                //console.log(votos[index]);
                                 var new_count = votos[index].count + 1;
                                 votos[index].count = new_count;
                             }
                         });
                     });
                 });
+
+                if (meeting.weatherMatters) {
+                    votos.forEach(datetime => {
+                        var index_clima = meeting.weather.findIndex(weather => weather.datetime.split(" ")[0].replaceAll("-","/") == datetime.date && parseInt(weather.datetime.split(" ")[1].split(":")[0]) <= parseInt(datetime.timeslot.end.split(":")[0]) && parseInt(weather.datetime.split(" ")[1].split(":")[0]) >= parseInt(datetime.timeslot.start.split(":")[0]));
+                        var weatherCondition = meeting.weather[index_clima].weather[0].main;
+                        var weatherTemp = meeting.weather[index_clima].main.temp;
+
+                        var index_clima_2 = meeting.weather.reverse().findIndex(weather => weather.datetime.split(" ")[0].replaceAll("-","/") == datetime.date && parseInt(weather.datetime.split(" ")[1].split(":")[0]) <= parseInt(datetime.timeslot.end.split(":")[0]) && parseInt(weather.datetime.split(" ")[1].split(":")[0]) >= parseInt(datetime.timeslot.start.split(":")[0]));
+                        var weatherCondition2 = meeting.weather[index_clima_2].weather[0].main;
+                        var weatherTemp2 = meeting.weather[index_clima_2].main.temp;
+
+                        var valores_climas = {
+                            "Clear": 2,
+                            "Clouds": 1.5,
+                            "Rain": 1
+                        };
+
+                        //Multiplicando segun estado del clima
+                        if (valores_climas[weatherCondition] > valores_climas[weatherCondition2]) {
+                            var new_count = datetime.count * valores_climas[weatherCondition2];
+                            datetime.count = new_count;
+                        } else {
+                            var new_count = datetime.count * valores_climas[weatherCondition];
+                            datetime.count = new_count;
+                        }
+
+                        var min_temp = Math.min(weatherTemp, weatherTemp2);
+                        //Multiplicando segun temperatura
+                        if (min_temp > 20) {
+                            var new_count = datetime.count * 2;
+                            datetime.count = new_count;
+                        } else if (min_temp > 10) {
+                            var new_count = datetime.count * 1.5;
+                            datetime.count = new_count;
+                        }
+                    });
+                }
 
                 votos.sort((datetime_a, datetime_b) => datetime_b.count - datetime_a.count);
 
