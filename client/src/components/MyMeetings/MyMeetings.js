@@ -5,6 +5,7 @@ import Page from "../General/Page"
 import MUIDataTable from "mui-datatables"
 import { makeStyles } from "@material-ui/core/styles"
 import { Grid } from "@material-ui/core"
+import { useHistory } from "react-router-dom"
 
 const useStyles = makeStyles((theme) => ({
 	root: {},
@@ -17,6 +18,7 @@ const MyMeetings = () => {
 	const { user } = useAuth0()
 	const [meetings, setMeetings] = useState([])
 	const classes = useStyles()
+	const history = useHistory()
 
 	useEffect(() => {
 		if (user.email) {
@@ -28,6 +30,14 @@ const MyMeetings = () => {
 	}, [])
 
 	const columns = [
+		{
+			name: "_id",
+			options: {
+				filter: true,
+				sort: false,
+				display: "excluded"
+			},
+		},
 		{
 			name: "title",
 			label: "Title",
@@ -72,6 +82,12 @@ const MyMeetings = () => {
 		filter: false,
 		viewColumns: false,
 		customToolbarSelect: () => null,
+		onRowClick: (rowData) => {
+			if (rowData[4] === user.email)
+				history.push(`/meet/${rowData[0]}`)
+			else 
+				history.push(`/meetinvitation/${rowData[0]}`)
+		}
 	}
 
 	return (

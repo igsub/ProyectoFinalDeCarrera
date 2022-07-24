@@ -41,8 +41,8 @@ services:
       CHOKIDAR_USEPOLLING: "true"
     # image: myapp-client
     container_name: meetapp-react-client
-    # stdin_open: true
-    # command: yarn start
+    stdin_open: true
+    command: yarn start
     volumes:
       - ./client:/usr/src/app
       - /usr/src/app/node_modules

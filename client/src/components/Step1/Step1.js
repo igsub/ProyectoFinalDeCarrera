@@ -13,22 +13,33 @@ import { setMeet } from "../../Store/meetSlice"
 import Page from "../General/Page"
 import GoogleAutocomplete from "../Googlemap/GoogleAutocomplete"
 import MyGoogleMap from "../Googlemap/MyGoogleMap"
+import { isMobile } from "react-device-detect"
 
 const useStyles = makeStyles((theme) => ({
 	root: {},
-	textfieldContainer: {
+	mobileTextfieldContainer: {
 		margin: "0.4rem",
-		width: "50%",
+		width: "100%",
+	},
+	desktopTextfieldContainer: {
+		margin: "0.4rem",
+		width: "75%",
 	},
 	textfield: {
 		width: "100%",
 	},
 	button: {
-		margin: "1rem",
+		marginTop: "1rem",
 	},
-	map: {
+	desktopMap: {
 		height: "60vh",
-		width: "50%",
+		width: "100%",
+		margin: "10px 50px",
+		filter: "drop-shadow(-1px 5px 3px #ccc)",
+	},
+	mobileMap: {
+		height: "60vh",
+		width: "100%",
 		margin: "10px 50px",
 		filter: "drop-shadow(-1px 5px 3px #ccc)",
 	},
@@ -131,19 +142,19 @@ const Step1 = () => {
 
 	return (
 		<Page showBack={true} flexDirection='column' justifyContent='center' alignItems='center' alignContent='center'>
-			<Box sx={{ display: "flex", alignItems: "flex-end" }} className={classes.textfieldContainer}>
+			<Box sx={{ display: "flex", alignItems: "flex-end" }} className={isMobile ? classes.mobileTextfieldContainer : classes.desktopTextfieldContainer}>
 				<TitleIcon style={{ fill: "darkgrey" }} />
 				<TextField variant='standard' color='secondary' label='Título' className={classes.textfield} onChange={(e) => setMeetTitle(e.target.value)} />
 			</Box>
-			<Box sx={{ display: "flex", alignItems: "flex-end" }} className={classes.textfieldContainer}>
+			<Box sx={{ display: "flex", alignItems: "flex-end" }} className={isMobile ? classes.mobileTextfieldContainer : classes.desktopTextfieldContainer}>
 				<EventNoteIcon style={{ fill: "darkgrey" }} />
 				<TextField variant='standard' color='secondary' label='Notas adicionales' className={classes.textfield} onChange={(e) => setMeetDescription(e.target.value)} />
 			</Box>
-			<Box sx={{ display: "flex", alignItems: "flex-end" }} className={classes.textfieldContainer}>
+			<Box sx={{ display: "flex", alignItems: "flex-end" }} className={isMobile ? classes.mobileTextfieldContainer : classes.desktopTextfieldContainer}>
 				<LocationOnIcon style={{ fill: "darkgrey" }} />
 				<GoogleAutocomplete mapState={mapState} setMapState={setMapState} autocompleteState={autocompleteState} setAutocompleteState={setAutocompleteState} />
 			</Box>
-			<Box className={classes.map}>
+			<Box className={isMobile ? classes.mobileMap : classes.desktopMap}>
 				<MyGoogleMap mapState={mapState} setMapState={setMapState} autocompleteState={autocompleteState} setAutocompleteState={setAutocompleteState} />
 			</Box>
 			<Box sx={{ display: "flex", alignItems: "flex-end" }}>

@@ -12,6 +12,7 @@ import TableContainer from "@material-ui/core/TableContainer"
 import TableHead from "@material-ui/core/TableHead"
 import TableRow from "@material-ui/core/TableRow"
 import moment from "moment"
+import { isMobile } from "react-device-detect"
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -50,7 +51,7 @@ const WeatherCards = () => {
 
 	return (
 		<Paper className={classes.root}>
-			<TableContainer style={{ width: 800 }}>
+			<TableContainer style={{ width: isMobile ? window.innerWidth : "800px" }}>
 				<Table aria-label='simple table'>
 					<TableBody>
 						<TableRow>
@@ -64,6 +65,9 @@ const WeatherCards = () => {
 											</Typography>
 											<Typography sx={{ mb: 1.5 }} color='text.secondary'>
 												{d.weather[0].main}
+											</Typography>
+											<Typography sx={{ mb: 1.5 }} color='text.secondary'>											
+												{`${Math.round(d.main.temp)}°C`}
 											</Typography>
 										</CardContent>
 									</Card>

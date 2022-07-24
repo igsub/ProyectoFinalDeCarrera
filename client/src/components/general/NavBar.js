@@ -14,6 +14,7 @@ import { setUser } from "../../Store/userSlice"
 import logo from "../../Images/MeetApp-logos_black.png"
 import { useHistory } from "react-router-dom"
 import CircularProgress from "@material-ui/core/CircularProgress"
+import { isMobile } from "react-device-detect"
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -35,6 +36,11 @@ const useStyles = makeStyles((theme) => ({
 	logo: {
 		maxWidth: "15rem",
 		width: "30vw",
+		padding: theme.spacing(2),
+	},
+	logoMobile: {
+		maxWidth: "15rem",
+		width: "35vw",
 		padding: theme.spacing(2),
 	},
 	iconButton: {
@@ -112,21 +118,21 @@ export default function NavBar() {
 		<Box className={classes.root}>
 			<AppBar position='static' color='transparent' elevation={0}>
 				<Toolbar>
-					<Grid container justifyContent='space-between'>
+					<Grid container justifyContent='space-between' alignContent="center">
 						<Grid item>
 							{!isHomePage && isAuthenticated ? (
 								<a href={`${window.location.protocol}//${window.location.host}`}>
-									<img alt='meet-app' src={logo} className={classes.logo} />
+									<img alt='meet-app' src={logo} className={isMobile ? classes.logoMobile : classes.logo} />
 								</a>
 							) : null}
 						</Grid>
 						<Grid item>
-							<div className={classes.userContainer}>
+							<div className={isMobile ? null : classes.userContainer}>
 								{user ? (
 									<>
 										<IconButton className={classes.iconButton} aria-label='account of current user' aria-controls='menu-appbar' aria-haspopup='true' onClick={handleMenu} color='inherit'>
-											<Typography className={classes.name}>{name}</Typography>
-											<Avatar src={picture} />
+											{isMobile ? null : <Typography className={classes.name}>{name}</Typography> }
+											<Avatar src={picture}/>
 										</IconButton>
 
 										<Menu

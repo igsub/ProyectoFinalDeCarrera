@@ -10,6 +10,9 @@ const useStyles = makeStyles((theme) => ({
 	root: {},
 	labelColor: {
         color: theme.palette.secondary.dark
+    },
+    value: {
+        textAlign: "center"
     }
 }))
 
@@ -24,7 +27,7 @@ const DisplayMeetData = ({title, description, location}) => {
             </Typography>
         </Grid>
         <Grid item xs={12}>
-            <Typography variant="subtitle1">
+            <Typography variant="subtitle1" className={classes.value}>
                 {title}
             </Typography>
         </Grid>
@@ -35,7 +38,7 @@ const DisplayMeetData = ({title, description, location}) => {
                 </Typography>
             </Grid>
             <Grid item xs={12}>
-                <Typography variant="subtitle1">
+                <Typography variant="subtitle1" className={classes.value}>
                     {description}
                 </Typography>
             </Grid>
@@ -49,7 +52,7 @@ const DisplayMeetData = ({title, description, location}) => {
                 </Typography>
             </Grid>
             <Grid item xs={12}>
-                <Typography variant="subtitle1">
+                <Typography variant="subtitle1" className={classes.value}>
                     {location.address}
                 </Typography>
             </Grid>

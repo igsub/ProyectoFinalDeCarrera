@@ -1,7 +1,7 @@
 import _, { forEach } from "lodash"
 import MUIDataTable from "mui-datatables"
-import React, { useEffect, useState } from "react"
-import { makeStyles } from "@material-ui/core/styles"
+import React, { useEffect, useRef, useState } from "react"
+import { makeStyles, createTheme, MuiThemeProvider } from "@material-ui/core/styles"
 import { useDispatch, useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
 import meetingService from "../../Services/meetingService"
@@ -13,38 +13,55 @@ import { Email } from "@material-ui/icons"
 import BadgeIcon from '@mui/icons-material/Badge';
 import { useAuth0 } from "@auth0/auth0-react"
 import DisplayMeetData from "./DisplayMeetData"
+import { clsx } from 'clsx'
 
 
 const useStyles = makeStyles((theme) => ({
 	root: {},
-	textfieldContainer: {
-	},
 	button: {
 		margin: "1rem",
-	},
-	map: {
-		height: "60vh",
-		width: "50%",
-		margin: "10px 50px",
-		filter: "drop-shadow(-1px 5px 3px #ccc)",
-	},
-	switchWeather: {
-		justifyContent: "start",
-	},
-	calendar: {
-		display: "flex",
-		flexDirection: "row",
 	},
 	tableContainer: {
 		marginTop: "1rem"
 	},
-	buttonContainer: {
-		marginTop: "1rem"
-	},
+	// buttonContainer: {
+	// 	marginTop: "1rem"
+	// },
 	labelColor: {
-        color: theme.palette.secondary.dark
-    }
+    color: theme.palette.secondary.dark
+  },
+	submittedLabel:{
+		color: theme.palette.secondary.dark,
+		margin: "1rem"
+	},
+	button:{
+		margin: "1rem"
+	}
 }))
+
+const getMuiTheme = (theme) => createTheme({
+	overrides: {
+		MUIDataTable: {
+			root: {
+			},
+			paper: {
+				//boxShadow: "none",
+			}
+		},
+		MUIDataTableBodyRow: {
+			root: {
+				'&:nth-child(odd)': { 
+					backgroundColor: '#06060626'
+				}
+			}
+		},
+		MUIDataTableBodyCell: {
+			root: {
+
+			}
+		}
+	}
+})
 
 const Invited = () => {
 	const dispatch = useDispatch()
@@ -55,6 +72,7 @@ const Invited = () => {
 	const [selectedDates, setSelectedDates] = useState([])
 	const [invitedName, setInvitedName] = useState("")
 	const [data, setData] = useState([])
+	const [hasVoted, setHasVoted] = useState(false)
 
 	const formatTableData = (array) => {
 		let formattedData = []
@@ -84,6 +102,10 @@ const Invited = () => {
 		}
 	}, [id])
 
+	useEffect(() => {
+		setInvitedName(userState.fullName)
+	}, [userState])
+
 	const submitVotes = () => {
 		let votes = []
 		_.forEach(selectedDates, (sd) => {
@@ -106,6 +128,8 @@ const Invited = () => {
 			}
 		})
 		meetingService.voteDatetimes({meeting_id: id, email: userState.email, datetimes: votes})
+		
+		setHasVoted(true)
 	}
 	
 	const columns = [
@@ -148,6 +172,8 @@ const Invited = () => {
 		print: false,
 		filter: false,
 		viewColumns: false,
+		responsive: "standard",
+		isRowSelectable: () => !hasVoted,
 		customToolbarSelect: () => null,
 		onRowSelectionChange: (currentRowSelected, allRowsSelected) => {			
 			setSelectedDates(allRowsSelected)
@@ -155,6 +181,7 @@ const Invited = () => {
 	}
 
 	return (
+		<>
 		<Page flexDirection='column' justifyContent='center' alignItems='center' alignContent='center'>
 				<DisplayMeetData title={meetState.title} description={meetState.description} location={meetState.location} />
 					<>
@@ -181,26 +208,34 @@ const Invited = () => {
 							: <TextField
 							variant='standard'
 							color="secondary"
-							value={invitedName}
 							inputProps={{min: 0, style: { textAlign: 'center' }}}
 							onChange={e => setInvitedName(e.target.value)}
 						/>}							
 						</Grid>
 					</>
 			<Grid container className={classes.tableContainer} justifyContent="center">
-				<MUIDataTable title={"Dates available"} data={data} columns={columns} options={options} />
+				<MuiThemeProvider theme={getMuiTheme()}>
+					<MUIDataTable title={"Dates available"} data={data} columns={columns} options={options} />
+				</MuiThemeProvider>
 			</Grid>
 			<Grid container className={classes.buttonContainer} justifyContent="center">
-				<Button
+				{hasVoted ? 
+				<Typography variant="h5" className={classes.labelColor}>
+					Votes Submitted!
+				</Typography>
+				: <Button
 					onClick={submitVotes}
 					variant="contained"
 					color="secondary"
 					disabled={!invitedName || selectedDates.length === 0}
+					className={classes.button}
 				>
 					Send selected dates
 				</Button>
+				}	
 			</Grid>
 		</Page>
+		</>
 	)
 }
 

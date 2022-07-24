@@ -5,13 +5,17 @@ import { Button } from "@material-ui/core";
 import logo from "../../Images/MeetApp-logos_black.png";
 import { makeStyles } from "@material-ui/core/styles";
 import { useAuth0 } from "@auth0/auth0-react"
+import { isMobile } from "react-device-detect";
 
 const useStyles = makeStyles((theme) => ({
   logo: {
-    maxWidth: "50vw",
+    maxWidth: "100vw",
   },
   title: {
     fontSize: "3vw"
+  },
+  titleMobile: {
+    fontSize: "6vw"
   }
 }));
 
@@ -27,7 +31,7 @@ const Home = () => {
       alignContent="center"
     >
       <img alt="" src={logo} className={classes.logo} />
-      <Typography variant="h4" gutterBottom className={classes.title}>
+      <Typography variant="h4" gutterBottom className={isMobile ? classes.titleMobile : classes.title}>
         Create your meeting easily!
       </Typography>
       {isAuthenticated? 

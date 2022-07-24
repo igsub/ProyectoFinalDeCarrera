@@ -11,6 +11,18 @@ const meetingService = {
 
 	voteDatetimes: async (data) => {
 		return await axios.post("/meeting/voteDatetimes", data)
+	},
+
+	// getMostVoted: async (id) => {
+	// 	return await axios.get("/meeting/getMostVoted/" + id)
+	// },
+
+	getMostVoted: async (id) => {
+		return await axios.get("/meeting/decideDatetime/" + id)
+	},
+
+	selectFinalDatetime: async (meeting) => {
+		return await axios.post("/meeting/selectFinalDatetime", meeting)
 	}
 }
 

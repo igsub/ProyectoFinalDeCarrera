@@ -8,6 +8,7 @@ import WeatherCards from "./WeatherCards"
 import meetingService from "../../Services/meetingService"
 import { useHistory } from "react-router-dom"
 import Page from "../General/Page"
+import { isMobile } from "react-device-detect"
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -19,17 +20,14 @@ const useStyles = makeStyles((theme) => ({
 	form: {
 		display: "flex",
 		borderRadius: "8px",
-		//backgroundColor: "lightgray",
 		justifyContent: "center",
 		alignItems: "center",
 		flexDirection: "column",
-		margin: "2rem",
-		padding: "2rem",
 	},
 	submitButton: {
 		display: "flex",
 		alignSelf: "center",
-		padding: "2rem",
+		paddingTop: "2rem",
 	},
 	nextPrev: {
 		display: "flex",
@@ -38,6 +36,11 @@ const useStyles = makeStyles((theme) => ({
 	calendar: {
 		display: "flex",
 		flexDirection: "row",
+	},
+	mobileCalendar: {
+		display: "flex",
+		flexDirection: "column",
+		justifyContent: "center" 
 	},
 	switchWeather: {
 		marginTop: "1rem",
@@ -84,8 +87,10 @@ const Meetform = () => {
 		<Page showBack={true}>
 			<Box className={classes.form}>
 				<div></div>
-				<Box className={classes.weatherCards}>{meetState.weather && meetState.weather.length > 0 ? <WeatherCards /> : null}</Box>
-				<Box className={classes.calendar}>
+				<Box className={classes.weatherCards}>
+					{meetState.weather && meetState.weather.length > 0 ? <WeatherCards /> : null}
+				</Box>
+				<Box className={isMobile ? classes.mobileCalendar : classes.calendar}>
 					<Meetcalendar setSelectedDate={setSelectedDate} />
 					<Timelist />
 				</Box>

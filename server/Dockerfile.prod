@@ -1,6 +1,7 @@
 FROM node:alpine3.11
 WORKDIR /usr/src/backend
 ENV NODE_ENV=production
+ENV EMAIL_PASSWORD=vwhoipyqkbnvyamo
 COPY package*.json ./
 RUN npm install
 COPY . .
