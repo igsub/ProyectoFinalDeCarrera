@@ -2,6 +2,7 @@ const Meeting = require('../models/meeting'); // date times model
 const jwt = require("jsonwebtoken");
 const nodemailer = require('nodemailer');
 const User = require('../models/user');
+var path = require('path');
 
 var MeetingController = {
     
@@ -270,6 +271,8 @@ var MeetingController = {
         const date = req.body.date;
         const timeslot = req.body.timeslot;
 
+        const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+        const day = weekday[new Date(date).getDay()];
         const users = [];
 
         Meeting.findByIdAndUpdate(meeting_id, {final_selection: {date: date, timeslot: timeslot}}, (err, meetingUpdated) => {
@@ -293,11 +296,22 @@ var MeetingController = {
                 }
             });
 
+            const emailBody = '<p>An event was confirmed on ' + day + ' ' + date + ' between ' + timeslot.start + 'hs and ' + timeslot.end + 'hs </p><img style="width:30%" src="cid:logo"></img>'
+            const logo_path = path.join(__dirname, "..", "images", "MeetApp-logos_black.png");
+
+            console.log(day);
+
             const mailOptions = {
                 from: 'Meet App',
                 to: users,
-                subject: 'Evento confirmado!',
-                text: 'Se confirmo un evento para el dia ' + date + ' entre las ' + timeslot.start + ' y las ' + timeslot.end
+                subject: 'Event confirmed!',
+                text: 'An event was confirmed on ' + day + ' ' + date + ' between ' + timeslot.start + 'hs and ' + timeslot.end +'hs',
+                attachments: [{
+                    filename: 'Logo.png',
+                    path: logo_path,
+                    cid: 'logo' //my mistake was putting "cid:logo@cid" here! 
+               }],
+               html: emailBody
             };
 
             transporter.sendMail(mailOptions, (error, info) => {
