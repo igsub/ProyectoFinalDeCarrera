@@ -259,7 +259,9 @@ var MeetingController = {
 
                 votos.sort((datetime_a, datetime_b) => datetime_b.count - datetime_a.count);
 
-                return res.status(200).send(votos);
+                const users_count = meeting.datetimesByUser.length;
+                
+                return res.status(200).send({votos: votos, cant_usuarios: users_count});
             });
         } catch (Error) {
             console.log(Error);
