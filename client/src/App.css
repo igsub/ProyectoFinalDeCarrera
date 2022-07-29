@@ -42,3 +42,7 @@
   margin: 10px 50px;
   filter: drop-shadow(-1px 5px 3px #ccc);
 }
+
+iframe {
+  pointer-events: none;
+}

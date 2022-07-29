@@ -3,7 +3,7 @@ import userService from "../../Services/userService"
 import { useAuth0 } from "@auth0/auth0-react"
 import Page from "../General/Page"
 import MUIDataTable from "mui-datatables"
-import { makeStyles } from "@material-ui/core/styles"
+import { makeStyles, createTheme, MuiThemeProvider } from "@material-ui/core/styles"
 import { Grid } from "@material-ui/core"
 import { useHistory } from "react-router-dom"
 
@@ -21,13 +21,14 @@ const MyMeetings = () => {
 	const history = useHistory()
 
 	useEffect(() => {
-		if (user.email) {
+		if (user?.email) {
 			userService
 				.getAllUserMeetings(user.email)
 				.then((response) => setMeetings(response.data))
 				.catch((error) => console.log(error))
 		}
-	}, [])
+	}, [user])
+	
 
 	const columns = [
 		{
@@ -73,6 +74,29 @@ const MyMeetings = () => {
 		},
 	]
 
+	const getMuiTheme = (theme) => createTheme({
+		overrides: {
+			MUIDataTableBodyRow: {
+				root: {
+					'&:nth-child(odd)': { 
+						backgroundColor: '#06060626'
+					}
+				}
+			},
+			MuiTableRow: { 
+				root: 
+				{ 
+					'&$hover:hover': {
+						backgroundColor: '#f7cfdca1'
+					},
+					'&$selected': {
+						backgroundColor: '#f7cfdca1 !important'
+					}
+				} 
+			}
+		}
+	})
+
 	const options = {
 		selectableRows: "none",
 		search: false,
@@ -92,7 +116,9 @@ const MyMeetings = () => {
 
 	return (
 		<Page showBack={true} flexDirection='column' justifyContent='center' alignItems='center' alignContent='center'>
-			<MUIDataTable title={"My meetings"} data={meetings} columns={columns} options={options} className={classes.table} />
+			<MuiThemeProvider theme={getMuiTheme()}>
+				<MUIDataTable title={"My meetings"} data={meetings} columns={columns} options={options} className={classes.table} />
+			</MuiThemeProvider>
 		</Page>
 	)
 }

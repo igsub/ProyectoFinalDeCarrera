@@ -2,17 +2,22 @@ import { makeStyles, Grid, Paper } from '@material-ui/core'
 import React from 'react'
 import NavBar from '../General/NavBar'
 import Footer from './Footer'
+import { isMobile } from 'react-device-detect'
+
+const MOBILE_MAIN_CONTAINER_HEIGTH = window.screen.height - 140 // navbar + footer
+const DESKTOP_MAIN_CONTAINER_HEIGTH = window.screen.height - 172
 
 const useStyles = makeStyles({
     page: {
-        background: "linear-gradient(180deg, rgba(232,232,232,0.4318102240896359) 40%, rgba(240,98,146,0.3054516806722689) 100%)",
         width: "100%",
-        overflowY: "scroll",
-        height: "100vh"
+        overflowY: "auto",
+        //minHeight: isMobile ? MOBILE_MAIN_CONTAINER_HEIGTH : DESKTOP_MAIN_CONTAINER_HEIGTH,
+        display: "flex",
+        justifyContent: "center"
     },
     footerContainer: {
         display: "flex",
-        flexDirection: "row-reverse"
+        flexDirection: "row-reverse",
     },
     paper: {
         padding: "2rem"
@@ -22,25 +27,17 @@ const useStyles = makeStyles({
 const Layout = ({children}) => {
     const classes = useStyles()
     return (    
-        
-        // <div className={classes.page}>
-            <Grid container spacing={0} className={classes.page} justifyContent="center">
-                <Grid item xs={12}>
-                    <NavBar />
-                </Grid>
-                <Grid item xs={12} md={6} lg={8}>
-                    {/* <Paper elevation={2} className={classes.paper}>
-                        {children}
-                    </Paper> */}
-                    {children}
-                </Grid>
-                <Grid item xs={12} className={classes.footerContainer}>
-                    <Footer />
-                </Grid>
+        <Grid container spacing={0} className={classes.page} justifyContent="center">
+            <Grid item xs={12}>
+                <NavBar />
             </Grid>
-        
-            
-        //</div>
+            <Grid item xs={12} md={6} lg={8}>
+                {children}
+            </Grid>
+            <Grid item xs={12} className={classes.footerContainer}>
+                <Footer />
+            </Grid>
+        </Grid>
   )
 }
 

@@ -106,11 +106,13 @@ export default function NavBar() {
 	}
 
 	const handleLogIn = () => {
+		setAnchorEl(null)
 		localStorage.setItem("callbackURL", window.location.pathname)
 		loginWithRedirect()
 	}
 
 	const handleMyMeetings = () => {
+		setAnchorEl(null)
 		history.push("/mymeetings")
 	}
 
@@ -150,10 +152,10 @@ export default function NavBar() {
 											open={open}
 											onClose={handleClose}
 										>
-											<MenuItem onClick={handleMyMeetings}>
+											<MenuItem key="option-mymeetings" onClick={handleMyMeetings}>
 												<Typography>My Meetings</Typography>
 											</MenuItem>
-											<MenuItem onClick={handleLogout}>
+											<MenuItem key="option-logout" onClick={handleLogout}>
 												<Typography>Log out</Typography>
 											</MenuItem>
 										</Menu>

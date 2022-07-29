@@ -211,10 +211,11 @@ var MeetingController = {
                         timeslots.forEach(timeslot => {
                             var index = votos.findIndex(element => element.date == datetime.date && element.timeslot.range == timeslot.range);
                             if (index == -1) {
-                                votos.push({date: datetime.date, timeslot: timeslot, count: 1});
+                                votos.push({date: datetime.date, timeslot: timeslot, count: 1, votes: 1});
                             } else {
                                 var new_count = votos[index].count + 1;
                                 votos[index].count = new_count;
+                                votos[index].votes = new_count;
                             }
                         });
                     });

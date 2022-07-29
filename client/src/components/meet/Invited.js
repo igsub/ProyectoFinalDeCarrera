@@ -59,6 +59,17 @@ const getMuiTheme = (theme) => createTheme({
 			root: {
 
 			}
+		},
+		MuiTableRow: { 
+			root: 
+			{ 
+				'&$hover:hover': {
+					backgroundColor: '#f7cfdca1'
+				},
+				'&$selected': {
+					backgroundColor: '#f7cfdca1 !important'
+				} 
+			} 
 		}
 	}
 })
@@ -172,7 +183,6 @@ const Invited = () => {
 		print: false,
 		filter: false,
 		viewColumns: false,
-		responsive: "standard",
 		isRowSelectable: () => !hasVoted,
 		customToolbarSelect: () => null,
 		onRowSelectionChange: (currentRowSelected, allRowsSelected) => {			

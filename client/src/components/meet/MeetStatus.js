@@ -29,13 +29,6 @@ const useStyles = makeStyles((theme) => ({
 
 const getMuiTheme = (theme) => createTheme({
 	overrides: {
-		MUIDataTable: {
-			root: {
-			},
-			paper: {
-				//boxShadow: "none",
-			}
-		},
 		MUIDataTableBodyRow: {
 			root: {
 				'&:nth-child(odd)': { 
@@ -52,9 +45,15 @@ const getMuiTheme = (theme) => createTheme({
 				// },
 			}
 		},
-		MUIDataTableBodyCell: {
-			root: {
-
+		MuiTableRow: { 
+			root: 
+			{ 
+				'&$hover:hover': {
+					backgroundColor: '#f7cfdca1'
+				},
+				'&$selected': {
+					backgroundColor: '#f7cfdca1 !important'
+				}
 			}
 		}
 	}
@@ -95,7 +94,7 @@ const MeetStatus = () => {
 			meetingService
 				.getMostVoted(id)
 				.then((response) => {
-					const mapData = _.orderBy(response.data.map(item => (
+					const mapData = _.orderBy(response.data.votos.map(item => (
 						{
 							...item, 
 							start: item.timeslot.start, 
@@ -172,6 +171,14 @@ const MeetStatus = () => {
 		{
 			name: "end",
 			label: "To",
+			options: {
+				filter: false,
+				sort: false,
+			},
+		},
+		{
+			name: "votes",
+			label: "Votes",
 			options: {
 				filter: false,
 				sort: false,

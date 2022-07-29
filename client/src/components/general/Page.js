@@ -49,7 +49,7 @@ const Page = (props) => {
 			</Grid>
 			{props.children}
 			{props.showBack? (
-				<IconButton onClick={() => history.goBack()} className={isMobile ? classes.backArrowButtonMobile : classes.backArrowButton} size='large'>
+				<IconButton onClick={() => history.goBack()} className={isMobile ? classes.backArrowButtonMobile : classes.backArrowButton} size="medium">
 					<ArrowBackIos className={classes.arrowIcon} />
 				</IconButton>
 			) : null}
