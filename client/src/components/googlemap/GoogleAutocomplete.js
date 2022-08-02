@@ -132,7 +132,7 @@ const GoogleAutocomplete = (props) => {
 				console.log("input change: ", event, newInputValue)
 				setAutocompleteState((as) => ({ ...as, inputValue: newInputValue }))
 			}}
-			renderInput={(params) => <TextField {...params} label='Ubicación' variant='standard' fullWidth onChange={(e) => setAutocompleteState((as) => ({ ...as, value: e.target.value }))} />}
+			renderInput={(params) => <TextField {...params} label='Location' variant='standard' color="secondary" fullWidth onChange={(e) => setAutocompleteState((as) => ({ ...as, value: e.target.value }))} />}
 			renderOption={(props, option) => {
 				console.log("renderOption props", props)
 				console.log("renderOption option: ", option)

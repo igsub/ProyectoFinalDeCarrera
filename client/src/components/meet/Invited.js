@@ -14,6 +14,7 @@ import BadgeIcon from '@mui/icons-material/Badge';
 import { useAuth0 } from "@auth0/auth0-react"
 import DisplayMeetData from "./DisplayMeetData"
 import { clsx } from 'clsx'
+import WeatherCards from "./WeatherCards"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -36,7 +37,10 @@ const useStyles = makeStyles((theme) => ({
 	},
 	button:{
 		margin: "1rem"
-	}
+	},
+	meetEndedLabel: {
+		margin: "1rem"
+	},
 }))
 
 const getMuiTheme = (theme) => createTheme({
@@ -84,6 +88,8 @@ const Invited = () => {
 	const [invitedName, setInvitedName] = useState("")
 	const [data, setData] = useState([])
 	const [hasVoted, setHasVoted] = useState(false)
+	const [endedMeeting, setEndedMeeting] = useState(false)
+	const [meetingDate, setMeetingDate] = useState(null)
 
 	const formatTableData = (array) => {
 		let formattedData = []
@@ -114,8 +120,24 @@ const Invited = () => {
 	}, [id])
 
 	useEffect(() => {
-		setInvitedName(userState.fullName)
-	}, [userState])
+		if (userState.email && data.length > 0) {
+			setInvitedName(userState.fullName)
+			const ownSelectedDatesIdx = _.findIndex(meetState.datetimesByUser, (dtByUser) => dtByUser.email === userState.email)
+			const ownSelectedDates = ownSelectedDatesIdx !== -1 ? formatTableData(meetState.datetimesByUser[ownSelectedDatesIdx].datetimes) : []
+			const idxs = []
+			ownSelectedDates.forEach(ownDate => {
+				let foundIdx = _.findIndex(data, el => el.date === ownDate.date && el.range === ownDate.range)
+				if (foundIdx !== -1) idxs.push({index: foundIdx, dataIndex: foundIdx})
+			})
+			setSelectedDates(idxs)
+
+			const datetime = meetState.final_selection
+			if (datetime) {
+				setMeetingDate({...datetime, from: datetime.timeslot.start, to: datetime.timeslot.end})
+				setEndedMeeting(true)
+			}
+		}	
+	}, [userState, data])
 
 	const submitVotes = () => {
 		let votes = []
@@ -183,16 +205,19 @@ const Invited = () => {
 		print: false,
 		filter: false,
 		viewColumns: false,
-		isRowSelectable: () => !hasVoted,
+		rowsSelected: selectedDates.length > 0 ? selectedDates.map(i => i.index) : [],
+		isRowSelectable: () => !hasVoted && !endedMeeting,
 		customToolbarSelect: () => null,
-		onRowSelectionChange: (currentRowSelected, allRowsSelected) => {			
+		onRowSelectionChange: (currentRowSelected, allRowsSelected) => {		
+			console.log(allRowsSelected)	
 			setSelectedDates(allRowsSelected)
 		}
 	}
 
 	return (
 		<>
-		<Page flexDirection='column' justifyContent='center' alignItems='center' alignContent='center'>
+		<Page flexDirection='column' justifyContent='center' alignItems='center' alignContent='center' title="Vote Dates">
+				{meetState.weatherMatters ? <WeatherCards /> : null}
 				<DisplayMeetData title={meetState.title} description={meetState.description} location={meetState.location} />
 					<>
 						<Grid item xs={12}>
@@ -207,7 +232,7 @@ const Invited = () => {
 						</Grid>
 						<Grid item xs={12}>
 							<Typography variant="h5" className={classes.labelColor}>
-								Nombre
+								Name
 							</Typography>
 						</Grid>
 						<Grid item xs={12} sm={8} md={4}>
@@ -229,11 +254,27 @@ const Invited = () => {
 				</MuiThemeProvider>
 			</Grid>
 			<Grid container className={classes.buttonContainer} justifyContent="center">
-				{hasVoted ? 
+				{hasVoted? 
 				<Typography variant="h5" className={classes.labelColor}>
 					Votes Submitted!
 				</Typography>
-				: <Button
+				: endedMeeting ? 
+				<Typography component="div" variant="h6" className={classes.meetEndedLabel}>
+					The meeting was set for 
+					<Box fontWeight={700} display='inline'>
+						{` ${moment(meetingDate.date, "YYYY/MM/DD").format("dddd D [of] MMMM[,] YYYY")} `}
+					</Box>
+					, between 
+					<Box fontWeight={700} display='inline'>
+						{` ${meetingDate.from}`}
+					</Box>
+					hs and 
+					<Box fontWeight={700} display='inline'>
+						{` ${meetingDate.to}`}
+					</Box>
+					hs
+				</Typography>
+				:<Button
 					onClick={submitVotes}
 					variant="contained"
 					color="secondary"

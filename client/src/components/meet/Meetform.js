@@ -48,7 +48,6 @@ const useStyles = makeStyles((theme) => ({
 	weatherCards: {
 		display: "flex",
 		flexDirection: "row",
-		marginBottom: "2rem",
 	},
 }))
 
@@ -84,7 +83,7 @@ const Meetform = () => {
 	}
 
 	return (
-		<Page showBack={true}>
+		<Page showBack={true} title="Dates Selection">
 			<Box className={classes.form}>
 				<div></div>
 				<Box className={classes.weatherCards}>

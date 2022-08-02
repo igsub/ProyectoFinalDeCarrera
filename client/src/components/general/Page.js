@@ -24,16 +24,18 @@ const Page = (props) => {
 			bottom: "0px",
 			left: "0px",
 			padding: "1.5rem",
-			color: theme.palette.secondary.main
+			color: theme.palette.secondary.main,
+			zIndex: 200
 		},
 		arrowIcon: {
 			transform: "scale(1.8)",
 		},
 		titleContainer: {
-			alignSelf: "start"
+			alignSelf: "center",
+			margin: "0.5rem"
 		},
 		title: {
-			textAlign: "left"
+			textAlign: "center"
 		}
 	}))
 
@@ -42,9 +44,9 @@ const Page = (props) => {
 
 	return (
 		<motion.div className={classes.root} initial={{ width: 0 }} animate={{ width: "100%" }} exit={{ x: window.innerWidth, transition: { duration: 0.1 } }}>
-			<Grid container>
+			<Grid container justifyContent="center">
 				<Grid item className={classes.titleContainer}>
-					<Typography variant='h6' className={classes.title}>{props.title ? props.title : null}</Typography>
+					<Typography variant='h4' className={classes.title}>{props.title ? props.title : null}</Typography>
 				</Grid>
 			</Grid>
 			{props.children}

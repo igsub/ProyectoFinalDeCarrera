@@ -141,18 +141,18 @@ const Step1 = () => {
 	}
 
 	return (
-		<Page showBack={true} flexDirection='column' justifyContent='center' alignItems='center' alignContent='center'>
+		<Page showBack={true} flexDirection='column' justifyContent='center' alignItems='center' alignContent='center' title="Meeting Information">
 			<Box sx={{ display: "flex", alignItems: "flex-end" }} className={isMobile ? classes.mobileTextfieldContainer : classes.desktopTextfieldContainer}>
 				<TitleIcon style={{ fill: "darkgrey" }} />
-				<TextField variant='standard' color='secondary' label='Título' className={classes.textfield} onChange={(e) => setMeetTitle(e.target.value)} />
+				<TextField variant='standard' color='secondary' label='Title' className={classes.textfield} onChange={(e) => setMeetTitle(e.target.value)} defaultValue={meetState.title} />
 			</Box>
 			<Box sx={{ display: "flex", alignItems: "flex-end" }} className={isMobile ? classes.mobileTextfieldContainer : classes.desktopTextfieldContainer}>
 				<EventNoteIcon style={{ fill: "darkgrey" }} />
-				<TextField variant='standard' color='secondary' label='Notas adicionales' className={classes.textfield} onChange={(e) => setMeetDescription(e.target.value)} />
+				<TextField variant='standard' color='secondary' label='Description' className={classes.textfield} onChange={(e) => setMeetDescription(e.target.value)} defaultValue={meetState.description}/>
 			</Box>
 			<Box sx={{ display: "flex", alignItems: "flex-end" }} className={isMobile ? classes.mobileTextfieldContainer : classes.desktopTextfieldContainer}>
 				<LocationOnIcon style={{ fill: "darkgrey" }} />
-				<GoogleAutocomplete mapState={mapState} setMapState={setMapState} autocompleteState={autocompleteState} setAutocompleteState={setAutocompleteState} />
+				<GoogleAutocomplete mapState={mapState} setMapState={setMapState} autocompleteState={autocompleteState} setAutocompleteState={setAutocompleteState}/>
 			</Box>
 			<Box className={isMobile ? classes.mobileMap : classes.desktopMap}>
 				<MyGoogleMap mapState={mapState} setMapState={setMapState} autocompleteState={autocompleteState} setAutocompleteState={setAutocompleteState} />

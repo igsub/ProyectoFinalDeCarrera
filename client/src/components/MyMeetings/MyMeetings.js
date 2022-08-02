@@ -115,9 +115,9 @@ const MyMeetings = () => {
 	}
 
 	return (
-		<Page showBack={true} flexDirection='column' justifyContent='center' alignItems='center' alignContent='center'>
+		<Page showBack={true} flexDirection='column' justifyContent='center' alignItems='center' alignContent='center' title="My Meetings">
 			<MuiThemeProvider theme={getMuiTheme()}>
-				<MUIDataTable title={"My meetings"} data={meetings} columns={columns} options={options} className={classes.table} />
+				<MUIDataTable title={"Created meetings and invitations"} data={meetings} columns={columns} options={options} className={classes.table} />
 			</MuiThemeProvider>
 		</Page>
 	)

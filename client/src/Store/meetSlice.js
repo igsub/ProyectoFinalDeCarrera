@@ -9,7 +9,8 @@ const initialState = {
 	currentDate: null,
 	currentTimes: [],
 	datetimesByUser: [],
-	weatherMatters: null
+	weatherMatters: null,
+	final_selection: null,
 }
 
 const meetSlice = createSlice({
@@ -26,6 +27,7 @@ const meetSlice = createSlice({
 			state.currentTimes = action.payload.currentTimes || []
 			state.datetimesByUser = action.payload.datetimesByUser || []
 			state.weatherMatters = action.payload.weatherMatters || null
+			state.final_selection = action.payload.final_selection || null
 		},
 	},
 })

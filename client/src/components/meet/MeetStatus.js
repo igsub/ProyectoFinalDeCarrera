@@ -11,8 +11,9 @@ import moment from "moment"
 import DisplayMeetData from "./DisplayMeetData"
 import InvitationLinkButton from "./InvitationLinkButton"
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import { IconButton, Modal, Button, Box, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@material-ui/core"
+import { IconButton, Modal, Button, Box, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Typography } from "@material-ui/core"
 import CircularProgress from "@material-ui/core/CircularProgress"
+import WeatherCards from "./WeatherCards"
 
 const useStyles = makeStyles((theme) => ({
 	root: {},
@@ -21,6 +22,9 @@ const useStyles = makeStyles((theme) => ({
 	},
 	button: {
 		margin: "1rem",
+	},
+	meetEndedLabel: {
+		margin: "1rem"
 	},
 	selectFInalDateButton: {
 		color: theme.palette.secondary.main
@@ -33,16 +37,7 @@ const getMuiTheme = (theme) => createTheme({
 			root: {
 				'&:nth-child(odd)': { 
 					backgroundColor: '#06060626'
-				},
-				// '&:nth-child(1)': { 
-				// 	backgroundColor: '#b2ff66'
-				// },
-				// '&:nth-child(2)': { 
-				// 	backgroundColor: '#d4f7b2'
-				// },
-				// '&:nth-child(3)': { 
-				// 	backgroundColor: '#e2f5cf'
-				// },
+				}
 			}
 		},
 		MuiTableRow: { 
@@ -69,6 +64,7 @@ const MeetStatus = () => {
 	const [openDialog, setOpenDialog] = useState(false)
 	const [loading, setLoading] = useState(false)
 	const [endedMeeting, setEndedMeeting] = useState(false)
+	const [meetingDate, setMeetingDate] = useState(null)
 
 	const formatTableData = (array) => {
 		let formattedData = []
@@ -80,16 +76,20 @@ const MeetStatus = () => {
 		return _.sortBy(formattedData, ["date", "range"])
 	}
 
+	const getMeetingData = () => {
+		meetingService
+				.getMeeting(id)
+				.then((response) => {
+					dispatch(setMeet(response.data?.meeting))
+					const datetime = response.data?.meeting.final_selection
+					if (datetime) setMeetingDate({...datetime, from: datetime.timeslot.start, to: datetime.timeslot.end})
+				})
+				.catch((e) => console.log(e))
+	}
+
 	useEffect(() => {
 		if (id) {
 			let isMounted = true
-			meetingService
-				.getMeeting(id)
-				.then((response) => {
-					console.log("getMeetingResponse: ", response)
-					dispatch(setMeet(response.data?.meeting))
-				})
-				.catch((e) => console.log(e))
 			
 			meetingService
 				.getMostVoted(id)
@@ -106,11 +106,20 @@ const MeetStatus = () => {
 				})
 				.catch((e) => console.log(e))
 
+			getMeetingData()
 			return () => {
 				isMounted = false
 			}
 		}
 	}, [id])
+
+	useEffect(() => {
+		if (meetingDate && data) {
+			const idx = data.findIndex(item => item.date === meetingDate.date)
+			setSelectedDate({index: idx, dataIndex: idx})
+			setEndedMeeting(true)
+		}
+	}, [meetingDate, data])
 
 
 	const selectFinalDate = () => {
@@ -151,7 +160,7 @@ const MeetStatus = () => {
 			options: {
 				filter: true,
 				sort: false,
-				customBodyRender: (v) => moment(v, "YYYY/MM/DD").format("dddd D [of] MMMM [,] YYYY"),
+				customBodyRender: (v) => moment(v, "YYYY/MM/DD").format("dddd D [of] MMMM[,] YYYY"),
 			},
 		},
 		{
@@ -202,11 +211,15 @@ const MeetStatus = () => {
 		print: false,
 		filter: false,
 		viewColumns: false,
-		responsive: "standard",
+		rowsSelected: selectedDate ? [selectedDate.index] : [],
 		customToolbarSelect: () => null,
 		isRowSelectable: () => !endedMeeting,
-		onRowSelectionChange: (currentRowSelected) => {			
-			setSelectedDate(currentRowSelected[0])
+		onRowSelectionChange: (currentRowSelected) => {
+			if (selectedDate?.index === currentRowSelected[0]?.index) {
+				setSelectedDate(null)
+			} else {
+				setSelectedDate(currentRowSelected[0])
+			}
 		},
 		customToolbarSelect: () => (<>
 			<IconButton title="Select date for the meeting" onClick={selectFinalDate}>
@@ -218,11 +231,28 @@ const MeetStatus = () => {
 	return (
 		<>
 			<Page flexDirection='column' justifyContent='center' alignItems='center' alignContent='center'>
+				{meetState.weatherMatters ? <WeatherCards /> : null}
 				<DisplayMeetData title={meetState.title} description={meetState.description} location={meetState.location} />
 				<MuiThemeProvider theme={getMuiTheme()}>
 					<MUIDataTable title={"Dates available to choose"} data={data} columns={columns} options={options} className={classes.table} />
 				</MuiThemeProvider>
-				{!endedMeeting ? <InvitationLinkButton path={`${window.location.protocol}//${window.location.host}/meetinvitation/${id}`} className={classes.button} /> : null}
+				{!endedMeeting ? 
+					<InvitationLinkButton path={`${window.location.protocol}//${window.location.host}/meetinvitation/${id}`} className={classes.button} /> 
+					: <Typography variant="h6" className={classes.meetEndedLabel}>
+					The meeting was set for 
+					<Box fontWeight={700} display='inline'>
+						{` ${moment(meetingDate.date, "YYYY/MM/DD").format("dddd D [of] MMMM[,] YYYY")} `}
+					</Box>
+					, between 
+					<Box fontWeight={700} display='inline'>
+						{` ${meetingDate.from}`}
+					</Box>
+					hs and 
+					<Box fontWeight={700} display='inline'>
+						{` ${meetingDate.to}`}
+					</Box>
+					hs
+						</Typography>}
 				
 			</Page>
 			<Dialog
