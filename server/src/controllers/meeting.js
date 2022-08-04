@@ -224,37 +224,41 @@ var MeetingController = {
                 if (meeting.weatherMatters) {
                     votos.forEach(datetime => {
                         var index_clima = meeting.weather.findIndex(weather => weather.datetime.split(" ")[0].replaceAll("-","/") == datetime.date && parseInt(weather.datetime.split(" ")[1].split(":")[0]) <= parseInt(datetime.timeslot.end.split(":")[0]) && parseInt(weather.datetime.split(" ")[1].split(":")[0]) >= parseInt(datetime.timeslot.start.split(":")[0]));
-                        var weatherCondition = meeting.weather[index_clima].weather[0].main;
-                        var weatherTemp = meeting.weather[index_clima].main.temp;
+                        
+                        if (index_clima >= 0) {
+                            var weatherCondition = meeting.weather[index_clima].weather[0].main;
+                            var weatherTemp = meeting.weather[index_clima].main.temp;
 
-                        var index_clima_2 = meeting.weather.reverse().findIndex(weather => weather.datetime.split(" ")[0].replaceAll("-","/") == datetime.date && parseInt(weather.datetime.split(" ")[1].split(":")[0]) <= parseInt(datetime.timeslot.end.split(":")[0]) && parseInt(weather.datetime.split(" ")[1].split(":")[0]) >= parseInt(datetime.timeslot.start.split(":")[0]));
-                        var weatherCondition2 = meeting.weather[index_clima_2].weather[0].main;
-                        var weatherTemp2 = meeting.weather[index_clima_2].main.temp;
+                            var index_clima_2 = meeting.weather.reverse().findIndex(weather => weather.datetime.split(" ")[0].replaceAll("-","/") == datetime.date && parseInt(weather.datetime.split(" ")[1].split(":")[0]) <= parseInt(datetime.timeslot.end.split(":")[0]) && parseInt(weather.datetime.split(" ")[1].split(":")[0]) >= parseInt(datetime.timeslot.start.split(":")[0]));
+                            var weatherCondition2 = meeting.weather[index_clima_2].weather[0].main;
+                            var weatherTemp2 = meeting.weather[index_clima_2].main.temp;
 
-                        var valores_climas = {
-                            "Clear": 2,
-                            "Clouds": 1.5,
-                            "Rain": 1
-                        };
+                            var valores_climas = {
+                                "Clear": 2,
+                                "Clouds": 1.5,
+                                "Rain": 1
+                            };
 
-                        //Multiplicando segun estado del clima
-                        if (valores_climas[weatherCondition] > valores_climas[weatherCondition2]) {
-                            var new_count = datetime.count * valores_climas[weatherCondition2];
-                            datetime.count = new_count;
-                        } else {
-                            var new_count = datetime.count * valores_climas[weatherCondition];
-                            datetime.count = new_count;
+                            //Multiplicando segun estado del clima
+                            if (valores_climas[weatherCondition] > valores_climas[weatherCondition2]) {
+                                var new_count = datetime.count * valores_climas[weatherCondition2];
+                                datetime.count = new_count;
+                            } else {
+                                var new_count = datetime.count * valores_climas[weatherCondition];
+                                datetime.count = new_count;
+                            }
+
+                            var min_temp = Math.min(weatherTemp, weatherTemp2);
+                            //Multiplicando segun temperatura
+                            if (min_temp > 20) {
+                                var new_count = datetime.count * 2;
+                                datetime.count = new_count;
+                            } else if (min_temp > 10) {
+                                var new_count = datetime.count * 1.5;
+                                datetime.count = new_count;
+                            }
                         }
-
-                        var min_temp = Math.min(weatherTemp, weatherTemp2);
-                        //Multiplicando segun temperatura
-                        if (min_temp > 20) {
-                            var new_count = datetime.count * 2;
-                            datetime.count = new_count;
-                        } else if (min_temp > 10) {
-                            var new_count = datetime.count * 1.5;
-                            datetime.count = new_count;
-                        }
+                        
                     });
                 }
 
