@@ -6,7 +6,7 @@ const InvitationLinkButton = ({ path }) => {
     const [buttonState, setButtonState] = useState({color: "secondary", text: "Copy invitation link"})
     const copyToClipboard = () => {       
         navigator.clipboard.writeText(path)
-        setButtonState({ color: "none", text: "Copied!"})
+        setButtonState({ text: "Copied!"})
     }
 
     return (

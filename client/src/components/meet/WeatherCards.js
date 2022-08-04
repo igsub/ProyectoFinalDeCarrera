@@ -14,11 +14,13 @@ import TableRow from "@material-ui/core/TableRow"
 import moment from "moment"
 import { isMobile } from "react-device-detect"
 
+const MOBILE_WIDTH = isMobile ? window.innerWidth - 2 * parseFloat(getComputedStyle(document.documentElement).fontSize) : "800px"
+
 const useStyles = makeStyles((theme) => ({
 	root: {
 		overflowX: "auto",
 		display: "flex",
-		marginBottom: "2rem"
+		marginBottom: "1rem"
 	},
 	cards: {
 		display: "flex",
@@ -55,7 +57,7 @@ const WeatherCards = () => {
 	const classes = useStyles()
 
 	const formatDatatime = (d) => {
-		const date = moment(d, "YYYY-MM-DD hh:mm:ss").format("LL")
+		const date = moment(d, "YYYY-MM-DD hh:mm:ss").format("dddd D [of] MMMM[,] YYYY")
 		const time = moment(d).hour() + " hs"
 		return (
 			<>
@@ -72,7 +74,7 @@ const WeatherCards = () => {
 
 	return (
 		<Paper className={classes.root}>
-			<TableContainer style={{ width: isMobile ? window.innerWidth : "800px" }}>
+			<TableContainer style={{ maxWidth: MOBILE_WIDTH, overflowX: "none" }}>
 				<Table aria-label='simple table'>
 					<TableBody>
 						<TableRow>

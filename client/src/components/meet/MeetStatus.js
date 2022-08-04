@@ -2,7 +2,7 @@ import Page from "../General/Page"
 import { useSelector, useDispatch } from "react-redux"
 import { makeStyles, createTheme, MuiThemeProvider } from "@material-ui/core/styles"
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, useLocation } from "react-router-dom"
 import { setMeet } from "../../Store/meetSlice"
 import meetingService from "../../Services/meetingService"
 import MUIDataTable from "mui-datatables"
@@ -59,6 +59,8 @@ const MeetStatus = () => {
 	const { id } = useParams()
 	const meetState = useSelector((state) => state.meet)
 	const classes = useStyles()
+	const location = useLocation()
+	const from = location.state ? location.state?.from : null
 	const [data, setData] = useState([])
 	const [selectedDate, setSelectedDate] = useState(null)
 	const [openDialog, setOpenDialog] = useState(false)
@@ -230,7 +232,7 @@ const MeetStatus = () => {
 
 	return (
 		<>
-			<Page flexDirection='column' justifyContent='center' alignItems='center' alignContent='center'>
+			<Page flexDirection='column' justifyContent='center' alignItems='center' alignContent='center' title="Meeting" showBack={from === "mymeetings"}>
 				{meetState.weatherMatters ? <WeatherCards /> : null}
 				<DisplayMeetData title={meetState.title} description={meetState.description} location={meetState.location} />
 				<MuiThemeProvider theme={getMuiTheme()}>

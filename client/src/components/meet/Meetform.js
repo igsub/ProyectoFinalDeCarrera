@@ -1,4 +1,4 @@
-import { Button, Box } from "@material-ui/core"
+import { Button, Box, Typography } from "@material-ui/core"
 import { useEffect, useState } from "react"
 import Meetcalendar from "./Meetcalendar"
 import Timelist from "./Timelist"
@@ -9,6 +9,7 @@ import meetingService from "../../Services/meetingService"
 import { useHistory } from "react-router-dom"
 import Page from "../General/Page"
 import { isMobile } from "react-device-detect"
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -44,11 +45,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	switchWeather: {
 		marginTop: "1rem",
-	},
-	weatherCards: {
-		display: "flex",
-		flexDirection: "row",
-	},
+	}
 }))
 
 const Meetform = () => {
@@ -77,7 +74,7 @@ const Meetform = () => {
 			})
 			.then((response) => {
 				const meetId = response.data._id
-				history.push(`/meet/${meetId}`)
+				history.push({ pathname: `/meet/${meetId}`, state: { from: "meetform" } })
 			})
 			.catch((error) => console.log(error))
 	}
@@ -85,10 +82,18 @@ const Meetform = () => {
 	return (
 		<Page showBack={true} title="Dates Selection">
 			<Box className={classes.form}>
-				<div></div>
-				<Box className={classes.weatherCards}>
-					{meetState.weather && meetState.weather.length > 0 ? <WeatherCards /> : null}
-				</Box>
+				
+					{meetState.weather && meetState.weather.length > 0 ? 
+						<Box>
+							<WeatherCards />
+						</Box>
+					: null}
+					{meetState.weather && meetState.weather.length > 0 ? 
+						<Typography variant="subtitle2" style={{marginBottom: "1rem", marginLeft: "1rem", marginRight: "1rem"}}>
+							{`The weather forecast is available until the ${moment(moment().add("day", 5)).format("dddd D [of] MMMM[,] YYYY")}. Selections beyond that date will not take the weather into account.`}
+						</Typography>
+					: null}
+				
 				<Box className={isMobile ? classes.mobileCalendar : classes.calendar}>
 					<Meetcalendar setSelectedDate={setSelectedDate} />
 					<Timelist />
