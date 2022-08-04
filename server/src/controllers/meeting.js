@@ -115,11 +115,11 @@ var MeetingController = {
     voteDatetimes: (req, res) => {
 
         var meeting_id = req.body.meeting_id;
-        var user_id = req.body.user_id;
         var email = req.body.email;
+        var name = req.body.name;
         var datetimes = req.body.datetimes;
 
-        var user_datetimes = {email, user_id, datetimes};
+        var user_datetimes = {email, name, datetimes};
 
         Meeting.findById({_id: meeting_id}).then((meeting) => {
             
