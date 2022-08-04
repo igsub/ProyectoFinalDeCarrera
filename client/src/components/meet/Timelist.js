@@ -108,7 +108,7 @@ const getListItemColor = (item) => {
 					disabled={meetState.currentDate ? false : true}
 				>
 					<ListItemIcon className={classes.listItemIcon}>
-						<Checkbox color="red" edge='start' checked={_.findIndex(meetState.currentTimes, (ct) => (ct ? t.range === ct.range : -1)) !== -1} disableRipple />
+						<Checkbox edge='start' checked={_.findIndex(meetState.currentTimes, (ct) => (ct ? t.range === ct.range : -1)) !== -1} disableRipple />
 					</ListItemIcon>
 					<ListItemIcon className={classes.listItemIcon}>
 						<TimeIcon />

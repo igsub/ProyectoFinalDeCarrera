@@ -108,9 +108,9 @@ const MyMeetings = () => {
 		customToolbarSelect: () => null,
 		onRowClick: (rowData) => {
 			if (rowData[4] === user.email)
-				history.push(`/meet/${rowData[0]}`)
+				history.push({pathname: `/meet/${rowData[0]}`, state: {from: "mymeetings"}})
 			else 
-				history.push(`/meetinvitation/${rowData[0]}`)
+				history.push({pathname: `/meetinvitation/${rowData[0]}`, state: {from: "mymeetings"}})
 		}
 	}
 

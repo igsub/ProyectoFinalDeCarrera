@@ -3,7 +3,7 @@ import MUIDataTable from "mui-datatables"
 import React, { useEffect, useRef, useState } from "react"
 import { makeStyles, createTheme, MuiThemeProvider } from "@material-ui/core/styles"
 import { useDispatch, useSelector } from "react-redux"
-import { useParams } from "react-router-dom"
+import { useParams, useLocation } from "react-router-dom"
 import meetingService from "../../Services/meetingService"
 import { setMeet } from "../../Store/meetSlice"
 import Page from "../General/Page"
@@ -31,6 +31,10 @@ const useStyles = makeStyles((theme) => ({
 	labelColor: {
     color: theme.palette.secondary.dark
   },
+	votesSubmittedLabel: {
+		marginTop: "1rem", 
+    color: theme.palette.secondary.dark
+	},
 	submittedLabel:{
 		color: theme.palette.secondary.dark,
 		margin: "1rem"
@@ -90,6 +94,8 @@ const Invited = () => {
 	const [hasVoted, setHasVoted] = useState(false)
 	const [endedMeeting, setEndedMeeting] = useState(false)
 	const [meetingDate, setMeetingDate] = useState(null)
+	const location = useLocation()
+	const from = location.state ? location.state?.from : null
 
 	const formatTableData = (array) => {
 		let formattedData = []
@@ -216,7 +222,7 @@ const Invited = () => {
 
 	return (
 		<>
-		<Page flexDirection='column' justifyContent='center' alignItems='center' alignContent='center' title="Vote Dates">
+		<Page flexDirection='column' justifyContent='center' alignItems='center' alignContent='center' title="Vote Dates" showBack={from === "mymeetings"}>
 				{meetState.weatherMatters ? <WeatherCards /> : null}
 				<DisplayMeetData title={meetState.title} description={meetState.description} location={meetState.location} />
 					<>
@@ -255,7 +261,7 @@ const Invited = () => {
 			</Grid>
 			<Grid container className={classes.buttonContainer} justifyContent="center">
 				{hasVoted? 
-				<Typography variant="h5" className={classes.labelColor}>
+				<Typography variant="h5" className={classes.votesSubmittedLabel}>
 					Votes Submitted!
 				</Typography>
 				: endedMeeting ? 
