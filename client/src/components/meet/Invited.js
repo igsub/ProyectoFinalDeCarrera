@@ -1,27 +1,20 @@
+import { Box, Button, Grid, TextField, Typography } from "@material-ui/core"
+import { createTheme, makeStyles, MuiThemeProvider } from "@material-ui/core/styles"
 import _, { forEach } from "lodash"
+import moment from "moment"
 import MUIDataTable from "mui-datatables"
-import React, { useEffect, useRef, useState } from "react"
-import { makeStyles, createTheme, MuiThemeProvider } from "@material-ui/core/styles"
+import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { useParams, useLocation } from "react-router-dom"
+import { useLocation, useParams } from "react-router-dom"
 import meetingService from "../../Services/meetingService"
 import { setMeet } from "../../Store/meetSlice"
 import Page from "../General/Page"
-import moment from "moment"
-import { Box, TextField, Button, Grid, Typography } from "@material-ui/core"
-import { Email } from "@material-ui/icons"
-import BadgeIcon from '@mui/icons-material/Badge';
-import { useAuth0 } from "@auth0/auth0-react"
 import DisplayMeetData from "./DisplayMeetData"
-import { clsx } from 'clsx'
 import WeatherCards from "./WeatherCards"
 
 
 const useStyles = makeStyles((theme) => ({
 	root: {},
-	button: {
-		margin: "1rem",
-	},
 	tableContainer: {
 		marginTop: "1rem"
 	},
@@ -166,7 +159,7 @@ const Invited = () => {
 				votes.push({date: currentValue.date, timeslots})
 			}
 		})
-		meetingService.voteDatetimes({meeting_id: id, email: userState.email, datetimes: votes})
+		meetingService.voteDatetimes({meeting_id: id, email: userState.email, name: invitedName, datetimes: votes})
 		
 		setHasVoted(true)
 	}
@@ -184,14 +177,16 @@ const Invited = () => {
 		{
 			name: "range",
 			options: {	
-				display: "excluded"
+				display: "excluded",
+				sort: false,
+				filter: false
 			}
 		},
 		{
 			name: "start",
 			label: "From",
 			options: {
-				filter: false,
+				filter: true,
 				sort: false
 			}
 		},
@@ -199,17 +194,17 @@ const Invited = () => {
 			name: "end",
 			label: "To",
 			options: {
-				filter: false,
+				filter: true,
 				sort: false
 			}
 		}
 	]
 	const options = {
-		search: false,
+		search: true,
 		filterType: "dropdown",
 		download: false,
 		print: false,
-		filter: false,
+		filter: true,
 		viewColumns: false,
 		rowsSelected: selectedDates.length > 0 ? selectedDates.map(i => i.index) : [],
 		isRowSelectable: () => !hasVoted && !endedMeeting,

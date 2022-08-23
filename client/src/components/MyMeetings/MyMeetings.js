@@ -34,7 +34,7 @@ const MyMeetings = () => {
 		{
 			name: "_id",
 			options: {
-				filter: true,
+				filter: false,
 				sort: false,
 				display: "excluded"
 			},
@@ -44,6 +44,7 @@ const MyMeetings = () => {
 			label: "Title",
 			options: {
 				filter: true,
+				filterType: "textField",
 				sort: false,
 			},
 		},
@@ -52,6 +53,7 @@ const MyMeetings = () => {
 			label: "Description",
 			options: {
 				filter: true,
+				filterType: "textField",
 				sort: false,
 			},
 		},
@@ -59,7 +61,8 @@ const MyMeetings = () => {
 			name: "location",
 			label: "Location",
 			options: {
-				filter: false,
+				filter: true,
+				filterType: "textField",
 				sort: false,
 				customBodyRender: (v) => (v ? v.address : "Not available"),
 			},
@@ -68,7 +71,7 @@ const MyMeetings = () => {
 			name: "ownerEmail",
 			label: "Owner Email",
 			options: {
-				filter: false,
+				filter: true,
 				sort: false,
 			},
 		},
@@ -99,11 +102,11 @@ const MyMeetings = () => {
 
 	const options = {
 		selectableRows: "none",
-		search: false,
+		search: true,
 		filterType: "dropdown",
 		download: false,
 		print: false,
-		filter: false,
+		filter: true,
 		viewColumns: false,
 		customToolbarSelect: () => null,
 		onRowClick: (rowData) => {

@@ -6,7 +6,7 @@ import { useParams, useLocation } from "react-router-dom"
 import { setMeet } from "../../Store/meetSlice"
 import meetingService from "../../Services/meetingService"
 import MUIDataTable from "mui-datatables"
-import _, { forEach } from "lodash"
+import _, { forEach, set } from "lodash"
 import moment from "moment"
 import DisplayMeetData from "./DisplayMeetData"
 import InvitationLinkButton from "./InvitationLinkButton"
@@ -101,7 +101,8 @@ const MeetStatus = () => {
 							...item, 
 							start: item.timeslot.start, 
 							end: item.timeslot.end, 
-							range: item.timeslot.range
+							range: item.timeslot.range,
+							votedBy: item.votedBy
 						})), 
 						["count", "date", "range"], ["desc", "asc", "asc"])
 					setData(mapData)
@@ -144,6 +145,7 @@ const MeetStatus = () => {
 		meetingService.selectFinalDatetime(finalDatetime)
 			.then(response => {
 				console.log(response)
+				setMeetingDate({...finalDatetime, from: finalDatetime.timeslot.from, to: finalDatetime.timeslot.to})
 				if (response.status === 200) setEndedMeeting(true)
 				setLoading(false)
 				setOpenDialog(false)
@@ -169,13 +171,15 @@ const MeetStatus = () => {
 			name: "range",
 			options: {
 				display: "excluded",
+				filter: false,
+				sort: false
 			},
 		},
 		{
 			name: "start",
 			label: "From",
 			options: {
-				filter: false,
+				filter: true,
 				sort: false,
 			},
 		},
@@ -183,15 +187,7 @@ const MeetStatus = () => {
 			name: "end",
 			label: "To",
 			options: {
-				filter: false,
-				sort: false,
-			},
-		},
-		{
-			name: "votes",
-			label: "Votes",
-			options: {
-				filter: false,
+				filter: true,
 				sort: false,
 			},
 		},
@@ -200,18 +196,35 @@ const MeetStatus = () => {
 			label: "Priority",
 			options: {
 				filter: false,
-				sort: false,
+				sort: true,
 			},
+		},
+		{
+			name: "votes",
+			label: "Votes",
+			options: {
+				filter: false,
+				sort: true,
+			},
+		},
+		{
+			name: "votedBy",
+			label: "Voted by",
+			options: {
+				filter: false,
+				sort: false,
+				customBodyRender: (arr) => arr?.join(", ")
+			}
 		}
 	]
 
 	const options = {
 		selectableRows: "single",
-		search: false,
+		search: true,
 		filterType: "dropdown",
 		download: false,
 		print: false,
-		filter: false,
+		filter: true,
 		viewColumns: false,
 		rowsSelected: selectedDate ? [selectedDate.index] : [],
 		customToolbarSelect: () => null,
